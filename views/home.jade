@@ -1,6 +1,28 @@
 extends layout
 
+mixin act_icon(cssClass)
+  div.border(ng-class="{selected: selectedActs.#{cssClass}}" ng-click="onActClick('#{cssClass}')")
+    div(class="#{cssClass}")
+
 block content
   h1 MeetUA
   p.lead
-    | Meet ups in Ukraine
+    | События в Киеве
+
+    div(ng-controller='SelectEventCtrl')
+      ul.nav.nav-tabs
+        li.active
+          a(href='#find_event') Найти
+        li
+          a(href='#') Создать
+
+      .tab-content
+        #find_event.tab-pane.active
+          div.act_bar
+            +act_icon('bike')
+            +act_icon('running')
+            +act_icon('workout')
+            +act_icon('hiking')
+            +act_icon('photo')
+            +act_icon('en')
+            +act_icon('code')

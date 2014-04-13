@@ -97,3 +97,73 @@ body {
   padding: 3px;
   bottom: 25px;
 }
+
+// Home page ------------------
+
+.border_radius(@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.act_img(@img_url) {
+  @size: 120px;
+  background-image: url("../img/@{img_url}");
+  background-repeat: no-repeat;
+  background-size: @size;
+  height: @size;
+  width: @size;
+}
+
+@act_border: 3px;
+
+.act_bar {
+  margin-top: 20px;
+
+  .border {
+    .border_radius(10px);
+
+    padding: 10px;
+    margin: 5px;
+    border: @act_border solid #ccc;
+    display: block;
+    float: left;
+
+    &:hover {
+      border: @act_border solid @link-color;
+      cursor: pointer;
+    }
+
+    &.selected {
+      background-color: #19FAD9;
+    }
+  }
+
+  .running {
+    .act_img("running-man-icon-128.png")
+  }
+
+  .bike {
+    .act_img("bike-icon-128.png")
+  }
+
+  .workout {
+    .act_img("street-workout.png")
+  }
+
+  .hiking {
+    .act_img("mountain.jpg")
+  }
+
+  .photo {
+    .act_img("camera_icon.png")
+  }
+
+  .en {
+    .act_img("english-icon.png")
+  }
+
+  .code {
+    .act_img("code_icon.png")
+  }
+}
