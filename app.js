@@ -19,6 +19,7 @@ var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
+var createEvent = require('./controllers/event/create-event');
 
 /**
  * API keys + Passport configuration.
@@ -55,7 +56,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(connectAssets({
   paths: ['public/css', 'public/js'],
-  helperContext: app.locals
+  helperContext: app.locals,
+  build: false
 }));
 app.use(express.compress());
 app.use(express.logger('dev'));
@@ -139,6 +141,7 @@ app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized,
 app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
+app.get('/event/create', createEvent);
 
 /**
  * OAuth routes for sign-in.

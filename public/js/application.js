@@ -10,5 +10,13 @@
  */
 
 //= require lib/jquery-2.1.0.min
+//= require lib/moment-2.6.0.min
+//= require lib/daterangepicker-1.3.5
 //= require lib/bootstrap.min
+//= require lib/angular-1.2.16.min
+//= require lib/angular-route-1.2.16.min
+//= require lib/ng-bs-daterangepicker-0.0.1
+//= require ng/app
+//= require ng/controllers
+//= require ng/directives
 //= require main

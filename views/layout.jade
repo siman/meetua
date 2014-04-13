@@ -13,7 +13,7 @@ html
   body
     #wrap
       include partials/navigation
-      .container
+      .container(ng-app='myApp')
         include partials/flash
         block content
     include partials/footer

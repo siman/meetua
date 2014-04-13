@@ -1,0 +1,29 @@
+extends layout
+
+block content
+    .page-header
+        h3 Создать событие
+
+    form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl')
+        input(type='hidden', name='_csrf', value=_csrf, ng-model='scrf')
+        .form-group
+            label(class='col-sm-2 control-label', for='name') Название
+            .col-sm-8
+                input.form-control(type='text', name='name', id='name', autofocus=true, ng-model='name')
+        .form-group
+            label(class='col-sm-2 control-label', for='startDate') Когда
+            .col-sm-3
+                input.form-control(type='daterange', ng-model='startDateTime', name='startDateTime', id='startDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm')
+            .col-sm-1
+                label.checkbox -
+            .col-sm-3
+                input.form-control(type='daterange', ng-model='endDateTime', name='endDateTime', id='endDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm')
+        .form-group
+            label(class='col-sm-2 control-label', for='description') Описание
+            .col-sm-8
+                textarea.form-control(name='description', id='description', ng-model='description')
+        .form-group
+            .col-sm-offset-2.col-sm-8
+                button.btn.btn-default(type='submit')
+                    i.fa.fa-mail-forward
+                    | Создать группу
