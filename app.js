@@ -21,6 +21,7 @@ var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var createEvent = require('./controllers/event/create-page');
 var findEvent = require('./controllers/event/find');
+var upload = require('./controllers/upload');
 
 /**
  * API keys + Passport configuration.
@@ -81,6 +82,7 @@ app.use(function(req, res, next) {
   res.locals.user = req.user;
   res.locals._csrf = req.csrfToken();
   res.locals.secrets = secrets;
+  res.cookie('XSRF-TOKEN', req.csrfToken());
   next();
 });
 app.use(flash());
@@ -144,6 +146,7 @@ app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, 
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 app.get('/event/create', createEvent);
 app.get('/event/find', findEvent);
+app.post('/upload/image', upload);
 
 /**
  * OAuth routes for sign-in.

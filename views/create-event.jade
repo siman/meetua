@@ -28,6 +28,13 @@ block content
             .col-sm-8
                 textarea#description.form-control(name='description', ng-model='event.description', required)
         .form-group
+            label(class='col-sm-2 control-label', for='description') Лого
+            .col-sm-8
+                input.form-control(type='file', ng-file-select='onFileSelect($files)')
+                div(ng-file-drop='onFileSelect($files)', ng-file-drag-over-class='optional-css-class', ng-show='dropSupported') drop files here
+                div(ng-file-drop-available='dropSupported=true', ng-show='!dropSupported') HTML5 Drop File is not supported!
+                button(ng-click='upload.abort()') Cancel Upload
+        .form-group
             .col-sm-offset-2.col-sm-8
                 button.btn.btn-default(type='submit', ng-disabled='eventForm.$invalid')
                     i.fa.fa-mail-forward
