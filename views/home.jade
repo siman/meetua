@@ -28,10 +28,10 @@ block content
             +act_icon('code')
       .row(style="clear: both;")
         .col-md-4
-          div(ng-repeat="event in foundEvents")
-            div {{event.title}}
-            div {{event.address}}
-            div {{event.startDate}}
+          div.event_box(ng-repeat="event in foundEvents")
+            div.event_title {{event.title}}
+            div.event_date {{event.startDate}}
+            div.event_address {{event.address}}
             div(style="margin-bottom: 10px;")
         .col-md-8
           google-map(center="map.center" zoom="map.zoom" draggable="true")
