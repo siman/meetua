@@ -8,6 +8,7 @@ html
     meta(name='csrf-token', content=_csrf)
     meta(name='author', content='')
     title #{title} | Hackathon Starter
+    script(src='http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false')
     != css('styles')
     != js('application')
   body
