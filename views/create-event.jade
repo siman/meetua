@@ -4,30 +4,31 @@ block content
     .page-header
         h3 Создать событие
 
-    form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl', ng-submit='submit()')
-        input(type='hidden', name='_csrf', value=_csrf, ng-model='scrf')
-        .form-group
-            label(class='col-sm-2 control-label', for='name') Название
+    form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl', ng-submit='submit()', name='eventForm', novalidate)
+        input(type='hidden', name='_csrf', value=_csrf, ng-model='csrf')
+        .form-group(ng-class="{'has-error' : eventForm.name.$invalid && eventForm.name.$dirty}")
+            label(class='col-sm-2 control-label', for='name') Название *
             .col-sm-8
-                input.form-control(type='text', name='name', id='name', autofocus=true, ng-model='name')
-        .form-group
-            label(class='col-sm-2 control-label', for='name') Где
+                input.form-control(type='text', name='name', id='name', autofocus=true, ng-model='event.name', required)
+        .form-group(ng-class="{'has-error' : eventForm.place.$invalid && eventForm.place.$dirty}")
+            label(class='col-sm-2 control-label', for='place') Где *
             .col-sm-8
-              input.form-control(type='text', ng-autocomplete='ng-autocomplete', ng-model='place', options='placesOptions')
-        .form-group
-            label(class='col-sm-2 control-label', for='startDate') Когда
+              input#place.form-control(type='text', name='place', ng-autocomplete='ng-autocomplete', ng-model='event.place', options='placesOptions', required)
+        .form-group(ng-class="{'has-error' : eventForm.startDateTime.$invalid && eventForm.startDateTime.$dirty}")
+            label(class='col-sm-2 control-label', for='startDateTime') Когда *
             .col-sm-3
-                input.form-control(type='daterange', ng-model='startDateTime', name='startDateTime', id='startDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm')
+                input#startDateTime.form-control(type='daterange', ng-model='event.startDateTime', name='startDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm', required)
             .col-sm-1
                 label.checkbox -
             .col-sm-3
-                input.form-control(type='daterange', ng-model='endDateTime', name='endDateTime', id='endDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm')
-        .form-group
-            label(class='col-sm-2 control-label', for='description') Описание
+                input#endDateTime.form-control(type='daterange', ng-model='event.endDateTime', name='endDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm')
+                span.col-sm-2.help-block (опционально)
+        .form-group(ng-class="{'has-error' : eventForm.description.$invalid && eventForm.description.$dirty}")
+            label(class='col-sm-2 control-label', for='description') Описание *
             .col-sm-8
-                textarea.form-control(name='description', id='description', ng-model='description')
+                textarea#description.form-control(name='description', ng-model='event.description', required)
         .form-group
             .col-sm-offset-2.col-sm-8
-                button.btn.btn-default(type='submit')
+                button.btn.btn-default(type='submit', ng-disabled='eventForm.$invalid')
                     i.fa.fa-mail-forward
                     | Создать группу

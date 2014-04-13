@@ -5,7 +5,10 @@
 angular.module('myApp.controllers', [])
     .controller('CreateEventCtrl', ['$scope', function($scope) {
         $scope.submit = function() {
-
+          var event = $scope.event;
+          event.startDateTime = $scope.event.startDateTime.startDate;
+          event.endDateTime = $scope.event.endDateTime.endDate;
+          alert(JSON.stringify(event));
         };
         $scope.placesOptions={
             country: 'ua'

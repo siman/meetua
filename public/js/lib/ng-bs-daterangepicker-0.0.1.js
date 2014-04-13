@@ -61,7 +61,7 @@
 
                 $element.daterangepicker(options, function(start, end) {
                     $scope.$apply(function () {
-                        console.log(start);
+
                         ngModel.$setViewValue({ startDate: start, endDate: end });
                         ngModel.$render();
                     });
