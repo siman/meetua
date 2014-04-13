@@ -27,12 +27,23 @@ angular.module('myApp.controllers', [])
         zoom: 8
       };
 
+      $scope.mapEvents = [];
+
+      $scope.onEventOver = function(event) {
+        $scope.mapEvents = [event];
+      };
+
+      $scope.onEventOut = function(event) {
+        $scope.mapEvents = $scope.foundEvents;
+      };
+
       $scope.onActClick = function(actName) {
         $scope.selectedAct = actName;
         console.log("actName", actName);
         $http({method: 'GET', url: '/event/find', params: {act: actName}}).
           success(function(data, status, headers, config) {
             $scope.foundEvents = data;
+            $scope.mapEvents = data;
             console.log('selected events ', $scope.foundEvents);
           }).
           error(function(data, status, headers, config) {
