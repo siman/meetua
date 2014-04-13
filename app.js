@@ -143,6 +143,7 @@ app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, a
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 app.get('/event/create', createEvent);
+app.get('/event/find', findEvent);
 
 /**
  * OAuth routes for sign-in.
