@@ -2,12 +2,14 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', [
+angular
+  .module('myApp', [
         'ngRoute',
         'myApp.directives',
         'myApp.controllers',
         'ngBootstrap',
-        'ngAutocomplete'
+        'ngAutocomplete',
+        'google-maps'
     ]).
     config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});

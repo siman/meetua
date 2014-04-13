@@ -19,6 +19,14 @@ angular.module('myApp.controllers', [])
 
       $scope.foundEvents = [];
 
+      $scope.map = {
+        center: {
+          latitude: 50.460646,
+          longitude: 30.521018
+        },
+        zoom: 8
+      };
+
       $scope.onActClick = function(actName) {
         $scope.selectedAct = actName;
         console.log("actName", actName);
@@ -30,7 +38,7 @@ angular.module('myApp.controllers', [])
           error(function(data, status, headers, config) {
             console.error('failed to find events by ' + actName, data)
           });
-      }
+      };
     }])
     .controller('MyCtrl2', [function() {
 
