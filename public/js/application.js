@@ -17,7 +17,5 @@
 //= require lib/angular-route-1.2.16.min
 //= require lib/ng-bs-daterangepicker-0.0.1
 //= require lib/ng-directives
-//= require ng/app
-//= require ng/controllers
-//= require ng/directives
+//= require_tree ng
 //= require main
