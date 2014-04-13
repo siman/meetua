@@ -3,8 +3,13 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-    .controller('CreateEventCtrl', [function() {
+    .controller('CreateEventCtrl', ['$scope', function($scope) {
+        $scope.submit = function() {
 
+        };
+        $scope.placesOptions={
+            country: 'ua'
+        };
     }])
     .controller('SelectEventCtrl', ['$scope', function($scope) {
       $scope.selectedActs = {
