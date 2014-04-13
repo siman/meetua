@@ -1,7 +1,7 @@
 extends layout
 
 mixin act_icon(cssClass)
-  div.border(ng-class="{selected: selectedActs.#{cssClass}}" ng-click="onActClick('#{cssClass}')")
+  div.border(ng-class="{selected: selectedAct == '#{cssClass}'}" ng-click="onActClick('#{cssClass}')")
     div(class="#{cssClass}")
 
 block content
@@ -26,3 +26,13 @@ block content
             +act_icon('photo')
             +act_icon('en')
             +act_icon('code')
+      .row
+        .col-md-4
+          div(style="clear: both;" ng-repeat="event in foundEvents")
+            div {{event.title}}
+            div {{event.address}}
+            div {{event.startDate}}
+            div(style="margin-bottom: 10px;")
+        .col-md-8 TODO MAP
+
+

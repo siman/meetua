@@ -20,6 +20,7 @@ var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var createEvent = require('./controllers/event/create-page');
+var findEvent = require('./controllers/event/find');
 
 /**
  * API keys + Passport configuration.

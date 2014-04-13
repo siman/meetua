@@ -14,20 +14,22 @@ angular.module('myApp.controllers', [])
             country: 'ua'
         };
     }])
-    .controller('SelectEventCtrl', ['$scope', function($scope) {
-      $scope.selectedActs = {
-        bike: false,
-        running: false,
-        workout: false,
-        hiking: false,
-        photo: false,
-        en: false,
-        code: false
-      };
+    .controller('SelectEventCtrl', ['$scope', '$http', function($scope, $http) {
+      $scope.selectedAct = undefined;
+
+      $scope.foundEvents = [];
 
       $scope.onActClick = function(actName) {
-        $scope.selectedActs[actName] = !$scope.selectedActs[actName];
-        console.log("selectedActs", $scope.selectedActs);
+        $scope.selectedAct = actName;
+        console.log("actName", actName);
+        $http({method: 'GET', url: '/event/find', params: {act: actName}}).
+          success(function(data, status, headers, config) {
+            $scope.foundEvents = data;
+            console.log('selected events ', $scope.foundEvents);
+          }).
+          error(function(data, status, headers, config) {
+            console.error('failed to find events by ' + actName, data)
+          });
       }
     }])
     .controller('MyCtrl2', [function() {
