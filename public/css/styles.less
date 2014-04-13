@@ -116,6 +116,7 @@ body {
 }
 
 @act_border: 3px;
+@selected_bg_color: #86FAD9;
 
 .act_bar {
   margin-top: 20px;
@@ -135,7 +136,7 @@ body {
     }
 
     &.selected {
-      background-color: #19FAD9;
+      background-color: @selected_bg_color;
     }
   }
 
@@ -175,9 +176,12 @@ body {
 .event_box {
   border-bottom: 1px solid #ccc;
   padding: 10px;
+  cursor: pointer;
+
   &:hover {
-    background-color: #86FAD9;
+    background-color: @selected_bg_color;
   }
+
   .event_title {
     font-size: 24px;
     font-weight: bold;

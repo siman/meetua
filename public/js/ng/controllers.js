@@ -48,10 +48,10 @@ angular.module('myApp.controllers', [])
 
       $scope.map = {
         center: {
-          latitude: 50.460646,
+          latitude: 50.440646,
           longitude: 30.521018
         },
-        zoom: 8
+        zoom: 11
       };
 
       $scope.mapEvents = [];
@@ -77,7 +77,4 @@ angular.module('myApp.controllers', [])
             console.error('failed to find events by ' + actName, data)
           });
       };
-    }])
-    .controller('MyCtrl2', [function() {
-
     }]);

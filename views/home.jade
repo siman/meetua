@@ -12,9 +12,9 @@ block content
     div(ng-controller='SelectEventCtrl')
       ul.nav.nav-tabs
         li.active
-          a(href='#find_event') Найти
+          a(href='#find') Найти
         li
-          a(href='#') Создать
+          a(href='#create') Создать
 
       .tab-content
         #find_event.tab-pane.active
@@ -26,9 +26,12 @@ block content
             +act_icon('photo')
             +act_icon('en')
             +act_icon('code')
+
       .row(style="clear: both;")
         .col-md-4
-          div.event_box(ng-repeat="event in foundEvents" ng-mouseenter="onEventOver(event)" ng-mouseleave="onEventOut()")
+          div.event_box(ng-repeat="event in foundEvents"
+              ng-mouseenter="onEventOver(event)"
+              ng-mouseleave="onEventOut()")
             div.event_title {{event.title}}
             div.event_date {{event.startDate}}
             div.event_address {{event.address}}
@@ -36,5 +39,3 @@ block content
         .col-md-8
           google-map(center="map.center" zoom="map.zoom" draggable="true")
             markers(models='mapEvents', coords="'self'")
-
-
