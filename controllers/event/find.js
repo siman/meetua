@@ -6,8 +6,8 @@ var bikeEvents = [
     author: "Denis",
     startDate: "4 May 2012",
     address: "Voloska St, 29",
-    lat: 50.469150,
-    lng: 30.515990
+    latitude: 50.469150,
+    longitude: 30.515990
   },
   {
     title: "poezdka v ad",
@@ -15,8 +15,8 @@ var bikeEvents = [
     author: "Devil",
     startDate: "5 April 2044",
     address: "Raiduzhna St, 29",
-    lat:50.482503,
-    lng:30.588658
+    latitude:50.482503,
+    longitude:30.588658
   }
 ];
 
@@ -27,8 +27,8 @@ var codeEvents = [
     author: "Sergey",
     startDate: "3 June 2012",
     address: "Rusanovskaya Naberezhnaya, 12",
-    lat: 50.442070,
-    lng: 30.591990
+    latitude: 50.442070,
+    longitude: 30.591990
   }
 ];
 
@@ -39,8 +39,8 @@ var hikingEvents = [
     author: "DIma Yarosh",
     startDate: "23 June 2012",
     address: "Radishcheva, 10/14",
-    lat: 50.450040,
-    lng: 30.410272
+    latitude: 50.450040,
+    longitude: 30.410272
   },
   {
     title: "Kyiv hiking 2 ",
@@ -48,8 +48,8 @@ var hikingEvents = [
     author: "DIma Yarosh",
     startDate: "24 June 2012",
     address: "Radishcheva, 12/16",
-    lat: 50.447991,
-    lng: 30.410133
+    latitude: 50.447991,
+    longitude: 30.410133
   },
   {
     title: "Kyiv hiking 3",
@@ -57,8 +57,8 @@ var hikingEvents = [
     author: "DIma Yarosh",
     startDate: "25 June 2012",
     address: "Vozdukhoflotskiy prospekt, 14/17",
-    lat: 50.439513,
-    lng: 30.477438
+    latitude: 50.439513,
+    longitude: 30.477438
   }
 ];
 
