@@ -17,11 +17,11 @@ block content
         .form-group(ng-class="{'has-error' : eventForm.startDateTime.$invalid && eventForm.startDateTime.$dirty}")
             label(class='col-sm-2 control-label', for='startDateTime') Когда *
             .col-sm-3
-                input#startDateTime.form-control(type='daterange', ng-model='event.startDateTime', name='startDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm', required)
+                input#startDateTime.form-control(type='daterange', ng-model='event.startDateTime', name='startDateTime', single='true', time-picker='true', start-empty='true', format='YYYY-MM-DD h:mm', required)
             .col-sm-1
                 label.checkbox -
             .col-sm-3
-                input#endDateTime.form-control(type='daterange', ng-model='event.endDateTime', name='endDateTime', single='true', time-picker='true', format='YYYY-MM-DD h:mm')
+                input#endDateTime.form-control(type='daterange', ng-model='event.endDateTime', name='endDateTime', single='true', time-picker='true', start-empty='true', format='YYYY-MM-DD h:mm')
                 span.col-sm-2.help-block (опционально)
         .form-group(ng-class="{'has-error' : eventForm.description.$invalid && eventForm.description.$dirty}")
             label(class='col-sm-2 control-label', for='description') Описание *

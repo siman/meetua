@@ -24,6 +24,7 @@
                 options.opens = $attributes.opens && $parse($attributes.opens)($scope);
                 options.singleDatePicker = 'true' == $attributes.single;
                 options.timePicker = 'true' == $attributes.timePicker;
+                options.startEmpty = 'true' == $attributes.startEmpty;
 
                 function format(date) {
                     return date.format(options.format);
@@ -48,15 +49,17 @@
                 };
 
                 $scope.$watch($attributes.ngModel, function (modelValue) {
-                    if (!modelValue || (!modelValue.startDate)) {
+                    if ((!modelValue || (!modelValue.startDate)) && !options.startEmpty) {
                         ngModel.$setViewValue({ startDate: moment().startOf('day'), endDate: moment().startOf('day') });
                         return;
                     }
-                    $element.data('daterangepicker').startDate = modelValue.startDate;
-                    $element.data('daterangepicker').endDate = modelValue.endDate;
-                    $element.data('daterangepicker').updateView();
-                    $element.data('daterangepicker').updateCalendars();
-                    $element.data('daterangepicker').updateInputText();
+                    if (modelValue) {
+                        $element.data('daterangepicker').startDate = modelValue.startDate;
+                        $element.data('daterangepicker').endDate = modelValue.endDate;
+                        $element.data('daterangepicker').updateView();
+                        $element.data('daterangepicker').updateCalendars();
+                        $element.data('daterangepicker').updateInputText();
+                    }
                 });
 
                 $element.daterangepicker(options, function(start, end) {
