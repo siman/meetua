@@ -45,7 +45,8 @@
     "underscore": "~1.6.0",
     "uglify-js": "~2.4.12",
     "validator": "~3.8.0",
-    "moment": "~2.6.0"
+    "moment": "~2.6.0",
+    "temp": "~0.7.0"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
