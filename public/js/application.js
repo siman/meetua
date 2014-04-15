@@ -14,11 +14,9 @@
 //= require lib/daterangepicker-1.3.5
 //= require lib/bootstrap.min
 //= require lib/underscore-1.6.0.min
-//= require lib/angular-file-upload-shim.min.js // keep shim before angular
-//= require lib/angular-1.2.16.min
-//= require lib/angular-route-1.2.16.min
-//= require lib/angular-file-upload-1.3.1.min
+//= require lib/angular-1.2.16
+//= require lib/angular-route-1.2.16
+//= require lib/angular-file-upload-0.5.5
 //= require lib/ng-bs-daterangepicker-0.0.1
-//= require lib/ng-directives
 //= require_tree ng
-//= require main
+//= require lib/ng-directives

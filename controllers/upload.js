@@ -18,12 +18,15 @@ module.exports = function(req, res, next) {
     }
 
     var wstream = temp.createWriteStream();
-    console.log('stream ', wstream.path);
-    wstream.on('pipe', function(src){
-        console.log('Sending file content to temp stream');
-    });
+    console.log('Upload image to ', wstream.path);
     req.pipe(wstream);
-    wstream.end();
+    req.on('data', function(d) {
+        console.log('Write bytes ', d.length);
+    });
+    req.on('end', function(){
+        console.log('File upload complete');
+        wstream.end();
+    });
 
     res.send(wstream.path);
 };
