@@ -3,12 +3,14 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-    .controller('CreateEventCtrl', ['$scope', '$fileUploader', function($scope, $fileUploader) {
-        // TODO csrf token
+    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', function($scope, $fileUploader, $cookies) {
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',
-            autoUpload: true
+            autoUpload: true,
+            headers: {
+                'X-CSRF-TOKEN': $cookies['XSRF-TOKEN']
+            }
         });
 
         // Images only

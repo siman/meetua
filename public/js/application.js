@@ -16,6 +16,7 @@
 //= require lib/underscore-1.6.0.min
 //= require lib/angular-1.2.16
 //= require lib/angular-route-1.2.16
+//= require lib/angular-cookies-1.2.16
 //= require lib/angular-file-upload-0.5.5
 //= require lib/ng-bs-daterangepicker-0.0.1
 //= require_tree ng
