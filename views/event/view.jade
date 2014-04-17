@@ -1,0 +1,28 @@
+extends ../layout
+
+mixin eventField(label, data)
+  div
+    span.event_label #{label}:
+    span #{data}
+
+block content
+  if (!event)
+    h1 Событие не найдено
+  else
+    div(ng-controller='ViewEventCtrl')
+      .row
+        .col-md-1
+          .act_bar
+            div(class="#{event.activity}")
+
+        .col-md-11
+          h1 #{event.title}
+          div.view_event
+            #eventJson.hidden #{JSON.stringify(event)}
+            +eventField("Когда", event.startDate)
+            +eventField("Где", event.address)
+            +eventField("Организатор", event.author)
+            div.event_desc #{event.description}
+
+      google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts")
+        marker(coords="event")

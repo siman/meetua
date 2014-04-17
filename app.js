@@ -21,6 +21,7 @@ var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var createEvent = require('./controllers/event/create-page');
 var findEvent = require('./controllers/event/find');
+var viewEvent = require('./controllers/event/view');
 var upload = require('./controllers/upload');
 
 /**
@@ -146,6 +147,7 @@ app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, 
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 app.get('/event/create', createEvent);
 app.get('/event/find', findEvent);
+app.get('/event/:id', viewEvent);
 app.post('/upload/image', upload);
 
 /**

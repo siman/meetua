@@ -1,41 +1,40 @@
 extends layout
 
-mixin act_icon(cssClass)
-  div.border(ng-class="{selected: selectedAct == '#{cssClass}'}" ng-click="onActClick('#{cssClass}')")
+mixin actIcon(cssClass)
+  div.border.row-fluid(
+      ng-class="{selected: selectedAct == '#{cssClass}'}"
+      ng-click="onActClick('#{cssClass}')"
+    )
     div(class="#{cssClass}")
 
 block content
   h1 MeetUA
-  p.lead
-    | События в Киеве
+  p.lead Лучшие события Киева
 
-    div(ng-controller='SelectEventCtrl')
-      ul.nav.nav-tabs
-        li.active
-          a(href='#find') Найти
-        li
-          a(href='#create') Создать
+  div(ng-controller='SelectEventCtrl')
+    div.act_bar
+      +actIcon('bike')
+      +actIcon('running')
+      +actIcon('workout')
+      +actIcon('hiking')
+      +actIcon('photo')
+      +actIcon('en')
+      +actIcon('code')
+      div.clearfix
 
-      .tab-content
-        #find_event.tab-pane.active
-          div.act_bar
-            +act_icon('bike')
-            +act_icon('running')
-            +act_icon('workout')
-            +act_icon('hiking')
-            +act_icon('photo')
-            +act_icon('en')
-            +act_icon('code')
+    .row
+      .col-md-4.preview_events_box
+        div.preview_event(
+            ng-repeat="event in foundEvents"
+            ng-click="viewEvent(event)"
+            ng-mouseenter="onEventOver(event)"
+            ng-mouseleave="onEventOut()"
+          )
+          a.event_title(ng-href="/event/{{event.id}}") {{event.title}}
+          div.event_date {{event.startDate}}
+          div.event_address {{event.address}}
+          div(style="margin-bottom: 10px;")
 
-      .row(style="clear: both;")
-        .col-md-4
-          div.event_box(ng-repeat="event in foundEvents"
-              ng-mouseenter="onEventOver(event)"
-              ng-mouseleave="onEventOut()")
-            div.event_title {{event.title}}
-            div.event_date {{event.startDate}}
-            div.event_address {{event.address}}
-            div(style="margin-bottom: 10px;")
-        .col-md-8
-          google-map(center="map.center" zoom="map.zoom" draggable="true")
-            markers(models='mapEvents', coords="'self'")
+      .col-md-8
+        google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts")
+          markers(models="mapEvents", coords="'self'")

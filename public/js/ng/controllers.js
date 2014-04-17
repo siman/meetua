@@ -1,5 +1,13 @@
 'use strict';
 
+var baseMap = {
+  draggable: true,
+  zoom: 16,
+  opts: {
+    scrollwheel: false
+  }
+};
+
 /* Controllers */
 
 angular.module('myApp.controllers', [])
@@ -34,13 +42,14 @@ angular.module('myApp.controllers', [])
 
       $scope.foundEvents = [];
 
-      $scope.map = {
+      // Zoom map on Kiev.
+      $scope.map = _.extend(baseMap, {
         center: {
           latitude: 50.440646,
           longitude: 30.521018
         },
         zoom: 11
-      };
+      });
 
       $scope.mapEvents = [];
 
@@ -52,10 +61,26 @@ angular.module('myApp.controllers', [])
         $scope.mapEvents = $scope.foundEvents;
       };
 
+      $scope.viewEvent = function(event) {
+        window.location = "/event/" + event.id;
+      };
+
       $scope.onActClick = function(actName) {
+        if (actName === $scope.selectedAct) {
+          actName = undefined;
+        }
         $scope.selectedAct = actName;
         console.log("actName", actName);
-        $http({method: 'GET', url: '/event/find', params: {act: actName}}).
+        findEvents(actName);
+      };
+
+      function init() {
+        findEvents();
+      }
+
+      function findEvents(actName) {
+        var params = _.isUndefined(actName) ? {} : {act: actName};
+        $http({method: 'GET', url: '/event/find', params: params}).
           success(function(data, status, headers, config) {
             $scope.foundEvents = data;
             $scope.mapEvents = data;
@@ -64,5 +89,22 @@ angular.module('myApp.controllers', [])
           error(function(data, status, headers, config) {
             console.error('failed to find events by ' + actName, data)
           });
-      };
-    }]);
+      }
+
+      init();
+    }])
+    .controller('ViewEventCtrl', ['$scope', '$http', function($scope, $http) {
+      var event = JSON.parse($("#eventJson").text());
+      console.log("Event", event);
+
+      $scope.event = event;
+
+      $scope.map = _.extend(baseMap, {
+        center: {
+          latitude: event.latitude,
+          longitude: event.longitude
+        },
+        zoom: 16
+      });
+    }])
+;

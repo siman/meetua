@@ -46,7 +46,8 @@
     "uglify-js": "~2.4.12",
     "validator": "~3.8.0",
     "moment": "~2.6.0",
-    "formidable": "~1.0.14"
+    "formidable": "~1.0.14",
+    "circular-json": "~0.1.6"
   },
   "devDependencies": {
     "mocha": "~1.18.2",

@@ -8,6 +8,10 @@
 // Scaffolding
 // -------------------------
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 html, body {
   height: 100%;
 }
@@ -98,7 +102,8 @@ body {
   bottom: 25px;
 }
 
-// Home page ------------------
+// Home page
+// -------------------------
 
 .border_radius(@radius: 5px) {
   -webkit-border-radius: @radius;
@@ -116,10 +121,13 @@ body {
 }
 
 @act_border: 3px;
-@selected_bg_color: #86FAD9;
+@color_highlight_bg: #affae3;
+@color_secondary: #999999;
+@map_height: 600px;
 
 .act_bar {
   margin-top: 20px;
+  margin-bottom: 10px;
 
   .border {
     .border_radius(10px);
@@ -136,59 +144,78 @@ body {
     }
 
     &.selected {
-      background-color: @selected_bg_color;
+      background-color: @color_highlight_bg;
     }
   }
 
+  .act_imgs;
+}
+
+.act {
+  .act_imgs;
+}
+
+.act_imgs {
   .running {
     .act_img("running-man-icon-128.png")
   }
-
   .bike {
     .act_img("bike-icon-128.png")
   }
-
   .workout {
     .act_img("street-workout.png")
   }
-
   .hiking {
     .act_img("mountain.jpg")
   }
-
   .photo {
     .act_img("camera_icon.png")
   }
-
   .en {
     .act_img("english-icon.png")
   }
-
   .code {
     .act_img("code_icon.png")
   }
 }
 
 .angular-google-map-container {
-  height: 600px;
+  height: @map_height;
 }
 
-.event_box {
+.preview_event {
   border-bottom: 1px solid #ccc;
   padding: 10px;
   cursor: pointer;
 
   &:hover {
-    background-color: @selected_bg_color;
+    background-color: @color_highlight_bg;
   }
 
   .event_title {
     font-size: 24px;
     font-weight: bold;
   }
-
   .event_address {
-    color: #999;
+    color: @color_secondary;
+  }
+}
+
+.preview_events_box {
+  height: @map_height;
+  max-height: @map_height;
+  overflow: auto;
+}
+
+.view_event {
+  .event_label {
+    color: @color_secondary;
+    margin-right: 5px;
+  }
+  .event_desc {
+    font-size: 18px; // TODO: Calculate as main font + 4px?
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 }
 
