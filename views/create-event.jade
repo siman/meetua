@@ -36,10 +36,10 @@ block content
 
             .col-sm-5(ng-repeat="item in uploader.queue", ng-click="setAsLogo(item)", ng-show="uploader.isHTML5")
               .event_img(ng-class="{ 'pointer': !item.isLogo }")
-                i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-click='uploader.removeFromQueue(item)')
+                i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-click='removeItem(item)')
                 div(ng-thumb="{ file: item.file, height: 150}", ng-class="{ 'selected': item.isLogo}")
-                h2.text_over_container
-                  span.text_over {{ itemImgText(item) }}
+                h2.text_over_container(ng-if='item.isLogo')
+                  span.text_over Лого
 
 
 

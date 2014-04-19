@@ -40,14 +40,18 @@ angular.module('myApp.controllers', [])
             _.each(uploader.queue, disableLogo);
             item.isLogo = true;
         };
-        $scope.itemImgText = function(item) {
-            return item.isLogo ? 'Лого' : 'Сделать лого';
-        };
         $scope.submit = function() {
           var event = $scope.event;
           event.startDateTime = $scope.event.startDateTime.startDate;
           event.endDateTime = $scope.event.endDateTime.endDate;
           alert(JSON.stringify(event));
+        };
+        $scope.removeItem = function(item){
+            uploader.removeFromQueue(item);
+            // logo is removed
+            if (item.isLogo && uploader.queue.length > 0) {
+                uploader.queue[0].isLogo = true; // make first image logo
+            }
         };
         $scope.placesOptions={
             country: 'ua'
