@@ -219,4 +219,46 @@ body {
   }
 }
 
-.ng-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+.drop-zone {
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
+  border: 4px dashed rgba(0,0,0,0.2);
+  padding: 40px 0;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.ng-file-over { /* Default class applied to drop zones on over */
+  border: 4px dashed red;
+}
+
+.pointer { cursor: pointer; }
+
+.event_img {
+  position:relative;
+  width: 100%;
+  & .selected canvas { border: 10px solid @color_highlight_bg; }
+  & canvas { border: 10px solid @well-bg;}
+  & .text_over_container {
+    position:absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    & .text_over {
+      color: white;
+      font: bold 18px/45px Helvetica, Sans-Serif;
+      letter-spacing: -1px;
+      background: rgb(0,0,0);
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+    }
+  }
+  & .remove_img {
+    right: -20px;
+    top: -10px;
+    position: absolute;
+    font-size: 24px;
+    &:hover { color: red; }
+  }
+}

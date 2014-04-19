@@ -15,10 +15,10 @@ angular.module('myApp.controllers', [])
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',
-            autoUpload: true,
             headers: {
                 'X-CSRF-TOKEN': $cookies['XSRF-TOKEN']
-            }
+            },
+            queueLimit: 5 // possible images count
         });
 
         // Images only
@@ -27,6 +27,22 @@ angular.module('myApp.controllers', [])
             type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         });
+        uploader.bind('afteraddingfile', function(e, item){
+            // first img is logo by default
+            if (uploader.queue.length === 1) {
+                item.isLogo = true;
+            }
+        });
+        $scope.setAsLogo = function(item) {
+            function disableLogo(item) {
+                item.isLogo = false;
+            }
+            _.each(uploader.queue, disableLogo);
+            item.isLogo = true;
+        };
+        $scope.itemImgText = function(item) {
+            return item.isLogo ? 'Лого' : 'Сделать лого';
+        };
         $scope.submit = function() {
           var event = $scope.event;
           event.startDateTime = $scope.event.startDateTime.startDate;

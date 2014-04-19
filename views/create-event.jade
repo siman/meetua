@@ -28,11 +28,19 @@ block content
             .col-sm-8
                 textarea#description.form-control(name='description', ng-model='event.description', required)
         .form-group
-          label(class='col-sm-2 control-label', for='description') Лого
-          .col-sm-8(ng-show='uploader.isHTML5', ng-file-drop)
-            .well.my-drop-zone(ng-file-over='ng-file-over')
-              | Base drop zone
-          input(ng-file-select='ng-file-select', type='file')
+          label(class='col-sm-2 control-label', for='description') Лого/изображения
+          .col-sm-8
+            div(ng-class="{ 'drop-zone': uploader.isHTML5 }", ng-file-over='ng-file-over', ng-file-drop)
+              | Перетяните изображения сюда
+            input(ng-file-select='ng-file-select', type='file')
+
+            .col-sm-5(ng-repeat="item in uploader.queue", ng-click="setAsLogo(item)", ng-show="uploader.isHTML5")
+              .event_img.pointer
+                i.glyphicon.glyphicon-remove-circle.remove_img(ng-click='uploader.removeFromQueue(item)')
+                div(ng-thumb="{ file: item.file, height: 150}", ng-class="{ 'selected': item.isLogo}")
+                h2.text_over_container
+                  span.text_over {{ itemImgText(item) }}
+
 
 
         .form-group
