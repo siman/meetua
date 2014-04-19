@@ -23,6 +23,7 @@ var createEvent = require('./controllers/event/create-page');
 var findEvent = require('./controllers/event/find');
 var viewEvent = require('./controllers/event/view');
 var upload = require('./controllers/upload');
+var myEvents = require('./controllers/event/my-events')
 
 /**
  * API keys + Passport configuration.
@@ -149,6 +150,7 @@ app.get('/event/create', createEvent);
 app.get('/event/find', findEvent);
 app.get('/event/:id', viewEvent);
 app.post('/upload/image', upload);
+app.get('/my-events', myEvents)
 
 /**
  * OAuth routes for sign-in.

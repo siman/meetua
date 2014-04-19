@@ -127,4 +127,48 @@ angular.module('myApp.controllers', [])
         zoom: 16
       });
     }])
+  .controller('SelectAuthorsEventCtrl', ['$scope', '$http', function($scope, $http) {
+    $scope.selectedEvent = undefined;
+
+    $scope.foundEvents = [];
+
+//    $scope.onEventOver = function(event) {
+//      $scope.mapEvents = [event];
+//    };
+//
+//    $scope.onEventOut = function(event) {
+//      $scope.mapEvents = $scope.foundEvents;
+//    };
+//
+    $scope.viewEvent = function(event) {
+      $scope.selectedEvent = event
+    };
+//
+//    $scope.onActClick = function(actName) {
+//      if (actName === $scope.selectedAct) {
+//        actName = undefined;
+//      }
+//      $scope.selectedAct = actName;
+//      console.log("actName", actName);
+//      findEvents(actName);
+//    };
+
+    function init() {
+      findBy();
+    }
+
+    function findBy(paramName, paramValue) {
+      var params = _.isUndefined(paramName) ? {} : {paramName: paramValue};
+      $http({method: 'GET', url: '/event/find', params: params}).
+        success(function(data, status, headers, config) {
+          $scope.foundEvents = data;
+          console.log('found authors events ', $scope.foundEvents);
+        }).
+        error(function(data, status, headers, config) {
+          console.error('failed to find author events author id: ' + authorId, data)
+        });
+    }
+
+    init();
+  }])
 ;
