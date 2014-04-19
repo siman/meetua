@@ -43,8 +43,6 @@ angular.module('myApp.controllers', [])
         };
         $scope.submit = function() {
           var event = $scope.event;
-          event.startDateTime = $scope.event.startDateTime.startDate;
-          event.endDateTime = $scope.event.endDateTime.endDate;
           alert(JSON.stringify(event));
         };
         $scope.removeItem = function(item){
