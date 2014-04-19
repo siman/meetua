@@ -1574,7 +1574,6 @@
                     return _.compact(_.each(scope.events, function(eventHandler, eventName) {
                         if (scope.events.hasOwnProperty(eventName) && angular.isFunction(scope.events[eventName])) {
                             return google.maps.event.addListener(marker, eventName, function() {
-                                console.log(arguments);
                                 return eventHandler.apply(scope, [marker, eventName, arguments]);
                             });
                         }
