@@ -10,7 +10,8 @@ angular.module('myApp', [
         'ngAutocomplete',
         'angularFileUpload',
         'google-maps',
-        'ngCookies'
+        'ngCookies',
+        'mgcrea.ngStrap'
     ]).
     config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});

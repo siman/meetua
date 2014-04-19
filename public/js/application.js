@@ -21,6 +21,8 @@
 //= require lib/angular-file-upload-0.5.5
 //= require lib/ng-bs-daterangepicker-0.0.1
 //= require lib/angular-google-maps-1.0.18.min
+//= require lib/angular-strap-2.0.1
+//= require lib/angular-strap-2.0.1.tpl
 //= require config
 //= require_tree ng
 //= require lib/ng-directives
