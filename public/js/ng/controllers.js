@@ -11,7 +11,8 @@ var baseMap = {
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', function($scope, $fileUploader, $cookies) {
+    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies',
+        function($scope, $fileUploader, $cookies) {
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',

@@ -4,6 +4,7 @@
 @import "lib/bootstrap-social";
 @import (less) "lib/daterangepicker-bs3.css";
 @import "themes/flatly";
+@import "lib/angular-strap-fix";
 
 // Scaffolding
 // -------------------------
@@ -262,3 +263,11 @@ body {
     &:hover { color: red; }
   }
 }
+
+label[disabled] {
+  .disabledLabel;
+}
+.disabledLabel {
+  opacity: 0.5;
+}
+

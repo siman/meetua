@@ -23,6 +23,37 @@ block content
             .col-sm-3
                 input#endDateTime.form-control(type='daterange', ng-model='event.endDateTime', name='endDateTime', single='true', time-picker='true', start-empty='true', format='YYYY-MM-DD h:mm')
                 span.col-sm-2.help-block (опционально)
+        .form-group
+            label(class='col-sm-2 control-label', for='startDate')
+              i.fa.fa-calendar
+              | Начало в *
+
+            .col-sm-4(ng-class="{'has-error' : eventForm.startDate.$invalid && eventForm.startDate.$dirty}")
+              input#startDate.form-control(ng-model='event.startDate', type='text', name='startDate', bs-datepicker,
+                required, min-date='today')
+            .col-sm-2: label.checkbox.pull-right(for='startTime')
+                i.fa.fa-clock-o
+                | Время
+            .col-sm-2
+              input#startTime.form-control(type='text', name='startTime', ng-model='event.startTime', bs-timepicker)
+            .col-sm-2
+        .form-group
+            label(class='col-sm-2 control-label', for='endDate', ng-disabled="disableMe")
+              i.fa.fa-calendar
+              | Окончание в
+
+            .col-sm-4
+              input#endDate.form-control(ng-model='event.endDate', type='text', name='endDate', bs-datepicker
+                ng-disabled="eventForm.startDate.$invalid || eventForm.startDate.$pristine", min-date="{{event.startDate}}")
+            .col-sm-2
+              label.checkbox.pull-right(for='endTime',
+                ng-disabled="eventForm.startDate.$invalid || eventForm.startDate.$pristine")
+                i.fa.fa-clock-o
+                | Время
+            .col-sm-2
+              input#endTime.form-control(type='text', name='endTime', ng-model='event.endTime', bs-timepicker
+                ng-disabled="eventForm.startDate.$invalid || eventForm.startDate.$pristine")
+            .col-sm-2
         .form-group(ng-class="{'has-error' : eventForm.description.$invalid && eventForm.description.$dirty}")
             label(class='col-sm-2 control-label', for='description') Описание *
             .col-sm-8
