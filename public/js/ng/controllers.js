@@ -1,18 +1,10 @@
 'use strict';
 
-var baseMap = {
-  draggable: true,
-  zoom: 16,
-  opts: {
-    scrollwheel: false
-  }
-};
-
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies',
-        function($scope, $fileUploader, $cookies) {
+    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', 'KIEV_MAP', 'BASE_MAP',
+        function($scope, $fileUploader, $cookies, KIEV_MAP, BASE_MAP) {
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',
@@ -45,6 +37,23 @@ angular.module('myApp.controllers', [])
           var event = $scope.event;
           alert(JSON.stringify(event));
         };
+        $scope.placeMap = _.extend(BASE_MAP, KIEV_MAP);
+        $scope.$watch('event.place.details', function(details){
+            if (details) {
+                $scope.placeMap.center.latitude = details.geometry.location.lat();
+                $scope.placeMap.center.longitude = details.geometry.location.lng();
+            }
+        });
+        $scope.onMarkerDragEnd = function(event) {
+            if (event) {
+                console.log(event);
+            }
+        };
+        $scope.onMarkerPositionChanged = function(event) {
+            if (event) {
+                console.log(event);
+            }
+        };
         $scope.removeItem = function(item){
             uploader.removeFromQueue(item);
             // logo is removed
@@ -52,23 +61,18 @@ angular.module('myApp.controllers', [])
                 uploader.queue[0].isLogo = true; // make first image logo
             }
         };
-        $scope.placesOptions={
+        $scope.placeOptions={
             country: 'ua'
         };
     }])
-    .controller('SelectEventCtrl', ['$scope', '$http', function($scope, $http) {
+    .controller('SelectEventCtrl', ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP',
+        function($scope, $http, KIEV_MAP, BASE_MAP) {
       $scope.selectedAct = undefined;
 
       $scope.foundEvents = [];
 
       // Zoom map on Kiev.
-      $scope.map = _.extend(baseMap, {
-        center: {
-          latitude: 50.440646,
-          longitude: 30.521018
-        },
-        zoom: 11
-      });
+      $scope.map = _.extend(BASE_MAP, KIEV_MAP);
 
       $scope.mapEvents = [];
 
@@ -112,13 +116,13 @@ angular.module('myApp.controllers', [])
 
       init();
     }])
-    .controller('ViewEventCtrl', ['$scope', '$http', function($scope, $http) {
+    .controller('ViewEventCtrl', ['$scope', '$http', 'BASE_MAP', function($scope, $http, BASE_MAP) {
       var event = JSON.parse($("#eventJson").text());
       console.log("Event", event);
 
       $scope.event = event;
 
-      $scope.map = _.extend(baseMap, {
+      $scope.map = _.extend(BASE_MAP, {
         center: {
           latitude: event.latitude,
           longitude: event.longitude
