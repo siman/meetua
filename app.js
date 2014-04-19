@@ -146,11 +146,11 @@ app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized,
 app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
-app.get('/event/create', createEvent);
+app.get('/event/create',  passportConf.isAuthenticated, createEvent);
 app.get('/event/find', findEvent);
 app.get('/event/:id', viewEvent);
 app.post('/upload/image', upload);
-app.get('/my-events', myEvents)
+app.get('/my-events', passportConf.isAuthenticated, myEvents);
 
 /**
  * OAuth routes for sign-in.
@@ -158,7 +158,7 @@ app.get('/my-events', myEvents)
 
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
+  res.redirect('/');
 });
 app.get('/auth/github', passport.authenticate('github'));
 app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), function(req, res) {
