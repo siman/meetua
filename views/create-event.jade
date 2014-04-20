@@ -7,15 +7,21 @@ block content
     form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl', ng-submit='submit()', name='eventForm', novalidate)
         input(type='hidden', name='_csrf', value=_csrf, ng-model='csrf')
         .form-group(ng-class="{'has-error' : eventForm.name.$invalid && eventForm.name.$dirty}")
-            label(class='col-sm-2 control-label', for='name') Название *
+            label.col-sm-2.control-label(for='name') Название *
             .col-sm-8
                 input.form-control(type='text', name='name', id='name', autofocus=true, ng-model='event.name', required)
-        .form-group(ng-class="{'has-error' : eventForm.place.$invalid && eventForm.place.$dirty}")
-            label(class='col-sm-2 control-label', for='place') Где *
+        .form-group(ng-class="{'has-error' : eventForm.placeName.$invalid && eventForm.placeName.$dirty}")
+            label.col-sm-2.control-label(for='placeName') Где *
             .col-sm-8
-              input#place.form-control(type='text', name='place', ng-autocomplete='ng-autocomplete', ng-model='event.place', options='placesOptions', required)
+              input#placeName.form-control(type='text', name='placeName', ng-autocomplete='ng-autocomplete',
+                ng-model='event.place.name', options='placeOptions', details='event.place.details', required)
+        .form-group(ng-if='event.place.details')
+          label.col-sm-2.control-label
+          .col-sm-8
+            google-map(center='placeMap.center', zoom='placeMap.zoom')
+              marker(coords='placeMap.center', options='placeMap.marker.options', events="placeMap.marker.events")
         .form-group
-            label(class='col-sm-2 control-label', for='startDate')
+            label.col-sm-2.control-label(for='startDate')
               i.fa.fa-calendar
               | Начало в *
 

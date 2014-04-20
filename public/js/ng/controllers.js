@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', 'KIEV_MAP', 'BASE_MAP',
-        function($scope, $fileUploader, $cookies, KIEV_MAP, BASE_MAP) {
+    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', '$timeout', 'KIEV_MAP', 'BASE_MAP',
+        function($scope, $fileUploader, $cookies, $timeout, KIEV_MAP, BASE_MAP) {
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',
@@ -37,23 +37,26 @@ angular.module('myApp.controllers', [])
           var event = $scope.event;
           alert(JSON.stringify(event));
         };
-        $scope.placeMap = _.extend(BASE_MAP, KIEV_MAP);
-        $scope.$watch('event.place.details', function(details){
-            if (details) {
-                $scope.placeMap.center.latitude = details.geometry.location.lat();
-                $scope.placeMap.center.longitude = details.geometry.location.lng();
+        $scope.placeMap = _.extend(BASE_MAP, KIEV_MAP, {
+            marker: {
+                options: {draggable: true},
+                events: {
+                    dragend: function(event) {
+                        $timeout(function(){
+                            updateMapLatLng(event.position.lat(), event.position.lng());
+                        });
+                    }
+                }
             }
         });
-        $scope.onMarkerDragEnd = function(event) {
-            if (event) {
-                console.log(event);
+        $scope.$watch('event.place.details', function(details){
+            if (details) {
+                updateMapLatLng(details.geometry.location.lat(), details.geometry.location.lng());
+                if ($scope.placeMap.zoom == KIEV_MAP.zoom) {
+                    $scope.placeMap.zoom = KIEV_MAP.zoom + 4;
+                }
             }
-        };
-        $scope.onMarkerPositionChanged = function(event) {
-            if (event) {
-                console.log(event);
-            }
-        };
+        });
         $scope.removeItem = function(item){
             uploader.removeFromQueue(item);
             // logo is removed
@@ -64,6 +67,10 @@ angular.module('myApp.controllers', [])
         $scope.placeOptions={
             country: 'ua'
         };
+        function updateMapLatLng(lat, lng) {
+            $scope.placeMap.center.latitude = lat;
+            $scope.placeMap.center.longitude = lng;
+        }
     }])
     .controller('SelectEventCtrl', ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP',
         function($scope, $http, KIEV_MAP, BASE_MAP) {
