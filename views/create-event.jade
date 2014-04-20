@@ -75,10 +75,10 @@ block content
               | Перетяните изображения сюда
             input(ng-file-select='ng-file-select', type='file')
 
-            .col-sm-5(ng-repeat="item in uploader.queue", ng-click="setAsLogo(item)", ng-show="uploader.isHTML5")
+            .col-sm-3(ng-repeat="item in uploader.queue", ng-click="setAsLogo(item)", ng-show="uploader.isHTML5")
               .event_img(ng-class="{ 'pointer': !item.isLogo }")
                 i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-click='removeItem(item)')
-                div(ng-thumb="{ file: item.file, height: 150}", ng-class="{ 'selected': item.isLogo}")
+                div(ng-thumb="{ file: item.file, width: 250}", ng-class="{ 'selected': item.isLogo}")
                 h2.text_over_container(ng-if='item.isLogo')
                   span.text_over Лого
 
