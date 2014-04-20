@@ -146,7 +146,7 @@ app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized,
 app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
-app.get('/event/create',  passportConf.isAuthenticated, createEvent);
+app.get('/event/create',  /*passportConf.isAuthenticated, FIXME*/createEvent);
 app.get('/event/find', findEvent);
 app.get('/event/:id', viewEvent);
 app.post('/upload/image', upload);
