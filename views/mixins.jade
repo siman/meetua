@@ -1,0 +1,9 @@
+mixin actIcon(cssClass, textOver)
+  div.border.row-fluid(
+  ng-class="{selected: selectedAct == '#{cssClass}'}"
+  ng-click="onActClick('#{cssClass}')", style='position:relative;'
+  )
+    div(class="#{cssClass}")
+    if (textOver)
+      h2.text_over_container
+        span.text_over #{textOver}

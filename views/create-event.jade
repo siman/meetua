@@ -1,5 +1,7 @@
 extends layout
 
+include mixins
+
 block content
     .page-header
         h3 Создать событие
@@ -55,6 +57,17 @@ block content
             label(class='col-sm-2 control-label', for='description') Описание *
             .col-sm-8
                 textarea#description.form-control(name='description', ng-model='event.description', required)
+        .form-group
+          label.col-sm-2.control-label(style='margin-top:70px') Тип события
+          .col-sm-8: div.act_bar
+              +actIcon('bike', 'Велосипед')
+              +actIcon('running', 'Бег')
+              +actIcon('workout', 'Workout')
+              +actIcon('hiking', 'Туризм')
+              +actIcon('photo', 'Фото')
+              +actIcon('en', 'Языки')
+              +actIcon('code', 'IT')
+              div.clearfix
         .form-group
           label(class='col-sm-2 control-label', for='description') Лого/изображения
           .col-sm-8

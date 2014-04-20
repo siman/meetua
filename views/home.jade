@@ -1,11 +1,6 @@
 extends layout
 
-mixin actIcon(cssClass)
-  div.border.row-fluid(
-      ng-class="{selected: selectedAct == '#{cssClass}'}"
-      ng-click="onActClick('#{cssClass}')"
-    )
-    div(class="#{cssClass}")
+include mixins
 
 block content
   h1 MeetUA

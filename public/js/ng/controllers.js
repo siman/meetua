@@ -26,6 +26,11 @@ angular.module('myApp.controllers', [])
                 item.isLogo = true;
             }
         });
+        $scope.event = {};
+        $scope.onActClick = function(act) {
+            $scope.selectedAct = act;
+            $scope.event.act = $scope.selectedAct;
+        };
         $scope.setAsLogo = function(item) {
             function disableLogo(item) {
                 item.isLogo = false;
@@ -35,7 +40,7 @@ angular.module('myApp.controllers', [])
         };
         $scope.submit = function() {
           var event = $scope.event;
-          alert(JSON.stringify(event));
+          console.log(event);
         };
         $scope.placeMap = _.extend(BASE_MAP, KIEV_MAP, {
             marker: {
