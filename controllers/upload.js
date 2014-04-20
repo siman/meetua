@@ -1,10 +1,10 @@
 var MAX_SIZE = 2*1024*1024; // 2MB
 var path = require('path');
 var os = require('os');
-var UPLOAD_DIR = path.join(os.tmpdir(), 'upload')
-var mkdirp = require('mkdirp');
+var UPLOAD_DIR = path.join(os.tmpdir(), 'upload');
+var fs = require('fs-extra');
 
-mkdirp(UPLOAD_DIR, function(err) {
+fs.mkdirp(UPLOAD_DIR, function(err) {
     if (err) throw err;
 });
 
