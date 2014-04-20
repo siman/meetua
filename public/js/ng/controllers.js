@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', '$timeout', 'KIEV_MAP', 'BASE_MAP',
-        function($scope, $fileUploader, $cookies, $timeout, KIEV_MAP, BASE_MAP) {
+    .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', '$timeout', '$http', 'KIEV_MAP', 'BASE_MAP',
+        function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP) {
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',
@@ -26,10 +26,10 @@ angular.module('myApp.controllers', [])
                 item.isLogo = true;
             }
         });
+        uploader.bind('completeall', submitAfterUpload);
         $scope.event = {};
         $scope.onActClick = function(act) {
             $scope.selectedAct = act;
-            $scope.event.act = $scope.selectedAct;
         };
         $scope.setAsLogo = function(item) {
             function disableLogo(item) {
@@ -39,8 +39,11 @@ angular.module('myApp.controllers', [])
             item.isLogo = true;
         };
         $scope.submit = function() {
-          var event = $scope.event;
-          console.log(event);
+            if (uploader.queue.length > 0) {
+                uploader.uploadAll();
+            } else {
+                doSendPost(buildReqData());
+            }
         };
         $scope.placeMap = _.extend(BASE_MAP, KIEV_MAP, {
             marker: {
@@ -72,6 +75,45 @@ angular.module('myApp.controllers', [])
         $scope.placeOptions={
             country: 'ua'
         };
+        function buildReqData(uploadedImages) {
+            var reqData = {
+                name: $scope.event.name,
+                place: {
+                    name: $scope.event.place.name,
+                    latitude: $scope.placeMap.center.latitude,
+                    longitude: $scope.placeMap.center.longitude
+                },
+                start: {
+                    date: $scope.event.startDate,
+                    time: $scope.event.startTime
+                },
+                end: {
+                    date: $scope.event.endDate,
+                    time: $scope.event.endTime
+                },
+                description: $scope.event.description,
+                activity: $scope.selectedAct,
+                images: uploadedImages
+            };
+            console.log('Request data ', reqData);
+            return reqData;
+        }
+        function submitAfterUpload(event, uploadItems, progress) {
+            function getItemUploadResponse(item){
+                var uploadResponse = JSON.parse(item._xhr.response);
+                return _.extend(uploadResponse, {isLogo: item.isLogo});
+            }
+            var uploadedImages = _.map(uploadItems, getItemUploadResponse);
+            var requestData = buildReqData(uploadedImages);
+            doSendPost(requestData);
+        }
+        function doSendPost(requestData) {
+            $http.post('/event/create', requestData).success(function(res){
+                console.log('Event is created successfully ', res);
+            }).error(function(err) {
+                console.error('Failed to create event ', err);
+            });
+        }
         function updateMapLatLng(lat, lng) {
             $scope.placeMap.center.latitude = lat;
             $scope.placeMap.center.longitude = lng;

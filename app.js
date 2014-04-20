@@ -19,11 +19,12 @@ var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
-var createEvent = require('./controllers/event/create-page');
+var createEventPage = require('./controllers/event/create-page');
+var createEvent = require('./controllers/event/create-event');
 var findEvent = require('./controllers/event/find');
 var viewEvent = require('./controllers/event/view');
-var upload = require('./controllers/upload');
-var myEvents = require('./controllers/event/my-events')
+var upload = require('./controllers/upload').handleUpload;
+var myEvents = require('./controllers/event/my-events');
 
 /**
  * API keys + Passport configuration.
@@ -146,10 +147,11 @@ app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized,
 app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
-app.get('/event/create',  passportConf.isAuthenticated, createEvent);
+app.get('/event/create',  passportConf.isAuthenticated, createEventPage);
+app.post('/event/create',  passportConf.isAuthenticated, createEvent);
 app.get('/event/find', findEvent);
 app.get('/event/:id', viewEvent);
-app.post('/upload/image', upload);
+app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/my-events', passportConf.isAuthenticated, myEvents);
 
 /**
