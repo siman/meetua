@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var Image = require('./Image');
 
 var eventSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    author: { type: Schema.Types.ObjectId, required: true },
     description: { type: String, required: true, trim: true },
     activity: String,
     place: {

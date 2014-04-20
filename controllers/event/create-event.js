@@ -21,6 +21,7 @@ function buildAndSaveEvent(req, res, next) {
         console.log('Copied images ', images);
         var event = new Event({
             name: req.body.name,
+            author: req.user._id,
             description: req.body.description,
             activity: req.body.activity,
             place: {
