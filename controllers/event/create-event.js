@@ -62,28 +62,8 @@ exports.verifyAndCopyImage = function(opts) {
             if (exists && imagePath.indexOf(uploadDir) == 0) {
                 var imageName = path.basename(imagePath);
                 var copyTo = path.join(eventImgDir, imageName);
-                console.log('Copy ', imagePath, ' to ', copyTo);
-//                fs.rename(imagePath, copyTo, function(err) {
-//                    next(null, _.extend(image, {path: copyTo}));
-//                });
-                // TODO replace with fs.copy()
-                fs.mkdirp(eventImgDir, function(err) {
-                    if (err) next(err);
-
-                    var wstream = fs.createWriteStream(copyTo);
-                    var rstream = fs.createReadStream(imagePath);
-                    rstream.pipe(wstream);
-                    rstream.on('error', next);
-                    wstream.on('error', next);
-                    rstream.on('end', onCopyEnd);
-                    function onCopyEnd() {
-                        var copiedImage = _.extend(image, {path: copyTo});
-                        fs.unlink(imagePath, function(err) {
-                            if (err)
-                            console.error('Cannot unlink file ', imagePath, err);
-                        });
-                        next(null, copiedImage);
-                    }
+                moveFile(imagePath, copyTo, function(err) {
+                    next(err, _.extend(image, {path: copyTo}));
                 });
             } else {
                 next(null, image);
@@ -91,5 +71,18 @@ exports.verifyAndCopyImage = function(opts) {
         });
     };
 };
+function moveFile(srcPath, destPath, next) {
+    console.log('Moving ', srcPath, ' to ', destPath);
+    fs.copy(srcPath, destPath, function(err) {
+        if (err) return next(err);
+
+        fs.unlink(srcPath, function(err) {
+            if (err) {
+                console.error('Cannot unlink file ', srcPath, err);
+            }
+            next(null);
+        });
+    });
+}
 
 var verifyAndCopyImage = exports.verifyAndCopyImage({uploadDir: UPLOAD_DIR, eventImgDir: EVENT_IMG_DIR});
