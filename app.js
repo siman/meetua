@@ -23,6 +23,7 @@ var createEventPage = require('./controllers/event/create-page');
 var createEvent = require('./controllers/event/create-event');
 var findEvent = require('./controllers/event/find');
 var viewEvent = require('./controllers/event/view');
+var editEvent = require('./controllers/event/edit');
 var upload = require('./controllers/upload').handleUpload;
 var myEvents = require('./controllers/event/my-events');
 
@@ -153,6 +154,7 @@ app.get('/event/create',  passportConf.isAuthenticated, createEventPage);
 app.post('/event/create',  passportConf.isAuthenticated, createEvent);
 app.get('/event/find', findEvent);
 app.get('/event/:id', viewEvent);
+app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/my-events', passportConf.isAuthenticated, myEvents);
 

@@ -1,0 +1,81 @@
+mixin eventFields(isCreate)
+  input(type='hidden', name='_csrf', value=_csrf, ng-model='csrf')
+  .form-group(ng-class="{'has-error' : eventForm.name.$invalid && eventForm.name.$dirty}")
+    label.col-sm-2.control-label(for='name') Название *
+    .col-sm-8
+      input.form-control(type='text', name='name', id='name', autofocus=true, ng-model='event.name', required)
+  .form-group(ng-class="{'has-error' : eventForm.placeName.$invalid && eventForm.placeName.$dirty}")
+    label.col-sm-2.control-label(for='placeName') Где *
+    .col-sm-8
+      input#placeName.form-control(type='text', name='placeName', ng-autocomplete='ng-autocomplete',
+      ng-model='event.place.name', options='placeOptions', details='data.place.details', required)
+  .form-group(ng-if='data.place.details')
+    label.col-sm-2.control-label
+    .col-sm-8
+      google-map(center='event.place', zoom='placeMap.zoom')
+        marker(coords='event.place', options='placeMap.marker.options', events="placeMap.marker.events")
+  .form-group
+    label.col-sm-2.control-label(for='startDate')
+      i.fa.fa-calendar
+      | Начало в *
+    .col-sm-4(ng-class="{'has-error' : eventForm.startDate.$invalid && eventForm.startDate.$dirty}")
+      input#startDate.form-control(ng-model='event.start.date', type='text', name='startDate', bs-datepicker,
+      required, min-date='today')
+    .col-sm-2: label.checkbox.pull-right(for='startTime')
+      i.fa.fa-clock-o
+      | Время
+    .col-sm-2
+      input#startTime.form-control(type='text', name='startTime', ng-model='event.start.time', bs-timepicker)
+    .col-sm-2
+  .form-group
+    - var endDateDisabled = (isCreate ? 'eventForm.startDate.$invalid || eventForm.startDate.$pristine' : 'eventForm.startDate.$invalid')
+    label(class='col-sm-2 control-label', for='endDate', ng-disabled="disableMe")
+      i.fa.fa-calendar
+      | Окончание в
+    .col-sm-4
+      input#endDate.form-control(ng-model='event.end.date', type='text', name='endDate', bs-datepicker
+      ng-disabled=endDateDisabled, min-date="{{event.start.date}}")
+    .col-sm-2
+      label.checkbox.pull-right(for='endTime',
+      ng-disabled=endDateDisabled)
+        i.fa.fa-clock-o
+        | Время
+    .col-sm-2
+      input#endTime.form-control(type='text', name='endTime', ng-model='event.end.time', bs-timepicker
+      ng-disabled=endDateDisabled)
+    .col-sm-2
+  .form-group(ng-class="{'has-error' : eventForm.description.$invalid && eventForm.description.$dirty}")
+    label(class='col-sm-2 control-label', for='description') Описание *
+    .col-sm-8
+      textarea#description.form-control(name='description', ng-model='event.description', required)
+  .form-group
+    label.col-sm-2.control-label(style='margin-top:70px') Тип события
+    .col-sm-8: div.act_bar
+      +actIcon('event.activity', 'bike', 'Велосипед')
+      +actIcon('event.activity', 'running', 'Бег')
+      +actIcon('event.activity', 'workout', 'Workout')
+      +actIcon('event.activity', 'hiking', 'Туризм')
+      +actIcon('event.activity', 'photo', 'Фото')
+      +actIcon('event.activity', 'en', 'Языки')
+      +actIcon('event.activity', 'code', 'IT')
+      div.clearfix
+  .form-group
+    label(class='col-sm-2 control-label', for='description') Лого/изображения
+    .col-sm-8
+      div(ng-class="{ 'drop-zone': uploader.isHTML5 }", ng-file-over='ng-file-over', ng-file-drop)
+        | Перетяните изображения сюда
+      input(ng-file-select='ng-file-select', type='file')
+      .col-sm-3(ng-repeat="item in uploader.queue", ng-click="setAsLogo(item)", ng-show="uploader.isHTML5")
+        .event_img(ng-class="{ 'pointer': !item.isLogo }")
+          i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-click='removeItem(item)')
+          div(ng-thumb="{ file: item.file, width: 250}", ng-class="{ 'selected': item.isLogo}")
+          h2.text_over_container(ng-if='item.isLogo')
+            span.text_over Лого
+  .form-group
+    .col-sm-offset-2.col-sm-8
+      button.btn.btn-default(type='submit', ng-disabled='eventForm.$invalid')
+        i.fa.fa-mail-forward
+        if isCreate
+          | Создать событие
+        else
+          | Сохранить событие

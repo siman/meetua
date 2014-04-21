@@ -109,6 +109,11 @@ angular.module('myApp.controllers', [])
             $scope.event.place.longitude = lng;
         }
     }])
+    .controller('EditEventCtrl', ['$scope', function($scope) {
+        $scope.init = function(event) {
+            $scope.event = event;
+        };
+    }])
     .controller('SelectEventCtrl', ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP',
         function($scope, $http, KIEV_MAP, BASE_MAP) {
       $scope.selectedAct = undefined;
