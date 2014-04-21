@@ -25,9 +25,9 @@ block content
             ng-mouseenter="onEventOver(event)"
             ng-mouseleave="onEventOut()"
           )
-          a.event_title(ng-href="/event/{{event.id}}") {{event.title}}
-          div.event_date {{event.startDate}}
-          div.event_address {{event.address}}
+          a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
+          div.event_date {{event.start.date}}
+          div.event_address {{event.place.name}}
           div(style="margin-bottom: 10px;")
 
       .col-md-8

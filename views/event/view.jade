@@ -19,10 +19,10 @@ block content
           h1 #{event.title}
           div.view_event
             #eventJson.hidden #{JSON.stringify(event)}
-            +eventField("Когда", event.startDate)
-            +eventField("Где", event.address)
+            +eventField("Когда", event.start.date)
+            +eventField("Где", event.place.name)
             +eventField("Организатор", event.author)
             div.event_desc #{event.description}
 
       google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts")
-        marker(coords="event")
+        marker(coords="event.place")

@@ -121,15 +121,15 @@ angular.module('myApp.controllers', [])
       $scope.mapEvents = [];
 
       $scope.onEventOver = function(event) {
-        $scope.mapEvents = [event];
+        $scope.mapEvents = [event.place];
       };
 
       $scope.onEventOut = function(event) {
-        $scope.mapEvents = $scope.foundEvents;
+        $scope.mapEvents = _.map($scope.foundEvents, function(ev) {return ev.place});
       };
 
       $scope.viewEvent = function(event) {
-        window.location = "/event/" + event.id;
+        window.location = "/event/" + event._id;
       };
 
       $scope.onActClick = function(actName) {
@@ -150,7 +150,7 @@ angular.module('myApp.controllers', [])
         $http({method: 'GET', url: '/event/find', params: params}).
           success(function(data, status, headers, config) {
             $scope.foundEvents = data;
-            $scope.mapEvents = data;
+            $scope.mapEvents = _.map(data, function(ev) {return ev.place});
             console.log('selected events ', $scope.foundEvents);
           }).
           error(function(data, status, headers, config) {
@@ -168,8 +168,8 @@ angular.module('myApp.controllers', [])
 
       $scope.map = _.extend(BASE_MAP, {
         center: {
-          latitude: event.latitude,
-          longitude: event.longitude
+          latitude: event.place.latitude,
+          longitude: event.place.longitude
         },
         zoom: 16
       });

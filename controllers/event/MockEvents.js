@@ -54,7 +54,7 @@ module.exports = [
       "date" : "2014-05-12T21:00:00Z"
     },
     "place" : {
-      "name" : "Co",
+      "name" : "ostrov Truhana",
       "latitude" : 50.4688889,
       "longitude" : 30.535833300000036
     },
@@ -81,20 +81,20 @@ module.exports = [
     "__v" : 0
   },
   {
-    "_id" : "53555203c5db1e5c17ba788c",
+    "_id" : "535551ecc5db1e6c17ba788b",
     "name" : "Code in comfy",
     "description" : "comfy code hackathon",
     "activity" : "code",
     "author" : "5352828ed8cf114c1063aa29",
     "images" : [ ],
     "end" : {
-      "date" : "2014-05-28T21:00:00Z"
+      "date" : "2014-06-28T21:00:00Z"
     },
     "start" : {
-      "date" : "2014-05-12T21:00:00Z"
+      "date" : "2014-06-12T21:00:00Z"
     },
     "place" : {
-      "name" : "Th",
+      "name" : "Comfy, Київ, місто Київ, Україна",
       "latitude" : 50.45081,
       "longitude" : 30.441569999999956
     },
