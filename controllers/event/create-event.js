@@ -20,28 +20,12 @@ function buildAndSaveEvent(req, res, next) {
     return function(err, images) {
         if (err) return next(err);
         console.log('Copied images ', images);
-        var event = new Event({
-            name: req.body.name,
-            author: req.user._id,
-            description: req.body.description,
-            activity: req.body.activity,
-            place: {
-                name: req.body.place.name,
-                latitude: req.body.place.latitude,
-                longitude: req.body.place.longitude
-            },
-            start: {
-                date: req.body.start.date,
-                time: req.body.start.time
-            },
-            end: {
-                date: req.body.end.date,
-                time: req.body.end.time
-            },
+        var event = new Event(_.extend(req.body, {
             images: _.map(images, function(image){
                 return new Image(image);
-            })
-        });
+            }),
+            author: req.user._id
+        }));
         console.log('Saving event ', event);
         event.save(function(err) {
             if (err) return next(err);

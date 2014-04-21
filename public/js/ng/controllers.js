@@ -4,7 +4,9 @@
 
 angular.module('myApp.controllers', [])
     .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', '$timeout', '$http', 'KIEV_MAP', 'BASE_MAP',
-        function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP) {
+        '$eventService',
+        function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP, $eventService) {
+        console.log('Creating event ', $eventService.createEvent());
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',
@@ -29,7 +31,11 @@ angular.module('myApp.controllers', [])
         uploader.bind('completeall', submitAfterUpload);
         $scope.event = {};
         $scope.onActClick = function(act) {
-            $scope.selectedAct = act;
+            if (act === $scope.event.activity) {
+                $scope.event.activity = undefined;
+            } else {
+                $scope.event.activity = act;
+            }
         };
         $scope.setAsLogo = function(item) {
             function disableLogo(item) {
@@ -57,7 +63,7 @@ angular.module('myApp.controllers', [])
                 }
             }
         });
-        $scope.$watch('event.place.details', function(details){
+        $scope.$watch('data.place.details', function(details){
             if (details) {
                 updateMapLatLng(details.geometry.location.lat(), details.geometry.location.lng());
                 if ($scope.placeMap.zoom == KIEV_MAP.zoom) {
@@ -76,25 +82,9 @@ angular.module('myApp.controllers', [])
             country: 'ua'
         };
         function buildReqData(uploadedImages) {
-            var reqData = {
-                name: $scope.event.name,
-                place: {
-                    name: $scope.event.place.name,
-                    latitude: $scope.placeMap.center.latitude,
-                    longitude: $scope.placeMap.center.longitude
-                },
-                start: {
-                    date: $scope.event.startDate,
-                    time: $scope.event.startTime
-                },
-                end: {
-                    date: $scope.event.endDate,
-                    time: $scope.event.endTime
-                },
-                description: $scope.event.description,
-                activity: $scope.selectedAct,
+            var reqData = _.extend($scope.event, {
                 images: uploadedImages
-            };
+            });
             console.log('Request data ', reqData);
             return reqData;
         }
@@ -115,8 +105,8 @@ angular.module('myApp.controllers', [])
             });
         }
         function updateMapLatLng(lat, lng) {
-            $scope.placeMap.center.latitude = lat;
-            $scope.placeMap.center.longitude = lng;
+            $scope.event.place.latitude = lat;
+            $scope.event.place.longitude = lng;
         }
     }])
     .controller('SelectEventCtrl', ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP',
