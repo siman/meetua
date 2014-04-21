@@ -67,6 +67,31 @@ describe('create-event', function() {
                 });
         });
     });
+    it('should generate unique name for image in the new dir', function(done) {
+        tmp.file(function(err, filePath, fd) {
+            var content = new Buffer('image content');
+            var reqImage = {
+                path: filePath,
+                type: 'image/jpg',
+                name: 'my-image.jpg'
+            };
+            fs.writeSync(fd, content, 0, content.length, 0);
+
+            var existingImage = {
+                path: path.join(config.EVENT_IMG_DIR, path.basename(reqImage.path)),
+                content: 'existing image'
+            };
+            fs.writeFileSync(existingImage.path, existingImage.content);
+
+            callCreateEvent(buildReqData({images: [reqImage]}))
+                .expect(200)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    expect(res.body.event.images[0].path).not.toBe(existingImage.path);
+                    done();
+                });
+        });
+    });
 });
 
 function buildReqData(opts) {

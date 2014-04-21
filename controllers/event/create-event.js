@@ -7,6 +7,7 @@ var EVENT_IMG_DIR = config.EVENT_IMG_DIR;
 var async = require('async');
 var Event = require('../../models/Event');
 var Image = require('../../models/Image');
+var tmp = require('tmp');
 
 module.exports = function(req, res, next) {
     var data = req.body;
@@ -34,7 +35,7 @@ function buildAndSaveEvent(req, res, next) {
             res.send(data);
         });
     }
-};
+}
 
 function verifyAndCopyImage(image, next) {
     console.log('Verify image ', image);
@@ -44,25 +45,35 @@ function verifyAndCopyImage(image, next) {
         console.log('uploadDir ', UPLOAD_DIR);
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
             var imageName = path.basename(imagePath);
-            var copyTo = path.join(EVENT_IMG_DIR, imageName);
-            moveFile(imagePath, copyTo, function(err) {
-                next(err, _.extend(image, {path: copyTo}));
+            moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
+                next(err, _.extend(image, {path: newPath}));
             });
         } else {
             next(null, image);
         }
     });
-};
-function moveFile(srcPath, destPath, next) {
-    console.log('Moving ', srcPath, ' to ', destPath);
-    fs.copy(srcPath, destPath, function(err) {
-        if (err) return next(err);
+}
 
-        fs.unlink(srcPath, function(err) {
-            if (err) {
-                console.error('Cannot unlink file ', srcPath, err);
-            }
-            next(null);
+/**
+ * Move file to specified directory generating unique name for it.
+ * TODO preserve file extension
+ * @param srcPath - source file path
+ * @param destDir - destination dir
+ * @param next
+ */
+function moveFile(srcPath, destDir, next) {
+    tmp.tmpName({ dir: destDir}, function(err, destPath) {
+        console.log('Created unique name ', destPath);
+        console.log('Moving ', srcPath, ' to ', destPath);
+        fs.copy(srcPath, destPath, function(err) {
+            if (err) return next(err);
+
+            fs.unlink(srcPath, function(err) {
+                if (err) {
+                    console.error('Cannot unlink file ', srcPath, err);
+                }
+                next(null, destPath);
+            });
         });
     });
 }
