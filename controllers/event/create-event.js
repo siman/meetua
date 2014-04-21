@@ -1,13 +1,14 @@
 var path = require('path');
 var fs = require('fs-extra');
 var _ = require('underscore');
-var UPLOAD_DIR = require('../upload').UPLOAD_DIR;
-var EVENT_IMG_DIR = './public/img/events';
+var config = require('../../config/app-config');
+var UPLOAD_DIR = config.UPLOAD_DIR;
+var EVENT_IMG_DIR = config.EVENT_IMG_DIR;
 var async = require('async');
 var Event = require('../../models/Event');
 var Image = require('../../models/Image');
 
-exports.createEvent = function(req, res, next) {
+module.exports = function(req, res, next) {
     var data = req.body;
     console.log('Create event request ', data);
 
@@ -44,32 +45,29 @@ function buildAndSaveEvent(req, res, next) {
         console.log('Saving event ', event);
         event.save(function(err) {
             if (err) return next(err);
-            res.send(event);
+            var data = {event: event};
+            console.log('Sending response ', data);
+            res.send(data);
         });
     }
 };
 
-exports.verifyAndCopyImage = function(opts) {
-    var uploadDir = opts.uploadDir;
-    var eventImgDir = opts.eventImgDir;
-
-    return function(image, next) {
-        console.log('Verify image ', image);
-        var imagePath = path.join('/', image.path); // removes any '..'
-        fs.exists(imagePath, function(exists) {
-            console.log('Image exists ', exists);
-            console.log('uploadDir ', uploadDir);
-            if (exists && imagePath.indexOf(uploadDir) == 0) {
-                var imageName = path.basename(imagePath);
-                var copyTo = path.join(eventImgDir, imageName);
-                moveFile(imagePath, copyTo, function(err) {
-                    next(err, _.extend(image, {path: copyTo}));
-                });
-            } else {
-                next(null, image);
-            }
-        });
-    };
+function verifyAndCopyImage(image, next) {
+    console.log('Verify image ', image);
+    var imagePath = path.join('/', image.path); // removes any '..'
+    fs.exists(imagePath, function(exists) {
+        console.log('Image exists ', exists);
+        console.log('uploadDir ', UPLOAD_DIR);
+        if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
+            var imageName = path.basename(imagePath);
+            var copyTo = path.join(EVENT_IMG_DIR, imageName);
+            moveFile(imagePath, copyTo, function(err) {
+                next(err, _.extend(image, {path: copyTo}));
+            });
+        } else {
+            next(null, image);
+        }
+    });
 };
 function moveFile(srcPath, destPath, next) {
     console.log('Moving ', srcPath, ' to ', destPath);
@@ -84,5 +82,3 @@ function moveFile(srcPath, destPath, next) {
         });
     });
 }
-
-var verifyAndCopyImage = exports.verifyAndCopyImage({uploadDir: UPLOAD_DIR, eventImgDir: EVENT_IMG_DIR});
