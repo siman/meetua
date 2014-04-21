@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "mocha"
+    "test": "jasmine-node spec --captureExceptions --autotest --watch .."
   },
   "dependencies": {
     "async": "~0.7.0",
