@@ -3,12 +3,15 @@ var
   , _ = require("underscore")
   ;
 
-module.exports = function(req, res) {
+module.exports = function(req, res, next) {
   var activity = req.query.act;
   console.log("act", activity);
-  res.json(
-    _.isUndefined(activity)
-      ? store.findAll()
-      : store.findByActivity(activity)
-  );
+    if (activity) {
+        res.json(store.findByActivity(activity));
+    } else {
+        store.findAll(function(err, events) {
+            if (err) return next(err);
+            res.json(events);
+        });
+    }
 };

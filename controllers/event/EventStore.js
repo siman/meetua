@@ -1,12 +1,19 @@
 var
   _ = require("underscore")
   , events = require("./MockEvents");
+var Event = require('../../models/Event');
 
-// TODO: Replace mock events by MongoDB.
+// TODO implement other methods using mongoose API
 // TODO: Order by 'startDate asc' to show most recent events.
 
-module.exports.findAll = function() {
-  return events;
+module.exports.findByAuthor = function() {
+    // TODO
+};
+
+module.exports.findAll = function(cb) {
+  return Event.find({}, function(err, events) {
+      cb(err, events);
+  });
 };
 
 module.exports.findByActivity = function(act) {

@@ -212,7 +212,7 @@ angular.module('myApp.controllers', [])
           console.log('found authors events ', $scope.foundEvents);
         }).
         error(function(data, status, headers, config) {
-          console.error('failed to find author events author id: ' + authorId, data)
+          console.error('failed to find author events author id: ' + authorId /*FIXME authorId*/, data)
         });
     }
 
