@@ -19,8 +19,14 @@ module.exports.dbPreload = function() {
   })
 };
 
-module.exports.findAll = function() {
-  return mockEvents;
+module.exports.findByAuthor = function () {
+  // TODO
+};
+
+module.exports.findAll = function (cb) {
+  return Event.find({}, function (err, events) {
+    cb(err, events);
+  });
 };
 
 module.exports.findByActivity = function(act) {
