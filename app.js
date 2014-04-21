@@ -26,6 +26,8 @@ var viewEvent = require('./controllers/event/view');
 var upload = require('./controllers/upload').handleUpload;
 var myEvents = require('./controllers/event/my-events');
 
+var eventStore = require('./controllers/event/EventStore');
+
 /**
  * API keys + Passport configuration.
  */
@@ -203,5 +205,7 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
 app.listen(app.get('port'), function() {
   console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
 });
+
+eventStore.dbPreload();
 
 module.exports = app;
