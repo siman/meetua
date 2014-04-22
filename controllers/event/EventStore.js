@@ -33,6 +33,9 @@ module.exports.findByActivity = function(act) {
   return _.filter(mockEvents, function(e) { return e.activity === act; });
 };
 
-module.exports.findById = function(id) {
-  return _.findWhere(mockEvents, {id: id});
+module.exports.findById = function(id, cb) {
+  //return _.findWhere(mockEvents, {_id: id});
+  return Event.findOne({'_id' : id}, function(err, event) {
+    cb(err, event);
+  });
 };
