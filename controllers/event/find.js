@@ -6,12 +6,13 @@ var
 module.exports = function(req, res, next) {
   var activity = req.query.act;
   console.log("act", activity);
-    if (activity) {
-        res.json(store.findByActivity(activity));
-    } else {
-        store.findAll(function(err, events) {
-            if (err) return next(err);
-            res.json(events);
-        });
-    }
+  function onFoundEvents(err, events) {
+    if (err) return next(err);
+    res.json(events);
+  }
+  if (activity) {
+    store.findByActivity(activity, onFoundEvents);
+  } else {
+    store.findAll(onFoundEvents);
+  }
 };
