@@ -9,9 +9,11 @@ module.exports = function(req, res) {
     if (err) console.log('Error while quering by event id', err);
     console.log("id", id);
     console.log("found event", event);
-    if (_.isUndefined(event)) {
+    if (!event) {
       res.status(404);
+      res.render("404");
+    } else {
+      res.render('event/view', {event: event});
     }
-    res.render('event/view', {event: event});
   });
 };

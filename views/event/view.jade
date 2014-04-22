@@ -16,7 +16,7 @@ block content
             div(class="#{event.activity}")
 
         .col-md-11
-          h1 #{event.title}
+          h1 #{event.name}
           div.view_event
             #eventJson.hidden #{JSON.stringify(event)}
             +eventField("Когда", event.start.date)
