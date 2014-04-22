@@ -149,7 +149,7 @@ body {
     }
   }
 
-  & .text_over_container {
+  .text_over_container {
     bottom: -16px;
     right: 2px;
   }
@@ -258,15 +258,15 @@ body {
 .event_img {
   position:relative;
   width: 100%;
-  & .selected canvas { border: 10px solid @color_highlight_bg; }
-  & canvas { border: 10px solid @well-bg;}
-  & .text_over_container {
+  .selected canvas { border: 10px solid @color_highlight_bg; }
+  canvas { border: 10px solid @well-bg;}
+  .text_over_container {
     top: 15px;
     left: 0;
   }
-  & .remove_img {
-    right: -5px;
-    top: -10px;
+  .remove_img {
+    right: -15px;
+    top: -8px;
     position: absolute;
     font-size: 24px;
     &:hover { color: red; }
