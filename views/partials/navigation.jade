@@ -17,8 +17,9 @@
           a(href='/event/find#TODO') Найти событие
         li(class=title=='Создать событие'?'active':undefined)
           a(href='/event/create') Создать событие
-        li(class=title=='Мои события'?'active':undefined)
-          a(href='/my-events') Мои события
+        if user
+          li(class=title=='Мои события'?'active':undefined)
+            a(href='/my-events') Мои события
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)
