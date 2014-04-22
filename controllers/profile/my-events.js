@@ -1,5 +1,5 @@
 module.exports = function(req, res) {
-    res.render('my-events', {
+    res.render('profile/my-events', {
         title: 'Мои события'
     });
 };

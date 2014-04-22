@@ -25,7 +25,7 @@ var findEvent = require('./controllers/event/find');
 var viewEvent = require('./controllers/event/view');
 var editEvent = require('./controllers/event/edit');
 var upload = require('./controllers/upload').handleUpload;
-var myEvents = require('./controllers/event/my-events');
+var myEvents = require('./controllers/profile/my-events');
 
 var eventStore = require('./controllers/event/EventStore');
 
@@ -150,13 +150,20 @@ app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized,
 app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
-app.get('/event/create',  passportConf.isAuthenticated, createEventPage);
-app.post('/event/create',  passportConf.isAuthenticated, createEvent);
+
+app.get('/event/create', passportConf.isAuthenticated, createEventPage);
+app.post('/event/create', passportConf.isAuthenticated, createEvent);
 app.get('/event/find', findEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
-app.get('/my-events', passportConf.isAuthenticated, myEvents);
+app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
+
+// MeetUA API
+var meetuaEventsApi = require('./controllers/api/events');
+app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
+//TODO app.get('/api/meetua/events/visited', passportConf.isAuthenticated, meetuaEventsApi.get_visited);
+//TODO app.get('/api/meetua/events/going', passportConf.isAuthenticated, meetuaEventsApi.get_going);
 
 /**
  * OAuth routes for sign-in.

@@ -1,7 +1,5 @@
-var
-  store = require("./EventStore")
-  , _ = require("underscore")
-  ;
+var store = require("./EventStore");
+var _ = require("underscore");
 
 module.exports = function(req, res, next) {
   var activity = req.query.act;

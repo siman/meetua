@@ -133,6 +133,7 @@ angular.module('myApp.controllers', [])
         $scope.mapEvents = _.map($scope.foundEvents, function(ev) {return ev.place});
       };
 
+      // TODO Copypaste: Extract to common utils.
       $scope.viewEvent = function(event) {
         window.location = "/event/" + event._id;
       };
@@ -156,10 +157,10 @@ angular.module('myApp.controllers', [])
           success(function(data, status, headers, config) {
             $scope.foundEvents = data;
             $scope.mapEvents = _.map(data, function(ev) {return ev.place});
-            console.log('selected events ', $scope.foundEvents);
+            console.log('Selected events ', $scope.foundEvents);
           }).
           error(function(data, status, headers, config) {
-            console.error('failed to find events by ' + actName, data)
+            console.error('Failed to find events by ' + actName, data);
           });
       }
 
@@ -180,44 +181,31 @@ angular.module('myApp.controllers', [])
       });
     }])
   .controller('SelectAuthorsEventCtrl', ['$scope', '$http', function($scope, $http) {
-    $scope.selectedEvent = undefined;
-
-    $scope.foundEvents = [];
-
-//    $scope.onEventOver = function(event) {
-//      $scope.mapEvents = [event];
-//    };
-//
-//    $scope.onEventOut = function(event) {
-//      $scope.mapEvents = $scope.foundEvents;
-//    };
-//
-    $scope.viewEvent = function(event) {
-      $scope.selectedEvent = event
+    $scope.events = {
+      my: [],
+      visited: [], // TODO
+      going: [] // TODO
     };
-//
-//    $scope.onActClick = function(actName) {
-//      if (actName === $scope.selectedAct) {
-//        actName = undefined;
-//      }
-//      $scope.selectedAct = actName;
-//      console.log("actName", actName);
-//      findEvents(actName);
-//    };
 
     function init() {
-      findBy();
+      findMyEvents();
     }
 
-    function findBy(paramName, paramValue) {
-      var params = _.isUndefined(paramName) ? {} : {paramName: paramValue};
-      $http({method: 'GET', url: '/event/find', params: params}).
+    // TODO Copypaste: Extract to common utils.
+    $scope.viewEvent = function(event) {
+      window.location = "/event/" + event._id;
+    };
+
+    function findMyEvents() {
+      var params = {};
+      // TODO: Extract method to build API URL using base '/api/meetua/'
+      $http({method: 'GET', url: '/api/meetua/events/my', params: params}).
         success(function(data, status, headers, config) {
-          $scope.foundEvents = data;
-          console.log('found authors events ', $scope.foundEvents);
+          $scope.events.my = data;
+          console.log('Found my events', data);
         }).
         error(function(data, status, headers, config) {
-          console.error('failed to find author events author id: ' + authorId /*FIXME authorId*/, data)
+          console.error('Failed to find my events', data);
         });
     }
 

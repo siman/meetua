@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  .page-header
+    h1 Мои cобытия
+  div(ng-controller='SelectAuthorsEventCtrl')
+    h2 Созданные мной
+    div.preview_event(
+      ng-repeat="event in events.my"
+      ng-click="viewEvent(event)"
+    )
+     a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
+     div.event_date {{event.start.date}}
+     div.event_address {{event.place.name}}
+     div(style="margin-bottom: 10px;")
+
+    h2 Собираюсь пойти
+    em TODO
+
+    h2 Посещенные
+    em TODO

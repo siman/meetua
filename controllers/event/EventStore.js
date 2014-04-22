@@ -5,6 +5,8 @@ var Event = require('../../models/Event');
 
 // TODO: Order by 'startDate asc' to show most recent events.
 
+// TODO: Preload test users: author of events, participants, etc.
+
 module.exports.dbPreload = function() {
   Event.count(function(err, eventSize) {
     if (eventSize > 0) {
