@@ -4,8 +4,8 @@
 
 angular.module('myApp.controllers', [])
     .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', '$timeout', '$http', 'KIEV_MAP', 'BASE_MAP',
-        '$eventService',
-        function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP, $eventService) {
+        '$eventService', '$window',
+        function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP, $eventService, $window) {
         console.log('Creating event ', $eventService.createEvent());
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
@@ -100,6 +100,9 @@ angular.module('myApp.controllers', [])
         function doSendPost(requestData) {
             $http.post('/event/create', requestData).success(function(res){
                 console.log('Event is created successfully ', res);
+                console.log('Redirecting to ', redirectUrl);
+                var redirectUrl = '/event/' + res.event._id;
+                $window.location = redirectUrl;
             }).error(function(err) {
                 console.error('Failed to create event ', err);
             });
