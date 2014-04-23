@@ -153,7 +153,7 @@ angular.module('myApp.controllers', [])
 
       function findEvents(actName) {
         var params = _.isUndefined(actName) ? {} : {act: actName};
-        $http({method: 'GET', url: '/event/find', params: params}).
+        $http({method: 'GET', url: '/api/meetua/events/find', params: params}).
           success(function(data, status, headers, config) {
             $scope.foundEvents = data;
             $scope.mapEvents = _.map(data, function(ev) {return ev.place});

@@ -21,7 +21,6 @@ var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 var createEventPage = require('./controllers/event/create-page');
 var createEvent = require('./controllers/event/create-event');
-var findEvent = require('./controllers/event/find');
 var viewEvent = require('./controllers/event/view');
 var editEvent = require('./controllers/event/edit');
 var upload = require('./controllers/upload').handleUpload;
@@ -153,7 +152,6 @@ app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized
 
 app.get('/event/create', passportConf.isAuthenticated, createEventPage);
 app.post('/event/create', passportConf.isAuthenticated, createEvent);
-app.get('/event/find', findEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
@@ -161,6 +159,7 @@ app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
 var meetuaEventsApi = require('./controllers/api/events');
+app.get('/api/meetua/events/find', meetuaEventsApi.get_find);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
 //TODO app.get('/api/meetua/events/visited', passportConf.isAuthenticated, meetuaEventsApi.get_visited);
 //TODO app.get('/api/meetua/events/going', passportConf.isAuthenticated, meetuaEventsApi.get_going);
