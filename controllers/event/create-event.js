@@ -44,7 +44,6 @@ function verifyAndCopyImage(image, next) {
         console.log('Image exists ', exists);
         console.log('uploadDir ', UPLOAD_DIR);
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
-            var imageName = path.basename(imagePath);
             moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
                 next(err, _.extend(image, {path: newPath}));
             });
@@ -55,14 +54,14 @@ function verifyAndCopyImage(image, next) {
 }
 
 /**
- * Move file to specified directory generating unique name for it.
- * TODO preserve file extension
+ * Move file to specified directory generating unique name preserving file extension.
  * @param srcPath - source file path
  * @param destDir - destination dir
+ * @param fileExtension - extension of the file
  * @param next
  */
 function moveFile(srcPath, destDir, next) {
-    tmp.tmpName({ dir: destDir}, function(err, destPath) {
+    tmp.tmpName({ dir: destDir, postfix: path.extname(srcPath)}, function(err, destPath) {
         console.log('Created unique name ', destPath);
         console.log('Moving ', srcPath, ' to ', destPath);
         fs.copy(srcPath, destPath, function(err) {

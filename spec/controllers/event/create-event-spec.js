@@ -67,8 +67,8 @@ describe('create-event', function() {
                 });
         });
     });
-    it('should generate unique name for image in the new dir', function(done) {
-        tmp.file(function(err, filePath, fd) {
+    it('should generate unique name for image in the new dir and preserve file extension', function(done) {
+        tmp.file({postfix: '.jpg'}, function(err, filePath, fd) {
             var content = new Buffer('image content');
             var reqImage = {
                 path: filePath,
@@ -87,7 +87,9 @@ describe('create-event', function() {
                 .expect(200)
                 .end(function(err, res) {
                     if (err) return done(err);
-                    expect(res.body.event.images[0].path).not.toBe(existingImage.path);
+                    var savedImage = res.body.event.images[0];
+                    expect(savedImage.path).not.toBe(existingImage.path);
+                    expect(path.extname(savedImage.path)).toBe(path.extname(reqImage.path));
                     done();
                 });
         });
