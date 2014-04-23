@@ -6,7 +6,7 @@ var eventSchema = new mongoose.Schema({
     name: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, required: true },
     description: { type: String, required: true, trim: true },
-    activity: String,
+    activity: { type: String, required: true, default: 'other' },
     place: {
         name: { type: String, required: true, trim: true },
         latitude: { type: Number, required: true },
