@@ -8,5 +8,5 @@ block content
     h3 Редактировать событие
 
   form.form-horizontal(role='form', method='POST', ng-controller='EditEventCtrl', ng-init='init(#{JSON.stringify(event)})', ng-submit='submit()', name='eventForm', novalidate)
-    {{event}}
+    .alert.alert-warning {{event}}
     +eventFields(false)
