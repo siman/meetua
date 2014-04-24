@@ -25,3 +25,7 @@ angular.module('myApp', [
             autoclose: true
         });
     }]);
+
+angular.module('myApp.controllers', []);
+
+angular.module('myApp.directives', []);
