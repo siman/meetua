@@ -37,7 +37,7 @@
     "passport-local": "~1.0.0",
     "passport-oauth": "~1.0.0",
     "passport-twitter": "~1.0.2",
-    "passport-vkontakte": "0.2.1",
+    "passport-vkontakte": "~0.2.1",
     "paypal-rest-sdk": "~0.7.0",
     "request": "~2.34.0",
     "tumblr.js": "~0.0.4",
