@@ -6,7 +6,7 @@
     "url": "https://github.com/sahat/hackathon-starter.git"
   },
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon --use_strict app.js",
     "test": "jasmine-node spec --captureExceptions --autotest --watch .."
   },
   "dependencies": {
