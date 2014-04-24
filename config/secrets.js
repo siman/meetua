@@ -32,6 +32,15 @@ module.exports = {
     passReqToCallback: true
   },
 
+  vkAuth: true,
+  vk: {
+    clientID: process.env.VK_ID || '4324675',
+    clientSecret: process.env.VK_SECRET || 'KUxP386NEIfon1JoIZdZ',
+    callbackURL: '/auth/vkontakte/callback',
+    passReqToCallback: true
+  },
+
+
   githubAuth: false,
   github: {
     clientID: process.env.GITHUB_ID || 'Your Client ID',

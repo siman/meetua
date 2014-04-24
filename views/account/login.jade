@@ -18,10 +18,13 @@ block content
             | Login
           a.btn.btn-link(href='/forgot') Forgot your password?
         hr
+      span.social-login Войти как пользователь
+      if secrets.vkAuth
+        a.btn.btn-social-icon.btn-lg.btn-vk(href='/auth/vkontakte')
+          i.fa.fa-vk
       if secrets.facebookAuth
-        a.btn.btn-block.btn-facebook.btn-social(href='/auth/facebook')
+        a.btn.btn-social-icon.btn-lg.btn-facebook(href='/auth/facebook')
           i.fa.fa-facebook
-          | Sign in with Facebook
       if secrets.twitterAuth
         a.btn.btn-block.btn-twitter.btn-social(href='/auth/twitter')
           i.fa.fa-twitter

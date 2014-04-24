@@ -2,6 +2,7 @@ var _ = require('underscore');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var VKontakteStrategy = require('passport-vkontakte').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var GitHubStrategy = require('passport-github').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -101,6 +102,50 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
     });
   }
 }));
+
+/**
+ * Sign in with vk
+ */
+
+passport.use(new VKontakteStrategy(secrets.vk,
+  function(req, accessToken, refreshToken, profile, done) {
+
+    if (req.user) {
+      User.findOne({ vkontakte: profile.id }, function(err, existingUser) {
+        if (existingUser) {
+          req.flash('errors', { msg: 'There is already a Vk account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+          done(err);
+        } else {
+          User.findById(req.user.id, function(err, user) {
+            user.vkontakte = profile.id;
+            user.tokens.push({ kind: 'vkontakte', accessToken: accessToken });
+            user.profile.name = user.profile.name || profile.displayName;
+            user.profile.gender = user.profile.gender || profile.gender;
+            user.profile.picture = user.profile.picture || profile._json.photo;
+            user.save(function(err) {
+              req.flash('info', { msg: 'Vkontakte account has been linked.' });
+              done(err, user);
+            });
+          });
+        }
+      });
+    } else {
+      User.findOne({ vkontakte: profile.id }, function(err, existingUser) {
+        if (existingUser) return done(null, existingUser);
+        var user = new User();
+        user.vkontakte = profile.id;
+        user.tokens.push({ kind: 'vkontakte', accessToken: accessToken});
+        user.profile.name = user.profile.name || profile.displayName;
+        user.profile.gender = user.profile.gender || profile.gender;
+        user.profile.picture = user.profile.picture || profile._json.photo;
+        user.save(function(err) {
+          done(err, user);
+        });
+      });
+    }
+
+  }
+));
 
 /**
  * Sign in with GitHub.
