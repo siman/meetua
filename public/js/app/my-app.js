@@ -6,7 +6,7 @@ angular.module('myApp', [
         'ngRoute',
         'myApp.directives',
         'myApp.controllers',
-        'myApp.shared.services',
+        'myApp.shared',
         'ngBootstrap',
         'ngAutocomplete',
         'angularFileUpload',
