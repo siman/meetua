@@ -12,7 +12,7 @@
     if (isAngular) {
         // AngularJS module definition
         angular.module('myApp.shared', [])
-            .service('$eventService', EventService);
+            .service('eventService', EventService);
     } else if (isNode) {
         // NodeJS module definition
         module.exports = new EventService();
