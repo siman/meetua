@@ -2,9 +2,8 @@
 
 angular.module('myApp')
     .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', '$timeout', '$http', 'KIEV_MAP', 'BASE_MAP',
-    'eventService', '$window',
-    function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP, eventService, $window) {
-        console.log('Creating event ', eventService.createEvent());
+    'eventService', '$window', 'eventImageService',
+    function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP, eventService, $window, eventImageService) {
         var uploader = $scope.uploader = $fileUploader.create({
             scope: $scope,
             url: '/upload/image',
