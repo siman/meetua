@@ -24,7 +24,6 @@
 //= require lib/angular-google-maps-1.0.18
 //= require lib/angular-strap-2.0.1
 //= require lib/angular-strap-tpl-2.0.1
-//= require app/my-app
-//= require_tree app/event
-//= require_tree app/shared
+//= require my-app
+//= require_tree app
 //= require lib/ng-directives

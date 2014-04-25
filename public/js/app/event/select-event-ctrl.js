@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.controllers')
+angular.module('myApp')
     .controller('SelectEventCtrl', ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP',
     function($scope, $http, KIEV_MAP, BASE_MAP) {
         $scope.selectedAct = undefined;

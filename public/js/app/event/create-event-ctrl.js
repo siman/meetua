@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.controllers')
+angular.module('myApp')
     .controller('CreateEventCtrl', ['$scope', '$fileUploader', '$cookies', '$timeout', '$http', 'KIEV_MAP', 'BASE_MAP',
     'eventService', '$window',
     function($scope, $fileUploader, $cookies, $timeout, $http, KIEV_MAP, BASE_MAP, eventService, $window) {

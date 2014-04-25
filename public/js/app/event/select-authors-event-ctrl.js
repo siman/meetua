@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.controllers')
+angular.module('myApp')
     .controller('SelectAuthorsEventCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.events = {
             my: [],

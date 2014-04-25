@@ -4,8 +4,6 @@
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
         'ngRoute',
-        'myApp.directives',
-        'myApp.controllers',
         'myApp.shared',
         'ngBootstrap',
         'ngAutocomplete',
@@ -41,7 +39,3 @@ angular.module('myApp', [
             scrollwheel: false
         }
     });
-
-angular.module('myApp.controllers', []);
-
-angular.module('myApp.directives', []);
