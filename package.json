@@ -8,8 +8,8 @@
   "scripts": {
     "start": "nodemon app.js",
     "test": "jasmine-node spec --captureExceptions --autotest --watch ..",
-    "selenium": "./node_modules/protractor/bin/webdriver-manager start",
-    "e2e": "./node_modules/protractor/bin/protractor spec/protractor_conf.js"
+    "selenium-server": "./node_modules/protractor/bin/webdriver-manager start",
+    "e2e-test": "./node_modules/protractor/bin/protractor spec/protractor_conf.js"
   },
   "dependencies": {
     "async": "~0.7.0",
@@ -57,6 +57,7 @@
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
     "supertest": "~0.10.0",
-    "tmp": "0.0.23"
+    "tmp": "0.0.23",
+    "protractor": "~0.22.0"
   }
 }
