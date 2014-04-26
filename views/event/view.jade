@@ -19,7 +19,7 @@ block content
           h1 #{event.name}
           div.view_event
             #eventJson.hidden #{JSON.stringify(event)}
-            +eventField("Когда", event.start.date)
+            +eventField("Когда", event.start.displayTime)
             +eventField("Где", event.place.name)
             +eventField("Организатор", event.author)
             div.event_desc #{event.description}

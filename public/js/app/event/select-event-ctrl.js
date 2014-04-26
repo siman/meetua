@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('SelectEventCtrl', ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP',
-    function($scope, $http, KIEV_MAP, BASE_MAP) {
+    .controller('SelectEventCtrl', ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'eventFormatDateService',
+    function($scope, $http, KIEV_MAP, BASE_MAP, eventFormatDateService) {
         $scope.selectedAct = undefined;
 
         $scope.foundEvents = [];
@@ -42,7 +42,10 @@ angular.module('myApp')
             var params = _.isUndefined(actName) ? {} : {act: actName};
             $http({method: 'GET', url: '/api/meetua/events/find', params: params}).
                 success(function(data, status, headers, config) {
-                    $scope.foundEvents = data;
+                    var formattedData = _.map(data, function(event){
+                      return eventFormatDateService.addDisplayData(event);
+                    });
+                    $scope.foundEvents = formattedData;
                     $scope.mapEvents = _.map(data, function(ev) {return ev.place});
                     console.log('Selected events ', $scope.foundEvents);
                 }).

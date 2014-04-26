@@ -26,7 +26,10 @@ block content
             ng-mouseleave="onEventOut()"
           )
           a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
-          div.event_date {{event.start.date}}
+          div.event_date
+            b {{event.start.displayDayOfWeek + ' '}}
+            | {{event.start.displayDate}}
+            | в {{event.start.displayTime}}
           div.event_address {{event.place.name}}
           div(style="margin-bottom: 10px;")
 

@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('ViewEventCtrl', ['$scope', '$http', 'BASE_MAP', function($scope, $http, BASE_MAP) {
+    .controller('ViewEventCtrl', ['$scope', '$http', 'BASE_MAP', 'eventFormatDateService',
+    function($scope, $http, BASE_MAP, eventFormatDateService) {
         var event = JSON.parse($("#eventJson").text());
+        eventFormatDateService.addDisplayData(event);
         console.log("Event", event);
 
         $scope.event = event;
