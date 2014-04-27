@@ -33,7 +33,7 @@ exports.dbPreload = function(processor) {
               callback(null, savedSize);
             })
           }, function(err, savedSize) {
-            console.log("MongoDB has been preloaded with", savedSize, "out of", processor.mockEntities.length, processor.entityName + s);
+            console.log("MongoDB has been preloaded with", savedSize, "out of", processor.mockEntities.length, processor.entityName + "s");
             if (cb) {
               cb();
             }
