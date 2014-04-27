@@ -6,7 +6,7 @@ var passport = require('passport');
 var User = require('../models/User');
 var secrets = require('../config/secrets');
 var util = require('./util');
-var mockUsers = require('./UserMockStore');
+var mockUsers = require('./user-mock-store');
 
 /**
  * GET /login

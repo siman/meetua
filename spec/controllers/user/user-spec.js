@@ -1,6 +1,6 @@
 var testUtil = require('../../test-util');
 var dbPreload = require('../../../controllers/user').dbPreload;
-var mockUsers = require('../../../controllers/UserMockStore');
+var mockUsers = require('../../../controllers/user-mock-store');
 var User = require('../../../models/User');
 
 describe('user controller', function() {
