@@ -9,7 +9,7 @@
     "start": "nodemon app.js",
     "test": "jasmine-node spec --captureExceptions --autotest --watch ..",
     "selenium-server": "./node_modules/protractor/bin/webdriver-manager start",
-    "e2e-test": "./node_modules/protractor/bin/protractor spec/protractor_conf.js"
+    "e2e-test": "./node_modules/protractor/bin/protractor spec-e2e/protractor_conf.js"
   },
   "dependencies": {
     "async": "~0.7.0",
