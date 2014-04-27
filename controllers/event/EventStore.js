@@ -2,35 +2,19 @@ var _ = require("underscore");
 var async = require("async");
 var mockEvents = require("./MockEvents");
 var Event = require('../../models/Event');
+var util = require('../util');
 
 // TODO: Order by 'startDate asc' to show most recent events.
 
 // TODO: Preload test users: author of events, participants, etc.
 
-module.exports.dbPreload = function() {
-  Event.count(function(err, eventSize) {
-    if (eventSize > 0) {
-      console.log("Found", eventSize, "events in MongoDB. Preloading is not required");
-    } else {
-      console.log("Preloading MongoDB with mocked events...");
-      async.reduce(mockEvents, 0,
-        function(savedSize, mockEvent, callback) {
-          var newEvent = new Event(mockEvent);
-          newEvent.save(function(err, savedEvent) {
-            if (err) {
-              console.error("Failed to save mocked event", err);
-            } else {
-              savedSize++;
-            }
-            callback(null, savedSize);
-          })
-        }, function(err, savedSize) {
-          console.log("MongoDB has been preloaded with", savedSize, "out of", mockEvents.length, "events");
-        }
-      );
-    }
-  })
-};
+module.exports.dbPreload = util.dbPreload({
+  count: function(cb) { // I don't know why, but it doesn't work if pass 'Event.count' inline. Maybe 'this' issue.
+    Event.count(cb);
+  },
+  mockEntities: mockEvents,
+  entityConstructor: Event
+});
 
 module.exports.findByAuthor = function () {
   // TODO
