@@ -22,19 +22,17 @@ module.exports.findByAuthor = function () {
 };
 
 module.exports.findAll = function (cb) {
-  return Event.find({}, function (err, events) {
-    cb(err, events);
-  });
+  return findEvents({}, cb);
 };
 
 module.exports.findByActivity = function(act, cb) {
-  return Event.find({'activity': act}, function(err, events) {
-    cb(err, events);
-  });
+  return findEvents({activity: act}, cb);
 };
 
 module.exports.findById = function(id, cb) {
-  return Event.findById(id, function(err, event) {
-    cb(err, event);
-  });
+  return findEvents({_id: id}, cb);
 };
+
+function findEvents(findQuery, cb) {
+  return Event.find(findQuery).populate("author", "profile.name profile.picture").exec(cb);
+}
