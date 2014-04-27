@@ -219,5 +219,6 @@ app.listen(app.get('port'), function() {
 });
 
 eventStore.dbPreload();
+userController.dbPreload();
 
 module.exports = app;

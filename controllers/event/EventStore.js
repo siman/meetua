@@ -13,7 +13,8 @@ module.exports.dbPreload = util.dbPreload({
     Event.count(cb);
   },
   mockEntities: mockEvents,
-  entityConstructor: Event
+  entityConstructor: Event,
+  entityName: "Event"
 });
 
 module.exports.findByAuthor = function () {

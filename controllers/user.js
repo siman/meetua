@@ -5,6 +5,8 @@ var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
 var secrets = require('../config/secrets');
+var util = require('./util');
+var mockUsers = require('./UserMockStore');
 
 /**
  * GET /login
@@ -378,3 +380,12 @@ exports.postForgot = function(req, res, next) {
     res.redirect('/forgot');
   });
 };
+
+exports.dbPreload = util.dbPreload({
+  count: function(cb) {
+    User.count(cb);
+  },
+  mockEntities: mockUsers,
+  entityConstructor: User,
+  entityName: "User"
+});
