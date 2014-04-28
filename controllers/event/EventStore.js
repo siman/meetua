@@ -30,9 +30,13 @@ module.exports.findByActivity = function(act, cb) {
 };
 
 module.exports.findById = function(id, cb) {
-  return findEvents({_id: id}, cb);
+  return findEvents({_id: id}, function(err, events) {
+    cb(err, events[0]);
+  });
 };
 
 function findEvents(findQuery, cb) {
-  return Event.find(findQuery).populate("author", "profile.name profile.picture").exec(cb);
+  return Event.find(findQuery)
+    .populate("author", "profile.name profile.picture")
+    .exec(cb);
 }

@@ -19,9 +19,10 @@ block content
           h1 #{event.name}
           div.view_event
             #eventJson.hidden #{JSON.stringify(event)}
-            +eventField("Когда", event.start.displayTime)
+            +eventField("Когда", event.start.displayTime) // TODO: Fix date time
             +eventField("Где", event.place.name)
-            +eventField("Организатор", event.author)
+            if event.author
+              +eventField("Организатор", event.author.profile.name)
             div.event_desc #{event.description}
 
       google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts")
