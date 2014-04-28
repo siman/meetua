@@ -10,11 +10,7 @@ block content
       ng-click="viewEvent(event)"
     )
       .col-sm-10
-        a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
-        div.event_date {{event.prettyStartDate}}
-        div.event_address {{event.place.name}}
-        div(style="margin-bottom: 10px;")
-
+        include ../partials/preview-event
       .col-sm-2
         .btn-group
           a.btn.btn-default(ng-href="/event/{{event._id}}/edit", role="button") Редактировать
