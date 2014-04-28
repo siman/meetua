@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Image = require('./Image');
+var moment = require('moment');
 
 var eventSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -22,5 +23,10 @@ var eventSchema = new mongoose.Schema({
     },
     images: [Image.schema]
 });
+
+eventSchema.virtual('prettyStartDate').get(function(){
+  return moment(this.start.date).format('dddd Do MMMM HH:mm')
+});
+eventSchema.set('toJSON', {virtuals: true });
 
 module.exports = mongoose.model('Event', eventSchema);

@@ -12,16 +12,7 @@ angular.module('myApp', [
         'ngCookies',
         'mgcrea.ngStrap'
     ]).run(function() {
-        //moment.lang('ru');
-        moment.lang('my-ru', {
-          months : [
-            "января", "февраля", "марта", "апреля", "мая", "июня", "июля",
-            "августа", "сентября", "октября", "ноября", "декабря"
-          ],
-          weekdays : [
-            "понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"
-          ]
-        });
+        moment.lang('ru');
         console.log('momentjs lang ', moment.lang());
     })
     .config(['$routeProvider', function($routeProvider) {

@@ -19,7 +19,7 @@ block content
           h1 #{event.name}
           div.view_event
             #eventJson.hidden #{JSON.stringify(event)}
-            +eventField("Когда", event.start.displayTime) // TODO: Fix date time
+            +eventField("Когда", event.prettyStartDate)
             +eventField("Где", event.place.name)
             if event.author
               +eventField("Организатор", event.author.profile.name)
