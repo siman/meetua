@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path');
 var os = require('os');
 var moment = require('moment');

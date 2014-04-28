@@ -1,7 +1,7 @@
-var
-  store = require("./EventStore")
-  , _ = require("underscore")
-  ;
+'use strict';
+
+var store = require("./EventStore");
+var _ = require("underscore");
 
 module.exports = function(req, res) {
   var id = req.params.id;

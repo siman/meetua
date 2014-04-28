@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('myApp')
     .factory('eventImageService', function() {
 

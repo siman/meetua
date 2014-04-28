@@ -1,3 +1,5 @@
+'use strict';
+
 var MAX_SIZE = 2*1024*1024; // 2MB
 var path = require('path');
 var os = require('os');

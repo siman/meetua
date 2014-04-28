@@ -1,3 +1,5 @@
+'use strict';
+
 var eventService = require('../../public/js/app/shared/event-service');
 
 module.exports = function(req, res) {

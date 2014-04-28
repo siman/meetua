@@ -1,4 +1,5 @@
-// TODO: delete once replaced by MongoDB
+'use strict';
+
 module.exports = [
   {
     "_id" : "5355443a9e965c7c19f33c43",

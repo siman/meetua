@@ -1,3 +1,5 @@
+'use strict';
+
 // We will pass these to the wrapper function at the end of the file
 (function(isNode, isAngular) {
 

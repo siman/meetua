@@ -1,6 +1,4 @@
-/**
- * Created by Alex on 4/23/14.
- */
+'use strict';
 
 var _ = require("underscore");
 var Event = require('../../models/Event');
