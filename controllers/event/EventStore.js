@@ -9,9 +9,7 @@ var util = require('../util');
 // TODO: Preload test users: author of events, participants, etc.
 
 module.exports.dbPreload = util.dbPreload({
-  count: function(cb) { // I don't know why, but it doesn't work if pass 'Event.count' inline. Maybe 'this' issue.
-    Event.count(cb);
-  },
+  count: Event.count.bind(Event),
   mockEntities: mockEvents,
   entityConstructor: Event,
   entityName: "Event"

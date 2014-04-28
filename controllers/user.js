@@ -382,9 +382,7 @@ exports.postForgot = function(req, res, next) {
 };
 
 exports.dbPreload = util.dbPreload({
-  count: function(cb) {
-    User.count(cb);
-  },
+  count: User.count.bind(User),
   mockEntities: mockUsers,
   entityConstructor: User,
   entityName: "User"
