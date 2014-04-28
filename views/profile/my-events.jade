@@ -3,7 +3,7 @@ extends ../layout
 block content
   .page-header
     h1 Мои cобытия
-  div(ng-controller='SelectAuthorsEventCtrl')
+  div(ng-controller='MyEventsCtrl')
     h2 Созданные мной
     div.row.preview_event(
       ng-repeat="event in events.my"
