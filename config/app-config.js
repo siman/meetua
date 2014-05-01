@@ -6,6 +6,7 @@ var moment = require('moment');
 moment.lang('ru');
 
 module.exports = {
-    EVENT_IMG_DIR: './public/upload',
-    UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload')
+  MAX_EVENTS_IN_OVERVIEW: 5,
+  EVENT_IMG_DIR: './public/upload',
+  UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload')
 };

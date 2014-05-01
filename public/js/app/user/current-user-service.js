@@ -11,6 +11,7 @@ angular.module('myApp')
     return {
       user: user,
       userId: isLoggedIn ? user._id : undefined,
-      isLoggedIn: isLoggedIn
+      isLoggedIn: isLoggedIn,
+      isLoggedOut: !isLoggedIn
     }
   });

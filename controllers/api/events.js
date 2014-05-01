@@ -1,27 +1,63 @@
 'use strict';
 
 var _ = require("underscore");
+var async = require('async');
+var conf = require('../../config/app-config');
 var Event = require('../../models/Event');
 var EventStore = require("../event/EventStore");
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile.
 
+/** Build Mongo filters for different event types: my, going, visited. */
+var buildMyFilters = function(req) {
+  var curUserId = req.user._id;
+  var now = Date.now();
+  return {
+    my: {author: curUserId},
+    going: {participants: curUserId, 'start.date': {$gt: now}},
+    visited: {participants: curUserId, 'start.date': {$lte: now}}
+  };
+};
+
+/** Returns all my events of certain type: my, going, visited. */
 module.exports.get_my = function(req, res, next) {
-  var type = req.query.type;
-  var query = {};
-  if (type == 'going') {
-    query = {participants: req.user._id, 'start.date': {$gt: Date.now()}};
-  } else if (type == 'visited') {
-    // TODO: Check also end date that it is <= now.
-    query = {participants: req.user._id, 'start.date': {$lte: Date.now()}};
-  } else {
-    // type=created by me
-    query = {author: req.user._id};
-  }
-  Event.find(query, function(err, events) {
+  var eventType = req.query.type || 'my';
+  var filter = buildMyFilters(req)[eventType];
+  // TODO: Add pagination
+  Event.find(filter).sort({'start.date': 1}).exec(function(err, events) {
     if (err) return next(err);
     res.json(events);
   });
+};
+
+/** Returns short overview of all user's events: my + going + visited. */
+module.exports.get_myOverview = function(req, res, next) {
+  var filters = buildMyFilters(req);
+  async.parallel(
+    {
+      my: function(cb) {
+        // Created by me
+        findMyEvents(filters.my, cb);
+      },
+      going: function(cb) {
+        findMyEvents(filters.going, cb);
+      },
+      visited: function(cb) {
+        // TODO: Check also end date that it is <= now.
+        findMyEvents(filters.visited, cb);
+      }
+    },
+    function(err, events) {
+      if (err) return next(err);
+      res.json(events);
+    });
+
+  function findMyEvents(query, cb) {
+    Event.find(query)
+      .sort({'start.date': 1})
+      .limit(conf.MAX_EVENTS_IN_OVERVIEW)
+      .exec(cb);
+  }
 };
 
 module.exports.get_find = function(req, res, next) {
@@ -38,6 +74,7 @@ module.exports.get_find = function(req, res, next) {
   }
 };
 
+/** Change participation status for event. */
 module.exports.post_participation = function(req, res, next) {
   var eventId = req.query.eventId;
   var act = req.query.act || 'add'; // valid values: add, remove.

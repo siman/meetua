@@ -161,6 +161,7 @@ app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 var meetuaEventsApi = require('./controllers/api/events');
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
+app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
 
 /**

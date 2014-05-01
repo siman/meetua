@@ -24,6 +24,7 @@ angular.module('myApp', [
             autoclose: true
         });
     }])
+    .constant('API_BASE_URL', '/api/meetua')
     .constant('KIEV_MAP', {
         center: {
             latitude: 50.440646,
