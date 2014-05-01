@@ -3,7 +3,8 @@
 var MAX_SIZE = 2*1024*1024; // 2MB
 var path = require('path');
 var os = require('os');
-var UPLOAD_DIR = path.join(os.tmpdir(), 'upload');
+var config = require('../config/app-config');
+var UPLOAD_DIR = config.UPLOAD_DIR;
 var fs = require('fs-extra');
 
 fs.mkdirp(UPLOAD_DIR, function(err) {
@@ -40,5 +41,3 @@ exports.handleUpload = function(req, res, next) {
     });
 
 };
-
-exports.UPLOAD_DIR = UPLOAD_DIR;

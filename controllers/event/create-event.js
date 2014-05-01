@@ -41,7 +41,11 @@ function buildAndSaveEvent(req, res, next) {
 
 function verifyAndCopyImage(image, next) {
     console.log('Verify image ', image);
-    var imagePath = path.join('/', image.path); // removes any '..'
+
+  // Siman: Image uploading works for me if comment next line. Does it work on Linux as well?
+//    var imagePath = path.join('/', image.path); // removes any '..'
+    var imagePath = image.path;
+
     fs.exists(imagePath, function(exists) {
         console.log('Image exists ', exists);
         console.log('uploadDir ', UPLOAD_DIR);

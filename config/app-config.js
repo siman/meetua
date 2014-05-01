@@ -7,5 +7,5 @@ moment.lang('ru');
 
 module.exports = {
     EVENT_IMG_DIR: './public/upload',
-    UPLOAD_DIR: path.join(os.tmpdir(), 'upload')
+    UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload')
 };
