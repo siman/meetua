@@ -68,7 +68,8 @@ function verifyAndCopyImage(image, next) {
  * @param next
  */
 function moveFile(srcPath, destDir, next) {
-    tmp.tmpName({ dir: destDir, postfix: path.extname(srcPath)}, function(err, destPath) {
+    tmp.tmpName({ dir: destDir, prefix: 'event-', postfix: path.extname(srcPath), tries: 100},
+      function(err, destPath) {
         console.log('Created unique name ', destPath);
         console.log('Moving ', srcPath, ' to ', destPath);
         fs.copy(srcPath, destPath, function(err) {
