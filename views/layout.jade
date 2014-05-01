@@ -9,6 +9,13 @@ html
     meta(name='author', content='')
     title #{title} | MeetUA
     script(src='//maps.googleapis.com/maps/api/js?libraries=places&sensor=false')
+
+    script.
+      var _myInit = {};
+
+    include mixins
+    +jsVar("currentUser", user)
+
     != css('styles')
     != js('includes')
   body

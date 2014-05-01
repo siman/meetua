@@ -8,6 +8,7 @@ var moment = require('moment');
 var eventSchema = new mongoose.Schema({
     name: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    participants: [{ type: Schema.Types.ObjectId, ref: "User" }],
     description: { type: String, required: true, trim: true },
     activity: { type: String, required: true, default: 'other' },
     place: {

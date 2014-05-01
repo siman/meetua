@@ -9,6 +9,7 @@ block content
   if (!event)
     h1 Событие не найдено
   else
+    +jsVar("event", event)
     div(ng-controller='ViewEventCtrl')
       .row
         .col-md-1
@@ -16,9 +17,15 @@ block content
             div(class="#{event.activity}")
 
         .col-md-11
-          h1 #{event.name}
+          div
+            .pull-right
+              #partBox
+                div(ng-show="isPart")
+                  #partStatus Я участник события
+                button#partBtn.btn(ng-click="participate()",
+                  ng-class="{'btn-default': isPart, 'btn-success': !isPart}") {{partBtnName}}
+            h1 #{event.name}
           div.view_event
-            #eventJson.hidden #{JSON.stringify(event)}
             +eventField("Когда", event.prettyStartDate)
             +eventField("Где", event.place.name)
             if event.author

@@ -7,3 +7,8 @@ mixin actIcon(modelName, cssClass, textOver)
     if (textOver)
       h2.text_over_container
         span.text_over #{textOver}
+
+mixin jsVar(modelName, model)
+  if model
+    script.
+      _myInit.#{modelName} = !{JSON.stringify(model)};
