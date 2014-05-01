@@ -45,21 +45,20 @@ module.exports.post_participation = function(req, res, next) {
 
   EventStore.findById(eventId, function(err, event) {
     if (err) next(err);
-    function partEqCurrentUser(partId) {
-      return partId.equals(curUser._id);
-    }
+
     function updateEvent(status) {
       event.save(function(err) {
         if (err) return next(err);
         res.json({status: status});
       });
     }
-    var alreadyPart = _.find(event.participants, partEqCurrentUser);
-    if (act === 'remove' && alreadyPart) {
+
+    var alreadyPartInx = event.participants.indexOf(curUser._id);
+    if (act === 'remove' && alreadyPartInx >= 0) {
 //      console.log("remove");
-      event.participants = _.reject(event.participants, partEqCurrentUser);
+      event.participants.splice(alreadyPartInx, 1);
       updateEvent('removed');
-    } else if (act === 'add' && !alreadyPart) {
+    } else if (act === 'add' && alreadyPartInx < 0) {
 //      console.log("add");
       event.participants.push(curUser._id);
       updateEvent('added');
