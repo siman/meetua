@@ -7,7 +7,18 @@ var EventStore = require("../event/EventStore");
 // TODO: Limit to last 5 events if this is an overview of events in user's profile.
 
 module.exports.get_my = function(req, res, next) {
-  Event.find({author: req.user._id}, function(err, events) {
+  var type = req.query.type;
+  var query = {};
+  if (type == 'going') {
+    query = {participants: req.user._id, 'start.date': {$gt: Date.now()}};
+  } else if (type == 'visited') {
+    // TODO: Check also end date that it is <= now.
+    query = {participants: req.user._id, 'start.date': {$lte: Date.now()}};
+  } else {
+    // type=created by me
+    query = {author: req.user._id};
+  }
+  Event.find(query, function(err, events) {
     if (err) return next(err);
     res.json(events);
   });

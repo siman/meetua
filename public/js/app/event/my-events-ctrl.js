@@ -4,8 +4,8 @@ angular.module('myApp')
     .controller('MyEventsCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.events = {
             my: [],
-            visited: [], // TODO
-            going: [] // TODO
+            visited: [],
+            going: []
         };
 
         function init() {
@@ -18,16 +18,22 @@ angular.module('myApp')
         };
 
         function findMyEvents() {
-            var params = {};
-            // TODO: Extract method to build API URL using base '/api/meetua/'
-            $http({method: 'GET', url: '/api/meetua/events/my', params: params}).
+            function findMyEvents(type) {
+              // TODO: Extract method to build API URL using base '/api/meetua/'
+              var params = {type: type};
+              $http({method: 'GET', url: '/api/meetua/events/my', params: params}).
                 success(function(data, status, headers, config) {
-                    $scope.events.my = data;
-                    console.log('Found my events', data);
+                  $scope.events[type] = data;
+                  console.log('Found ' + type + ' events', data);
                 }).
                 error(function(data, status, headers, config) {
-                    console.error('Failed to find my events', data);
+                  console.error('Failed to find ' + type + ' events', data);
                 });
+            }
+
+            findMyEvents('my');
+            findMyEvents('going');
+            findMyEvents('visited');
         }
 
         init();

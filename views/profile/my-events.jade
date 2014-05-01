@@ -6,7 +6,7 @@ block content
   div(ng-controller='MyEventsCtrl')
     h2 Созданные мной
     div.row.preview_event(
-      ng-repeat="event in events.my"
+      ng-repeat="event in events.my",
       ng-click="viewEvent(event)"
     )
       .col-sm-10
@@ -17,7 +17,20 @@ block content
           //a.btn.btn-default(href="#", role="button") Удалить // TODO
 
     h2 Собираюсь пойти
-    em TODO
+    div.row.preview_event(
+      ng-repeat="event in events.going",
+      ng-click="viewEvent(event)"
+    )
+      .col-sm-10
+        include ../partials/preview-event
+      .col-sm-2
+        .btn-group
+          a.btn.btn-default(role="button") TODO: Отказаться
 
     h2 Посещенные
-    em TODO
+    div.row.preview_event(
+      ng-repeat="event in events.visited",
+      ng-click="viewEvent(event)"
+    )
+      .col-sm-10
+        include ../partials/preview-event
