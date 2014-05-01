@@ -21,10 +21,10 @@ angular.module('myApp')
         var isPart = _.find(event.participants, function(partId) {
           return partId === curUserId;
         });
-        setPart(isPart);
+        changeParticipation(isPart);
       }
 
-      function setPart(isPart) {
+      function changeParticipation(isPart) {
         if (isPart) {
           $scope.isPart = true;
           $scope.partBtnName = 'Отказаться от участия?';
@@ -36,18 +36,18 @@ angular.module('myApp')
 
       $scope.participate = function() {
         var $partBtn = $('#partBtn');
-        $partBtn.attr('disabled','disabled');
+        $partBtn.attr('disabled', 'disabled');
 
         var params = {eventId: event._id, act: $scope.isPart ? 'remove' : 'add'};
         $http({method: 'POST', url: '/api/meetua/events/participation', params: params}).
           success(function(data, status, headers, config) {
             $partBtn.removeAttr('disabled');
-            setPart(data.status === 'added');
+            changeParticipation(data.status === 'added');
           }).
           error(function(data, status, headers, config) {
             // TODO show on UI that failed to participate in event.
             $partBtn.removeAttr('disabled');
-            setPart(false);
+            changeParticipation(false);
             console.error('Failed to change participation in event', data);
           });
       };
