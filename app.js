@@ -150,6 +150,8 @@ app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, a
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 
+var feedback = require('./controllers/feedback');
+app.get('/feedback', feedback.get_feedback);
 app.get('/event/create', passportConf.isAuthenticated, createEventPage);
 app.post('/event/create', passportConf.isAuthenticated, createEvent);
 app.get('/event/:id', viewEvent);

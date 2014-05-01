@@ -1,7 +1,7 @@
 mixin actIcon(modelName, cssClass, textOver)
   div.border.row-fluid(
-  ng-class="{selected: #{modelName} == '#{cssClass}'}"
-  ng-click="onActClick('#{cssClass}')", style='position:relative;'
+    ng-class="{selected: #{modelName} == '#{cssClass}'}",
+    ng-click="onActClick('#{cssClass}')", style='position:relative;'
   )
     div(class="#{cssClass}")
     if (textOver)

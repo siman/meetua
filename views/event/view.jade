@@ -11,7 +11,7 @@ block content
   else
     +jsVar("event", event)
     div#view_event_page(ng-controller='ViewEventCtrl')
-      .row
+      .row(style="margin-bottom: 10px")
         .col-md-1
           div.event_logo_box
             div(ng-show="!event.logoUrl")
