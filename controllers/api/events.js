@@ -46,10 +46,7 @@ module.exports.post_participation = function(req, res, next) {
   EventStore.findById(eventId, function(err, event) {
     if (err) next(err);
     function partEqCurrentUser(partId) {
-      // TODO: Fix hack
-      // Siman: This is a hack. These two objects are of 2 different types somehow.
-      var isEq = partId.toString() == curUser._id.toString();
-      return isEq;
+      return partId.equals(curUser._id);
     }
     function updateEvent(status) {
       event.save(function(err) {
@@ -65,7 +62,6 @@ module.exports.post_participation = function(req, res, next) {
     } else if (act === 'add' && !alreadyPart) {
 //      console.log("add");
       event.participants.push(curUser._id);
-      console.log("updated event 2", event);
       updateEvent('added');
     } else {
 //      console.log("else");
