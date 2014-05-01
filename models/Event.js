@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Image = require('./Image');
 var moment = require('moment');
+var _ = require('underscore');
+var path = require('path');
 
 var eventSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -27,9 +29,20 @@ var eventSchema = new mongoose.Schema({
     images: [Image.schema]
 });
 
-eventSchema.virtual('prettyStartDate').get(function(){
-  return moment(this.start.date).format('dddd Do MMMM HH:mm')
+eventSchema.virtual('prettyStartDate').get(function() {
+  return moment(this.start.date).format('dddd Do MMMM HH:mm');
 });
+
+eventSchema.virtual('logoUrl').get(function() {
+  var logo = _.find(this.images, function(img) { return img.isLogo; });
+  console.log("Found logo", logo);
+  if (logo) {
+    return '/upload/' + path.basename(logo.path);
+  } else {
+    return null;
+  }
+});
+
 eventSchema.set('toJSON', {virtuals: true });
 
 module.exports = mongoose.model('Event', eventSchema);

@@ -124,13 +124,48 @@ body {
   border-radius: @radius;
 }
 
+.square_image(@size: 120px) {
+  background-size: @size;
+  width: @size;
+  height: @size;
+  min-width: @size;
+  min-height: @size;
+}
+
+.event_logo_box {
+  .square_image;
+  float: left;
+  margin-left: 15px;
+  margin-right: 10px;
+
+  .event_logo {
+    .square_image;
+  }
+  
+  .no_image {
+    .square_image;
+    border: 3px dashed #eee;
+    background-color: #fafafa;
+  }
+}
+#view_event_page .event_logo_box {
+  padding-top: 40px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 10px;
+}
+
+.no_margin_left {
+  margin-left: 0;
+}
+.no_margin_right {
+  margin-right: 0;
+}
+
 .act_img(@img_url) {
-  @size: 120px;
   background-image: url("../img/@{img_url}");
   background-repeat: no-repeat;
-  background-size: @size;
-  height: @size;
-  width: @size;
+  .square_image;
 }
 
 @act_border: 3px;
@@ -254,7 +289,7 @@ body {
 .drop-zone {
   background: rgba(0,0,0,0.1);
   border-radius: 10px;
-  border: 4px dashed rgba(0,0,0,0.2);
+  border: @act_border dashed rgba(0,0,0,0.2);
   padding: 40px 0;
   text-align: center;
   font-size: 25px;
@@ -262,7 +297,8 @@ body {
 }
 
 .ng-file-over { /* Default class applied to drop zones on over */
-  border: 4px dashed red;
+  border: @act_border solid @link-color;
+  color: @link-color;
 }
 
 .pointer { cursor: pointer; }

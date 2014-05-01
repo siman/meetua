@@ -10,11 +10,18 @@ block content
     h1 Событие не найдено
   else
     +jsVar("event", event)
-    div(ng-controller='ViewEventCtrl')
+    div#view_event_page(ng-controller='ViewEventCtrl')
       .row
         .col-md-1
-          .act_bar
-            div(class="#{event.activity}")
+          div.event_logo_box
+            div(ng-show="!event.logoUrl")
+              div.no_image
+            div(ng-show="event.logoUrl")
+              img.event_logo(src="{{event.logoUrl}}")
+
+          // TODO: Show activity as text or icon?
+          //.act_bar
+            //div(class="#{event.activity}")
 
         .col-md-11
           div

@@ -1,4 +1,11 @@
-a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
-div.event_date {{event.prettyStartDate}}
-div.event_address {{event.place.name}}
-div(style="margin-bottom: 10px;")
+.row
+  div.event_logo_box
+    div(ng-show="!event.logoUrl")
+      div.no_image
+    div(ng-show="event.logoUrl")
+      img.event_logo(src="{{event.logoUrl}}")
+  div
+    a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
+    div.event_date {{event.prettyStartDate}}
+    div.event_address {{event.place.name}}
+    div(style="margin-bottom: 10px;")
