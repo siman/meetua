@@ -1,7 +1,6 @@
 extends ../layout
 
-mixin listMyEvents(groupTitle, groupType)
-  h2 #{groupTitle}
+mixin listMyEvents(groupType)
   div(ng-show="!events.#{groupType}.length")
    em Нет событий
   div(ng-show="events.#{groupType}.length")
@@ -21,6 +20,18 @@ block content
   .page-header
     h1 Мои cобытия
   div(ng-controller='MyEventsCtrl')
-    +listMyEvents('Созданные мной', 'my')
-    +listMyEvents('Собираюсь пойти', 'going')
-    +listMyEvents('Посещенные', 'visited')
+
+    h2
+      i.fa.fa-edit
+      span Созданные мной
+    +listMyEvents('my')
+
+    h2
+      i.fa.fa-chevron-right
+      span Собираюсь пойти
+    +listMyEvents('going')
+
+    h2
+      i.fa.fa-chevron-left
+      span Посещенные
+    +listMyEvents('visited')
