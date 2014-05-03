@@ -6,7 +6,7 @@ module.exports = [
     "name" : "test1",
     "description" : "test desc",
     "activity" : "bike",
-    "author" : "5352828ed8cf114c1063aa29",
+    "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
       "date" : "2014-04-29T21:00:00Z"
@@ -26,7 +26,7 @@ module.exports = [
     "name" : "pokatushka v buche",
     "description" : "pokatuuuuuuuuuuuuuuuushka",
     "activity" : "bike",
-    "author" : "5352828ed8cf114c1063aa29",
+    "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
       "date" : "2014-04-29T21:00:00Z"
@@ -46,7 +46,7 @@ module.exports = [
     "name" : "pokatushka na truhane",
     "description" : "Truhan",
     "activity" : "bike",
-    "author" : "5352828ed8cf114c1063aa29",
+    "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
       "date" : "2014-05-28T21:00:00Z"
@@ -66,7 +66,7 @@ module.exports = [
     "name" : "Code in comfy",
     "description" : "comfy code hackathon",
     "activity" : "code",
-    "author" : "5352828ed8cf114c1063aa29",
+    "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
       "date" : "2014-05-28T21:00:00Z"
@@ -86,7 +86,7 @@ module.exports = [
     "name" : "Code in comfy",
     "description" : "comfy code hackathon",
     "activity" : "code",
-    "author" : "5352828ed8cf114c1063aa29",
+    "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
       "date" : "2014-06-28T21:00:00Z"
@@ -106,7 +106,7 @@ module.exports = [
     "name" : "Chimera house",
     "description" : "Chimera house tour",
     "activity" : "hiking",
-    "author" : "5352828ed8cf114c1063aa29",
+    "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
       "date" : "2014-05-23T21:00:00Z"
