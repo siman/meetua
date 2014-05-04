@@ -1,10 +1,11 @@
 'use strict';
 
-var _ = require("underscore");
+var _ = require('underscore');
 var async = require('async');
 var conf = require('../../config/app-config');
 var Event = require('../../models/Event');
-var EventStore = require("../event/EventStore");
+var EventStore = require('../event/EventStore');
+var Notifier = require('../util/notifierService');
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile.
 
@@ -75,7 +76,7 @@ module.exports.get_find = function(req, res, next) {
 };
 
 /** Change participation status for event. */
-module.exports.post_participation = function(req, res, next) {
+module.exports.post_participation = function(re0q, res, next) {
   var eventId = req.query.eventId;
   var act = req.query.act || 'add'; // valid values: add, remove.
   var curUser = req.user;
@@ -86,7 +87,9 @@ module.exports.post_participation = function(req, res, next) {
     function updateEvent(status) {
       event.save(function(err) {
         if (err) return next(err);
-        res.json({status: status});
+
+        Notifier.notifyParticipant(curUser,status);
+        res.json({status: status})
       });
     }
 
