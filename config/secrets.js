@@ -34,8 +34,10 @@ module.exports = {
 
   vkAuth: true,
   vk: {
-    clientID: process.env.VK_ID || '4324675',
-    clientSecret: process.env.VK_SECRET || 'KUxP386NEIfon1JoIZdZ',
+    clientID: process.env.VK_ID || '4342834',
+    clientSecret: process.env.VK_SECRET || 'v4Y1BbQ9BF2s2MVhzY4H',
+//    clientID: process.env.VK_ID || '4342941',
+//    clientSecret: process.env.VK_SECRET || 'HtX1C4eEuDjIQMiXUONF',
     callbackURL: '/auth/vkontakte/callback',
     passReqToCallback: true
   },
