@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var fs = require('fs-extra');
+var flash = require('express-flash');
 var path = require('path');
 var tmp = require('tmp');
 var os = require('os');
@@ -18,7 +19,12 @@ var createEvent = require('../../../controllers/event/create-event');
 describe('create-event', function() {
     var user = { _id: mongoose.Types.ObjectId() };
     var app = express();
+    app.use(express.cookieParser());
     app.use(express.bodyParser());
+    app.use(express.session({
+      secret: 's3cr3t'
+    }));
+    app.use(flash());
     app.use(testUtil.reqUser(user));
     app.post('/event/create', createEvent);
     app.use(testUtil.errorHandler);
