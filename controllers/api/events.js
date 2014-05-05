@@ -76,7 +76,7 @@ module.exports.get_find = function(req, res, next) {
 };
 
 /** Change participation status for event. */
-module.exports.post_participation = function(re0q, res, next) {
+module.exports.post_participation = function(req, res, next) {
   var eventId = req.query.eventId;
   var act = req.query.act || 'add'; // valid values: add, remove.
   var curUser = req.user;
