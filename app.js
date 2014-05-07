@@ -97,7 +97,8 @@ app.use(function(req, res, next) {
   if (req.method !== 'GET') return next();
   var path = req.path.split('/')[1];
   if (/(auth|login|logout|signup)$/i.test(path)) return next();
-  req.session.returnTo = req.path;
+  var returnTo = req.path.indexOf('/assets') === 0 ? '/' : req.path; // ignore assets requests
+  req.session.returnTo = returnTo;
   next();
 });
 app.use(app.router);
