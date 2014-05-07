@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  form(method='POST')
+  form(method='POST', action='/login')
     legend Sign In
     input(type='hidden', name='_csrf', value=_csrf)
     .col-sm-8.col-sm-offset-2
