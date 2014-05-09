@@ -13,6 +13,7 @@ angular.module('myApp')
         var uploader = $scope.uploader = imageService.uploader;
 
         $scope.event = {};
+        // FIXME remove copy-paste and extract into directive when activity will have new design
         $scope.onActClick = function(act) {
             if (act === $scope.event.activity) {
                 $scope.event.activity = undefined;
