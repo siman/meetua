@@ -28,6 +28,8 @@ var myEvents = require('./controllers/profile/my-events');
 
 var eventStore = require('./controllers/event/EventStore');
 
+var renderTpl = require('./controllers/render-tpl').renderTpl;
+
 /**
  * API keys + Passport configuration.
  */
@@ -152,6 +154,7 @@ app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, 
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 
 var feedback = require('./controllers/feedback');
+app.get('/tpl/*', renderTpl);
 app.get('/feedback', feedback.get_feedback);
 app.get('/event/create', passportConf.isAuthenticated, createEventPage);
 app.post('/event/create', passportConf.isAuthenticated, createEvent);
