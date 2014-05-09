@@ -8,4 +8,5 @@ block content
         h3 Создать событие
 
     form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl', ng-submit='submit()', name='eventForm', novalidate)
+      .alert.alert-warning {{event}}
       +eventFields(true)
