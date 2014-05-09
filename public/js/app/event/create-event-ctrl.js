@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('CreateEventCtrl', ['$scope', '$timeout', '$http', 'KIEV_MAP', 'BASE_MAP',
+    .controller('CreateEventCtrl', ['$scope', '$timeout', '$http',
     '$window', 'EventImageService',
-    function($scope, $timeout, $http, KIEV_MAP, BASE_MAP, $window, EventImageService) {
+    function($scope, $timeout, $http, $window, EventImageService) {
         var imageService = $scope.imageService = EventImageService.create({
           scope: $scope,
           onAllUploaded: function submitAfterUpload(uploadedImages) {
@@ -28,29 +28,6 @@ angular.module('myApp')
                 doSendPost(buildReqData());
             }
         };
-        $scope.placeMap = _.extend(BASE_MAP, KIEV_MAP, {
-            marker: {
-                options: {draggable: true},
-                events: {
-                    dragend: function(event) {
-                        $timeout(function(){
-                            updateMapLatLng(event.position.lat(), event.position.lng());
-                        });
-                    }
-                }
-            }
-        });
-        $scope.$watch('data.place.details', function(details){
-            if (details) {
-                updateMapLatLng(details.geometry.location.lat(), details.geometry.location.lng());
-                if ($scope.placeMap.zoom == KIEV_MAP.zoom) {
-                    $scope.placeMap.zoom = KIEV_MAP.zoom + 4;
-                }
-            }
-        });
-        $scope.placeOptions={
-            country: 'ua'
-        };
         function buildReqData(uploadedImages) {
             var reqData = _.extend($scope.event, {
                 images: uploadedImages
@@ -67,9 +44,5 @@ angular.module('myApp')
             }).error(function(err) {
                     console.error('Failed to create event ', err);
                 });
-        }
-        function updateMapLatLng(lat, lng) {
-            $scope.event.place.latitude = lat;
-            $scope.event.place.longitude = lng;
         }
     }]);

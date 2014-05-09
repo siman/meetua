@@ -8,12 +8,11 @@ mixin eventFields(isCreate)
     label.col-sm-2.control-label(for='placeName') Где *
     .col-sm-8
       input#placeName.form-control(type='text', name='placeName', ng-autocomplete='ng-autocomplete',
-      ng-model='event.place.name', options='placeOptions', details='data.place.details', required)
-  .form-group(ng-if='data.place.details')
+      ng-model='event.place.name', options='placeOptions', details='place.details', required)
+  .form-group(ng-if='place.details')
     label.col-sm-2.control-label
     .col-sm-8
-      google-map(center='event.place', zoom='placeMap.zoom')
-        marker(coords='event.place', options='placeMap.marker.options', events="placeMap.marker.events")
+      place-map(details='place.details', lat='event.place.latitude', lng='event.place.longitude')
   .form-group
     label.col-sm-2.control-label(for='startDate')
       i.fa.fa-calendar
