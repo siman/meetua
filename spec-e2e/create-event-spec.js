@@ -1,10 +1,11 @@
 "use strict";
+var conf = require('./protractor_conf').config;
 
 describe('homepage', function () {
   var ptor;
 
   beforeEach(function () {
-    browser.get('http://127.0.0.1:3000/');
+    browser.get(conf.baseUrl);
     ptor = protractor.getInstance();
     browser.get('/event/create');
   });
