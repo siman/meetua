@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('myApp')
-    .factory('EventImageService', ['$fileUploader', '$cookies', function($fileUploader, $cookies) {
+    .factory('EventImageService', ['$fileUploader', '$cookies', '$http', function($fileUploader, $cookies, $http) {
         /**
          *
          * @param {Object} params
          * @param {Scope} params.scope
          * @param {Function} params.onAllUploaded function(uploadedImages)
          * @param {Array} params.uploadedImages uploaded images, that are of mongoose Image schema type
+         * @param {Event} [params.event]
          * @param {String} [params.uploadUrl]
          * @param {Number} [params.queueLimit]
          * @param {String} [params.acceptedFormats]
@@ -21,16 +22,21 @@ angular.module('myApp')
           self.acceptedFormats = params.acceptedFormats || '|jpg|png|jpeg|bmp|gif|'; // Images only
           self.onAllUploaded = params.onAllUploaded;
           self.uploadedImages = params.uploadedImages || [];
+          self.event = params.event || {};
           self.uploader = createFileUploader();
           self.removeItem = removeItem;
           self.setAsLogo = setAsLogo;
+
+          if (self.uploadedImages.length > 0 && !self.event._id) {
+            throw new Error('Event is required when uploaded images exist');
+          }
 
           var helper = {
             allImages: function() {
               return self.uploadedImages.concat(self.uploader.queue);
             },
             isUploadedImage: function(item) {
-              return self.uploader.getIndexOfItem(item) < 0;
+              return self.uploader.getIndexOfItem(item) < 0 && item._id;
             }
           };
 
@@ -38,33 +44,15 @@ angular.module('myApp')
             var allImages = helper.allImages();
             if (allImages.length > 1) {
               _.each(allImages, disableLogo);
-              if (helper.isUploadedImage(item)) {
-                postSetLogo(item, true);
-              } else {
-                item.isLogo = true;
-              }
+              item.isLogo = true;
             }
 
             function disableLogo(item) {
-              if (item.isLogo === true) {
-                if (helper.isUploadedImage(item)) {
-                  postSetLogo(item, false);
-                } else {
-                  item.isLogo = false;
-                }
-              }
+              item.isLogo = false;
             }
           }
 
-          function postSetLogo(item, isLogo) {
-            if (helper.isUploadedImage(item)) {
-              // TODO
-              console.log('Set image as logo', isLogo, item);
-              item.isLogo = isLogo;
-            }
-          }
-
-          function removeItem(item){
+          function removeItem(item) {
             if (helper.isUploadedImage(item)) {
               // TODO
               console.log('Removing server image ', item);
