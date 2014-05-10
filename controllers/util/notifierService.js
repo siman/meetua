@@ -1,5 +1,6 @@
 'use strict';
-var mandrill = require('node-mandrill')('iiiPHm_fhC7JrK4vgExm0A');
+var conf = require('../../config/app-config.js');
+var mandrill = require('node-mandrill')(conf.notification.MANDRILL_KEY);
 
 module.exports.notifyParticipant = function (user) {
 	var mailto;
@@ -12,7 +13,7 @@ module.exports.notifyParticipant = function (user) {
 				to: [
 					{email: mailto}
 				],
-				from_email: 'meetua@domain.com',
+				from_email: conf.notification.MAIL_FROM,
 				subject: 'meetua subject',
 				text: "meetua text"
 			}
