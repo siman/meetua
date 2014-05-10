@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('CreateEventCtrl', ['$scope', '$http',
-    '$window', 'EventImageService',
+    .controller('CreateEventCtrl', ['$scope', '$http', '$window', 'EventImageService',
     function($scope, $http, $window, EventImageService) {
         var imageService = $scope.imageService = EventImageService.create({
           scope: $scope,
