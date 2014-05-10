@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
+var CronJob = require('cron').CronJob;
 
 /**
  * Load controllers.
@@ -227,5 +228,9 @@ app.listen(app.get('port'), function() {
 
 eventStore.dbPreload();
 userController.dbPreload();
+
+new CronJob('* * * * * *', function () {
+  console.log('You will see this message every second');
+}, null, true, "Europe/Kiev");
 
 module.exports = app;
