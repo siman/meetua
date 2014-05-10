@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('myApp').controller('SelectEventCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'myApiService',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, myApiService) {
-    $scope.selectedAct = undefined;
-
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'myApiService', 'activities',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, myApiService, activities) {
+    $scope.data = {};
+    $scope.activities = activities;
     $scope.foundEvents = [];
 
     // Zoom map on Kiev.
@@ -27,14 +27,10 @@ angular.module('myApp').controller('SelectEventCtrl',
       window.location = "/event/" + event._id;
     };
 
-    $scope.onActClick = function (actName) {
-      if (actName === $scope.selectedAct) {
-        actName = undefined;
-      }
-      $scope.selectedAct = actName;
-      console.log("actName", actName);
-      findEvents(actName);
-    };
+    $scope.$watch('data.selectedAct', function(newAct) {
+      console.log("actName", newAct);
+      findEvents(newAct);
+    });
 
     function init() {
       findEvents();

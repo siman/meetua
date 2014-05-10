@@ -8,13 +8,7 @@ block content
 
   div(ng-controller='SelectEventCtrl')
     div.act_bar
-      +actIcon('selectedAct', 'bike')
-      +actIcon('selectedAct', 'running')
-      +actIcon('selectedAct', 'workout')
-      +actIcon('selectedAct', 'hiking')
-      +actIcon('selectedAct', 'photo')
-      +actIcon('selectedAct', 'en')
-      +actIcon('selectedAct', 'code')
+      act-icon(ng-model='data.selectedAct', activity='{{activity.name}}', text-over='{{activity.textOver}}', ng-repeat='activity in activities')
       div.clearfix
 
     .row
