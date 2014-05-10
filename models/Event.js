@@ -47,6 +47,10 @@ eventSchema.virtual('participantCount').get(function() {
   return this.participants.length;
 });
 
+eventSchema.virtual('isPassed').get(function() {
+  return moment(this.start.date).isBefore(moment());
+});
+
 eventSchema.set('toJSON', {virtuals: true });
 
 module.exports = mongoose.model('Event', eventSchema);

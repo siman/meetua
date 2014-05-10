@@ -107,6 +107,8 @@ module.exports.post_participation = function(req, res, next) {
       });
     }
 
+    // TODO: Disallow to change participation if event is int the past?
+
     var alreadyPartInx = event.participants.indexOf(curUser._id);
     if (act === 'remove' && alreadyPartInx >= 0) {
 //      console.log("remove");

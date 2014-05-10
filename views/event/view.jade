@@ -27,17 +27,20 @@ block content
           div
             .pull-right
               #partBox
-                div(ng-show="isPart")
-                  #partStatus Я участник события
+                div(ng-show="event.isPassed")
+                  div Событие уже прошло
+                div(ng-show="!event.isPassed")
+                  div(ng-show="isPart")
+                    #partStatus Я участник события
 
-                div(ng-show="event.participantCount")
-                  span.event_label Всего участников:
-                  span {{event.participantCount}}
-                div(ng-show="!event.participantCount")
-                  span.event_label Еще нет участников
+                  div(ng-show="event.participantCount")
+                    span.event_label Всего участников:
+                    span {{event.participantCount}}
+                  div(ng-show="!event.participantCount")
+                    span.event_label Еще нет участников
 
-                button#partBtn.btn(ng-click="participate()",
-                  ng-class="{'btn-default': isPart, 'btn-success': !isPart}") {{partBtnName}}
+                  button#partBtn.btn(ng-click="participate()",
+                    ng-class="{'btn-default': isPart, 'btn-success': !isPart}") {{partBtnName}}
 
             h1 #{event.name}
           div.view_event
