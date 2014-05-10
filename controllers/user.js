@@ -138,13 +138,7 @@ exports.postUpdateProfile = function(req, res, next) {
     user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
     user.profile.website = req.body.website || '';
-
-    //Can I make this shorter?
-    if (req.body.notification == 'on')
-      var notifications = true;
-    else var notifications = false;
-
-		user.profile.receiveNotifications = notifications;
+		user.profile.receiveNotifications = req.body.notification === 'on';
 
     user.save(function(err) {
       if (err) return next(err);
