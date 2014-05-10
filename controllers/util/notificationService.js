@@ -8,33 +8,33 @@ var mandrill = require('node-mandrill')(conf.notification.MANDRILL_KEY);
 
 module.exports.notifyParticipant = function (user, event) {
 
-	if ((user.email) && (user.profile.receiveNotifications)) {
+  if ((user.email) && (user.profile.receiveNotifications)) {
 
-		emailTemplates(templatesDir, function (err, template) {
-			if (err) {
-				console.log(err);
-			} else {
-				var params = { eventName: event.name };
-				template('event-participate', params, function (err, html, text) {
+    emailTemplates(templatesDir, function (err, template) {
+      if (err) {
+        console.log(err);
+      } else {
+        var params = { eventName: event.name };
+        template('event-participate', params, function (err, html, text) {
 
-					mandrill('/messages/send', {
-						message: {
-							to: [
-								{email: user.email}
-							],
-							from_email: conf.notification.MAIL_FROM,
-							subject: 'meetua subject',
-							html: html
-						}
-					}, function (error, response) {
-						if (error) console.log(JSON.stringify(error));
-						else console.log(response);
-					});
-				});
+          mandrill('/messages/send', {
+            message: {
+              to: [
+                {email: user.email}
+              ],
+              from_email: conf.notification.MAIL_FROM,
+              subject: 'meetua subject',
+              html: html
+            }
+          }, function (error, response) {
+            if (error) console.log(JSON.stringify(error));
+            else console.log(response);
+          });
+        });
 
-			}
-		});
+      }
+    });
 
-	}
+  }
 
 };
