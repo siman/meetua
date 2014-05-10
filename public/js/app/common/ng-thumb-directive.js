@@ -8,6 +8,11 @@ angular.module('myApp')
       isImage: function(file) {
         var type =  '|' + file.type.slice(file.type.lastIndexOf('/') + 1) + '|';
         return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+      },
+      createImage: function(src, onLoad) {
+        var img = new Image();
+        img.onload = onLoad;
+        img.src = src;
       }
     };
 
@@ -15,24 +20,25 @@ angular.module('myApp')
       restrict: 'A',
       template: '<canvas/>',
       link: function(scope, element, attributes) {
-        if (!helper.support) return;
-
         var params = scope.$eval(attributes.ngThumb);
 
-        if (!helper.isFile(params.file)) return;
-        if (!helper.isImage(params.file)) return;
+        if (!helper.support) return;
+        if (!params.file) return;
+
+        if (params.file.url) {
+          helper.createImage(params.file.url, onLoadImage);
+        } else {
+          if (!helper.isFile(params.file)) return;
+          if (!helper.isImage(params.file)) return;
+
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            helper.createImage(event.target.result, onLoadImage);
+          };
+          reader.readAsDataURL(params.file);
+        }
 
         var canvas = element.find('canvas');
-        var reader = new FileReader();
-
-        reader.onload = onLoadFile;
-        reader.readAsDataURL(params.file);
-
-        function onLoadFile(event) {
-          var img = new Image();
-          img.onload = onLoadImage;
-          img.src = event.target.result;
-        }
 
         function onLoadImage() {
           var width = params.width || this.width / this.height * params.height;
