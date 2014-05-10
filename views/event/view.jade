@@ -29,8 +29,16 @@ block content
               #partBox
                 div(ng-show="isPart")
                   #partStatus Я участник события
+
+                div(ng-show="event.participantCount")
+                  span.event_label Всего участников:
+                  span {{event.participantCount}}
+                div(ng-show="!event.participantCount")
+                  span.event_label Еще нет участников
+
                 button#partBtn.btn(ng-click="participate()",
                   ng-class="{'btn-default': isPart, 'btn-success': !isPart}") {{partBtnName}}
+
             h1 #{event.name}
           div.view_event
             +eventField("Когда", event.prettyStartDate)

@@ -43,6 +43,10 @@ angular.module('myApp').controller('ViewEventCtrl',
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');
           changeParticipation(data.status === 'added');
+          $http({method: 'GET', url: myApiService.buildUrl('/events/findById'), params: {id: $scope.event._id}}).
+            success(function(res) {
+              $scope.event = res.event;
+            });
         }).
         error(function(data, status, headers, config) {
           // TODO show on UI that failed to participate in event.

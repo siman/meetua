@@ -61,6 +61,19 @@ module.exports.get_myOverview = function(req, res, next) {
   }
 };
 
+module.exports.get_findById = function(req, res, next) {
+  var id = req.query.id;
+  console.log("id", id);
+  if (id) {
+    EventStore.findById(id, function(err, event) {
+      if (err) return next(err);
+      res.json({event: event});
+    });
+  } else {
+    res.send(404);
+  }
+};
+
 module.exports.get_find = function(req, res, next) {
   var activity = req.query.act;
   console.log("act", activity);

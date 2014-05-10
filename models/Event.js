@@ -43,6 +43,10 @@ eventSchema.virtual('logoUrl').get(function() {
   }
 });
 
+eventSchema.virtual('participantCount').get(function() {
+  return this.participants.length;
+});
+
 eventSchema.set('toJSON', {virtuals: true });
 
 module.exports = mongoose.model('Event', eventSchema);

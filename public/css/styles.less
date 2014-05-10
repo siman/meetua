@@ -250,6 +250,27 @@ body {
   height: @map_height;
 }
 
+.preview_events_box {
+  height: @map_height;
+  max-height: @map_height;
+  overflow: auto;
+}
+
+.preview_event_row {
+  position: relative;
+
+  .event_statistics {
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+  }
+}
+
+.event_label {
+  color: @color_secondary;
+  margin-right: 5px;
+}
+
 .preview_event {
   border-bottom: 1px solid #ccc;
   padding: 10px;
@@ -268,17 +289,7 @@ body {
   }
 }
 
-.preview_events_box {
-  height: @map_height;
-  max-height: @map_height;
-  overflow: auto;
-}
-
 .view_event {
-  .event_label {
-    color: @color_secondary;
-    margin-right: 5px;
-  }
   .event_desc {
     font-size: 18px; // TODO: Calculate as main font + 4px?
     margin-top: 10px;
@@ -288,7 +299,7 @@ body {
 
 .drop-zone {
   background: rgba(0,0,0,0.1);
-  border-radius: 10px;
+  .border_radius(10px);
   border: @act_border dashed rgba(0,0,0,0.2);
   padding: 40px 0;
   text-align: center;
@@ -304,7 +315,7 @@ body {
 .pointer { cursor: pointer; }
 
 .event_img {
-  position:relative;
+  position: relative;
   width: 100%;
   .selected canvas { border: 10px solid @color_highlight_bg; }
   canvas { border: 10px solid @well-bg;}
@@ -333,12 +344,15 @@ label[disabled] {
 }
 
 #partBox {
+  .border_radius(10px);
+  background-color: #f5f5f5;
+  padding: 20px;
+  text-align: center;
+
   #partStatus {
     color: @color_secondary;
-    padding-bottom: 10px;
-    text-align: center;
   }
   #partBtn {
-
+    margin-top: 10px;
   }
 }
