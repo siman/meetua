@@ -101,8 +101,8 @@ module.exports.post_participation = function(req, res, next) {
       event.save(function(err) {
         if (err) return next(err);
 
-        //Notifier.notifyParticipant(curUser,status);
-        Notifier.notifyParticipant(curUser, event);
+
+        if (status == 'added') Notifier.notifyParticipant(curUser, event);
         res.json({status: status})
       });
     }
