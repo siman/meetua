@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('CreateEventCtrl', ['$scope', '$timeout', '$http',
+    .controller('CreateEventCtrl', ['$scope', '$http',
     '$window', 'EventImageService',
-    function($scope, $timeout, $http, $window, EventImageService) {
+    function($scope, $http, $window, EventImageService) {
         var imageService = $scope.imageService = EventImageService.create({
           scope: $scope,
           onAllUploaded: function submitAfterUpload(uploadedImages) {
