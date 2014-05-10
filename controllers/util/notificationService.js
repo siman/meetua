@@ -8,7 +8,7 @@ var mandrill = require('node-mandrill')(conf.notification.MANDRILL_KEY);
 
 module.exports.notifyParticipant = function (user, event) {
 
-  if ((user.email) && (user.profile.receiveNotifications)) {
+  if (user.email && user.profile.receiveNotifications) {
 
     emailTemplates(templatesDir, function (err, template) {
       if (err) {
