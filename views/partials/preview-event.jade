@@ -3,7 +3,7 @@
     div(ng-show="!event.logoUrl")
       div.no_image
     div(ng-show="event.logoUrl")
-      img.event_logo(src="{{event.logoUrl}}")
+      img.event_logo(ng-src="{{event.logoUrl}}")
   div
     a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
     div.event_date {{event.prettyStartDate}}
