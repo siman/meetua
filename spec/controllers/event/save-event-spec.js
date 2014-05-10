@@ -27,21 +27,21 @@ describe('save-event', function() {
   }));
   app.use(flash());
   app.use(testUtil.reqUser(user));
-  app.post('/event/create', saveEvent);
+  app.post('/event/save', saveEvent);
   app.use(testUtil.errorHandler);
 
   beforeEach(testUtil.mongoConnect);
   afterEach(testUtil.mongoDisconnect);
 
-  function callCreateEvent(reqData) {
+  function callSaveEvent(reqData) {
     return request(app)
-      .post('/event/create')
+      .post('/event/save')
       .send(reqData);
   }
 
   describe('create-event', function() {
     it('should save event to the database', function(done) {
-      callCreateEvent(buildReqData())
+      callSaveEvent(buildReqData())
         .expect(200)
         .end(function(err, res) {
           if (err) return done(err);
@@ -55,7 +55,7 @@ describe('save-event', function() {
       testUtil.createTestImage({isLogo: true}, function(reqImage) {
         fs.removeSync(config.EVENT_IMG_DIR);
 
-        callCreateEvent(buildReqData({images: [reqImage]}))
+        callSaveEvent(buildReqData({images: [reqImage]}))
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
@@ -69,13 +69,8 @@ describe('save-event', function() {
       });
     });
     it('should forbid multiple logos', function(done) {
-      var createLogoImage = function(next) {
-        testUtil.createTestImage({isLogo: true}, function(image) {
-          next(null, image);
-        });
-      };
       async.parallel([createLogoImage, createLogoImage], function(err, images) {
-        callCreateEvent(buildReqData({images: images}))
+        callSaveEvent(buildReqData({images: images}))
           .expect(400)
           .end(done);
       });
@@ -97,7 +92,7 @@ describe('save-event', function() {
         };
         fs.writeFileSync(existingImage.path, existingImage.content);
 
-        callCreateEvent(buildReqData({images: [reqImage]}))
+        callSaveEvent(buildReqData({images: [reqImage]}))
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
@@ -110,6 +105,17 @@ describe('save-event', function() {
     });
   });
 });
+
+function createImage(next) {
+  testUtil.createTestImage({isLogo: false}, function(image) {
+    next(null, image);
+  });
+}
+function createLogoImage(next) {
+  testUtil.createTestImage({isLogo: true}, function(image) {
+    next(null, image);
+  });
+}
 
 function buildReqData(opts) {
   var reqData = {

@@ -7,7 +7,7 @@ describe('homepage', function () {
   beforeEach(function () {
     browser.get(conf.baseUrl);
     ptor = protractor.getInstance();
-    browser.get('/event/create');
+    browser.get('/event/save');
   });
 
   it('should load the page', function () {

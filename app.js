@@ -157,7 +157,7 @@ var feedback = require('./controllers/feedback');
 app.get('/tpl/*', renderTpl);
 app.get('/feedback', feedback.get_feedback);
 app.get('/event/create', passportConf.isAuthenticated, createEventPage);
-app.post('/event/create', passportConf.isAuthenticated, saveEvent);
+app.post('/event/save', passportConf.isAuthenticated, saveEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);
 app.post('/upload/image', passportConf.isAuthenticated, upload);

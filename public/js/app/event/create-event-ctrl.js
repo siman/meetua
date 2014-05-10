@@ -27,7 +27,7 @@ angular.module('myApp')
       return reqData;
     }
     function doSendPost(requestData) {
-      $http.post('/event/create', requestData).success(function(res){
+      $http.post('/event/save', requestData).success(function(res){
         console.log('Event is created successfully ', res);
         var redirectUrl = '/event/' + res.event._id;
         console.log('Redirecting to ', redirectUrl);

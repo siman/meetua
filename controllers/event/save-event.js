@@ -13,7 +13,12 @@ var tmp = require('tmp');
 
 module.exports = function(req, res, next) {
     var data = req.body;
-    console.log('Create event request ', data);
+    var isCreate = _.isUndefined(req.body._id);
+    if (isCreate) {
+      console.log('Create event request', data);
+    } else {
+      console.log('Update event request', data);
+    }
 
     var images = req.body.images || [];
     async.map(images, verifyAndCopyImage, buildAndSaveEvent(req, res, next));
