@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('myApp')
   .directive('actIcon', function() {
     function link(scope, element, attrs, ngModel) {

@@ -1,3 +1,5 @@
+'use strict';
+
 var renderTpl = function(req, res, next) {
   _renderTpl(req.path, res);
 };

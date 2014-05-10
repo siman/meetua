@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('myApp')
   .directive('placeMap', ['BASE_MAP', 'KIEV_MAP', '$timeout', function(BASE_MAP, KIEV_MAP, $timeout) {
     function controller($scope) {
