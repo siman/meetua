@@ -20,24 +20,32 @@ module.exports = function(req, res, next) {
 };
 
 function buildAndSaveEvent(req, res, next) {
+    function countLogoImages(acc, image, next) {
+      var add = image.isLogo ? 1 : 0;
+      next(null, acc + add);
+    }
     return function(err, images) {
         if (err) return next(err);
-        console.log('Copied images ', images);
-        var event = new Event(_.extend(req.body, {
-            images: _.map(images, function(image){
-                return new Image(image);
-            }),
-            author: req.user._id
-        }));
-        console.log('Saving event ', event);
-        event.save(function(err) {
-            if (err) return next(err);
-            var data = {event: event};
-            console.log('Sending response ', data);
-            req.flash('success', { msg: 'Ваше событие создано!' });
-            res.send(data);
+        async.reduce(images, 0, countLogoImages, function(err, logoCount) {
+          if (err) return next(err);
+          if (images.length > 0 && logoCount != 1) return res.json(400, {error: 'Invalid logo count ' + logoCount});
+
+          var event = new Event(_.extend(req.body, {
+              images: _.map(images, function(image){
+                  return new Image(image);
+              }),
+              author: req.user._id
+          }));
+          console.log('Saving event ', event);
+          event.save(function(err) {
+              if (err) return next(err);
+              var data = {event: event};
+              console.log('Sending response ', data);
+              req.flash('success', { msg: 'Ваше событие создано!' });
+              res.send(data);
+          });
         });
-    }
+    };
 }
 
 function verifyAndCopyImage(image, next) {
