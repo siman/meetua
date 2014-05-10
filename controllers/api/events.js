@@ -88,6 +88,7 @@ module.exports.post_participation = function(req, res, next) {
       event.save(function(err) {
         if (err) return next(err);
 
+        //Notifier.notifyParticipant(curUser,status);
         Notifier.notifyParticipant(curUser,status);
         res.json({status: status})
       });

@@ -1,36 +1,25 @@
 'use strict';
+var mandrill = require('node-mandrill')('iiiPHm_fhC7JrK4vgExm0A');
 
-var nodemailer = require("nodemailer");
+module.exports.notifyParticipant = function (user) {
+	var mailto;
 
-var smtpTransport = nodemailer.createTransport("SMTP",{
-  service: "Gmail",
-  auth: {
-    user: "meetua32@gmail.com",
-    pass: "meetua23"
-  }
-});
+	if (user.email) {
+		mailto = user.email;
 
-var mailOptions = {
-  from: "Meet Ua <meetua32@gmail.com>", // sender address
-  to: "gonevo32@mail.ru", // list of receivers
-  subject: "Hello ", // Subject line
-  text: "Hello world ", // plaintext body
-  html: "<b>Hello world</b>" // html body
-};
+		mandrill('/messages/send', {
+			message: {
+				to: [
+					{email: mailto}
+				],
+				from_email: 'meetua@domain.com',
+				subject: 'meetua subject',
+				text: "meetua text"
+			}
+		}, function (error, response) {
+			if (error) console.log(JSON.stringify(error));
+			else console.log(response);
+		});
 
-
-module.exports.notifyParticipant = function(user, status) {
-  console.log('userrrrr', user);
-  if (user.email) mailOptions.to = user.email;
-  smtpTransport.sendMail(mailOptions, function(error, response){
-    if(error){
-      console.log(error);
-    }else{
-      console.log("Message sent: " + response.message);
-    }
-
-    // if you don't want to use this transport object anymore, uncomment following line
-    //smtpTransport.close(); // shut down the connection pool, no more messages
-  });
-
+	}
 };
