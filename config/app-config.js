@@ -10,9 +10,9 @@ module.exports = {
   EVENT_IMG_DIR: './public/upload',
   UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload'),
 
-	notification: {
-		MANDRILL_KEY: 'iiiPHm_fhC7JrK4vgExm0A',
-		MAIL_FROM: 'meetua@domain.conf'
-	}
+  notification: {
+    MANDRILL_KEY: 'iiiPHm_fhC7JrK4vgExm0A',
+    MAIL_FROM: 'meetua@domain.conf'
+  }
 
 };
