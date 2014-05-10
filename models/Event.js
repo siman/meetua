@@ -37,7 +37,7 @@ eventSchema.virtual('logoUrl').get(function() {
   var logo = _.find(this.images, function(img) { return img.isLogo; });
   console.log("Found logo", logo);
   if (logo) {
-    return '/upload/' + path.basename(logo.path);
+    return logo.url;
   } else {
     return null;
   }
