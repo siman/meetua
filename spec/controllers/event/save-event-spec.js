@@ -18,118 +18,118 @@ config.EVENT_IMG_DIR = path.join(os.tmpDir(), 'event-imgs');
 var saveEvent = require('../../../controllers/event/save-event');
 
 describe('save-event', function() {
-    var user = { _id: mongoose.Types.ObjectId() };
-    var app = express();
-    app.use(express.cookieParser());
-    app.use(express.bodyParser());
-    app.use(express.session({
-      secret: 's3cr3t'
-    }));
-    app.use(flash());
-    app.use(testUtil.reqUser(user));
-    app.post('/event/create', saveEvent);
-    app.use(testUtil.errorHandler);
+  var user = { _id: mongoose.Types.ObjectId() };
+  var app = express();
+  app.use(express.cookieParser());
+  app.use(express.bodyParser());
+  app.use(express.session({
+    secret: 's3cr3t'
+  }));
+  app.use(flash());
+  app.use(testUtil.reqUser(user));
+  app.post('/event/create', saveEvent);
+  app.use(testUtil.errorHandler);
 
-    beforeEach(testUtil.mongoConnect);
-    afterEach(testUtil.mongoDisconnect);
+  beforeEach(testUtil.mongoConnect);
+  afterEach(testUtil.mongoDisconnect);
 
-    function callCreateEvent(reqData) {
-        return request(app)
-            .post('/event/create')
-            .send(reqData);
-    }
+  function callCreateEvent(reqData) {
+    return request(app)
+      .post('/event/create')
+      .send(reqData);
+  }
 
-    describe('create-event', function() {
-      it('should save event to the database', function(done) {
-          callCreateEvent(buildReqData())
-              .expect(200)
-              .end(function(err, res) {
-                  if (err) return done(err);
-                  Event.findOne({_id: res.body.event._id }, function(err, doc) {
-                      expect(doc).toBeDefined();
-                      done();
-                  })
-              });
-      });
-      it('should move image to the new dir creating dest dir if necessary', function(done) {
-          testUtil.createTestImage({isLogo: true}, function(reqImage) {
-              fs.removeSync(config.EVENT_IMG_DIR);
-
-              callCreateEvent(buildReqData({images: [reqImage]}))
-                  .expect(200)
-                  .end(function(err, res) {
-                      if (err) return done(err);
-                      var copiedImage = res.body.event.images[0];
-                      expect(copiedImage.name).toBe(reqImage.name);
-                      expect(copiedImage.type).toBe(reqImage.type);
-                      expect(fs.existsSync(copiedImage.path)).toBe(true);
-                      expect(fs.existsSync(reqImage.path)).toBe(false);
-                      done();
-                  });
-          });
-      });
-      it('should forbid multiple logos', function(done) {
-        var createLogoImage = function(next) {
-          testUtil.createTestImage({isLogo: true}, function(image) {
-            next(null, image);
-          });
-        };
-        async.parallel([createLogoImage, createLogoImage], function(err, images) {
-          callCreateEvent(buildReqData({images: images}))
-            .expect(400)
-            .end(done);
+  describe('create-event', function() {
+    it('should save event to the database', function(done) {
+      callCreateEvent(buildReqData())
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          Event.findOne({_id: res.body.event._id }, function(err, doc) {
+            expect(doc).toBeDefined();
+            done();
+          })
         });
-      });
-      it('should generate unique name for image in the new dir and preserve file extension', function(done) {
-          tmp.file({postfix: '.jpg'}, function(err, filePath, fd) {
-              var content = new Buffer('image content');
-              var reqImage = {
-                  path: filePath,
-                  type: 'image/jpg',
-                  name: 'my-image.jpg',
-                  isLogo: true
-              };
-              fs.writeSync(fd, content, 0, content.length, 0);
+    });
+    it('should move image to the new dir creating dest dir if necessary', function(done) {
+      testUtil.createTestImage({isLogo: true}, function(reqImage) {
+        fs.removeSync(config.EVENT_IMG_DIR);
 
-              var existingImage = {
-                  path: path.join(config.EVENT_IMG_DIR, path.basename(reqImage.path)),
-                  content: 'existing image'
-              };
-              fs.writeFileSync(existingImage.path, existingImage.content);
-
-              callCreateEvent(buildReqData({images: [reqImage]}))
-                  .expect(200)
-                  .end(function(err, res) {
-                      if (err) return done(err);
-                      var savedImage = res.body.event.images[0];
-                      expect(savedImage.path).not.toBe(existingImage.path);
-                      expect(path.extname(savedImage.path)).toBe(path.extname(reqImage.path));
-                      done();
-                  });
+        callCreateEvent(buildReqData({images: [reqImage]}))
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            var copiedImage = res.body.event.images[0];
+            expect(copiedImage.name).toBe(reqImage.name);
+            expect(copiedImage.type).toBe(reqImage.type);
+            expect(fs.existsSync(copiedImage.path)).toBe(true);
+            expect(fs.existsSync(reqImage.path)).toBe(false);
+            done();
           });
       });
     });
+    it('should forbid multiple logos', function(done) {
+      var createLogoImage = function(next) {
+        testUtil.createTestImage({isLogo: true}, function(image) {
+          next(null, image);
+        });
+      };
+      async.parallel([createLogoImage, createLogoImage], function(err, images) {
+        callCreateEvent(buildReqData({images: images}))
+          .expect(400)
+          .end(done);
+      });
+    });
+    it('should generate unique name for image in the new dir and preserve file extension', function(done) {
+      tmp.file({postfix: '.jpg'}, function(err, filePath, fd) {
+        var content = new Buffer('image content');
+        var reqImage = {
+          path: filePath,
+          type: 'image/jpg',
+          name: 'my-image.jpg',
+          isLogo: true
+        };
+        fs.writeSync(fd, content, 0, content.length, 0);
+
+        var existingImage = {
+          path: path.join(config.EVENT_IMG_DIR, path.basename(reqImage.path)),
+          content: 'existing image'
+        };
+        fs.writeFileSync(existingImage.path, existingImage.content);
+
+        callCreateEvent(buildReqData({images: [reqImage]}))
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            var savedImage = res.body.event.images[0];
+            expect(savedImage.path).not.toBe(existingImage.path);
+            expect(path.extname(savedImage.path)).toBe(path.extname(reqImage.path));
+            done();
+          });
+      });
+    });
+  });
 });
 
 function buildReqData(opts) {
-    var reqData = {
-        name: 'pokatushka',
-        place: {
-            name: 'Kiev- stalica!',
-            latitude: 49,
-            longitude: 50
-        },
-        start: {
-            date: new Date(),
-            time: new Date()
-        },
-        end: {
-            date: new Date(),
-            time: new Date()
-        },
-        description: 'event description',
-        activity: 'bike',
-        images: []
-    };
-    return _.extend(reqData, opts);
+  var reqData = {
+    name: 'pokatushka',
+    place: {
+      name: 'Kiev- stalica!',
+      latitude: 49,
+      longitude: 50
+    },
+    start: {
+      date: new Date(),
+      time: new Date()
+    },
+    end: {
+      date: new Date(),
+      time: new Date()
+    },
+    description: 'event description',
+    activity: 'bike',
+    images: []
+  };
+  return _.extend(reqData, opts);
 }
