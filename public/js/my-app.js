@@ -38,4 +38,13 @@ angular.module('myApp', [
         opts: {
             scrollwheel: false
         }
-    });
+    })
+    .constant('activities', [  // TODO move into db in the future
+      {name: 'bike', textOver: 'Велосипед'},
+      {name: 'running', textOver: 'Бег'},
+      {name: 'workout', textOver: 'Workout'},
+      {name: 'hiking', textOver: 'Туризм'},
+      {name: 'photo', textOver: 'Фото'},
+      {name: 'en', textOver: 'Языки'},
+      {name: 'code', textOver: 'IT'}
+    ]);

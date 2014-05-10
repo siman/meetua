@@ -1,0 +1,7 @@
+div.border.row-fluid(
+  ng-class="{selected: ngModel == activity}",
+  ng-click="onActClick()", style='position:relative;'
+)
+  div(class="{{activity}}")
+    h2.text_over_container(ng-if='textOver')
+      span.text_over {{textOver}}

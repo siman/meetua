@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('CreateEventCtrl', ['$scope', '$http', '$window', 'EventImageService',
-    function($scope, $http, $window, EventImageService) {
+    .controller('CreateEventCtrl', ['$scope', '$http', '$window', 'EventImageService', 'activities',
+    function($scope, $http, $window, EventImageService, activities) {
         var imageService = $scope.imageService = EventImageService.create({
           scope: $scope,
           onAllUploaded: function submitAfterUpload(uploadedImages) {
@@ -10,16 +10,8 @@ angular.module('myApp')
           }
         });
         var uploader = $scope.uploader = imageService.uploader;
-
+        $scope.activities = activities;
         $scope.event = {};
-        // FIXME remove copy-paste and extract into directive when activity will have new design
-        $scope.onActClick = function(act) {
-            if (act === $scope.event.activity) {
-                $scope.event.activity = undefined;
-            } else {
-                $scope.event.activity = act;
-            }
-        };
         $scope.submit = function() {
             if (uploader.queue.length > 0) {
                 uploader.uploadAll();

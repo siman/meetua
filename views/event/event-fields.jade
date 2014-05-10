@@ -50,13 +50,7 @@ mixin eventFields(isCreate)
   .form-group
     label.col-sm-2.control-label(style='margin-top:70px') Тип события
     .col-sm-8: div.act_bar
-      +actIcon('event.activity', 'bike', 'Велосипед')
-      +actIcon('event.activity', 'running', 'Бег')
-      +actIcon('event.activity', 'workout', 'Workout')
-      +actIcon('event.activity', 'hiking', 'Туризм')
-      +actIcon('event.activity', 'photo', 'Фото')
-      +actIcon('event.activity', 'en', 'Языки')
-      +actIcon('event.activity', 'code', 'IT')
+      act-icon(ng-model='event.activity', activity='{{activity.name}}', text-over='{{activity.textOver}}', ng-repeat='activity in activities')
       div.clearfix
   .form-group
     label(class='col-sm-2 control-label', for='description') Лого/изображения
