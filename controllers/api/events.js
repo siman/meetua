@@ -5,11 +5,11 @@ var async = require('async');
 var conf = require('../../config/app-config');
 var Event = require('../../models/Event');
 var EventStore = require('../event/EventStore');
-var Notifier = require('../util/notifierService');
+var Notifier = require('../util/notificationService');
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile.
 
-/** Build Mongo filters for different event types: my, going, visited. */
+/** Build Mongo filters for different event types: my , going, visited. */
 var buildMyFilters = function(req) {
   var curUserId = req.user._id;
   var now = Date.now();
@@ -102,7 +102,7 @@ module.exports.post_participation = function(req, res, next) {
         if (err) return next(err);
 
         //Notifier.notifyParticipant(curUser,status);
-        Notifier.notifyParticipant(curUser,status);
+        Notifier.notifyParticipant(curUser, event);
         res.json({status: status})
       });
     }

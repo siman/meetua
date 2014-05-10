@@ -52,7 +52,8 @@
     "formidable": "~1.0.14",
     "circular-json": "~0.1.6",
     "fs-extra": "~0.8.1",
-    "node-mandrill": "~1.0.1"
+    "node-mandrill": "~1.0.1",
+		"email-templates": "~0.1.8"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
