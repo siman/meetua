@@ -13,8 +13,7 @@ var tmp = require('tmp');
 
 module.exports = function(req, res, next) {
     var data = req.body;
-    var isCreate = _.isUndefined(req.body._id);
-    if (isCreate) {
+    if (isCreate(req)) {
       console.log('Create event request', data);
     } else {
       console.log('Update event request', data);
@@ -23,6 +22,10 @@ module.exports = function(req, res, next) {
     var images = req.body.images || [];
     async.map(images, verifyAndCopyImage, buildAndSaveEvent(req, res, next));
 };
+
+function isCreate(req) {
+  return _.isUndefined(req.body._id);
+}
 
 function buildAndSaveEvent(req, res, next) {
     function countLogoImages(acc, image, next) {
@@ -35,20 +38,29 @@ function buildAndSaveEvent(req, res, next) {
           if (err) return next(err);
           if (images.length > 0 && logoCount != 1) return res.json(400, {error: 'Invalid logo count ' + logoCount});
 
-          var event = new Event(_.extend(req.body, {
-              images: _.map(images, function(image){
-                  return new Image(image);
-              }),
-              author: req.user._id
-          }));
-          console.log('Saving event ', event);
-          event.save(function(err) {
-              if (err) return next(err);
-              var data = {event: event};
-              console.log('Sending response ', data);
-              req.flash('success', { msg: 'Ваше событие создано!' });
-              res.send(data);
+          var eventObj = _.extend(req.body, {
+            images: _.map(images, function(image){
+              return new Image(image);
+            }),
+            author: req.user._id
           });
+          var event = new Event(eventObj);
+          if (isCreate(req)) {
+            console.log('Creating event ', eventObj);
+            event.save(afterSave);
+          } else {
+            console.log('Updating event ', eventObj);
+            var withoutId = _.omit(eventObj, '_id');
+            event.update(withoutId, afterSave);
+          }
+          function afterSave(err) {
+            console.log('afterSave');
+            if (err) return next(err);
+            var data = {event: event};
+            console.log('Sending response ', data);
+            req.flash('success', { msg: 'Ваше событие создано!' });
+            res.send(data);
+          }
         });
     };
 }

@@ -104,6 +104,31 @@ describe('save-event', function() {
       });
     });
   });
+  describe('update-event', function() {
+    it('should update event', function(done) {
+      async.series([createLogoImage, createImage], createEvent);
+
+      function createEvent(err, images) {
+        if (err) return done(err);
+
+        callSaveEvent(buildReqData({images: [images[0]/*logo*/]}))
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            updateEvent(res.body.event, images);
+          });
+      }
+      function updateEvent(event, images) {
+        callSaveEvent(_.extend(event, {images: images}))
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            expect(res.body.event.images.length).toBe(2);
+            done();
+          });
+      }
+    });
+  });
 });
 
 function createImage(next) {
