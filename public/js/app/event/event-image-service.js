@@ -7,6 +7,7 @@ angular.module('myApp')
          * @param {Object} params
          * @param {Scope} params.scope
          * @param {Function} params.onAllUploaded function(uploadedImages)
+         * @param {Array} params.uploadedImages uploaded images, that are of mongoose Image schema type
          * @param {String} [params.uploadUrl]
          * @param {Number} [params.queueLimit]
          * @param {String} [params.acceptedFormats]
@@ -19,24 +20,64 @@ angular.module('myApp')
           self.queueLimit = params.queueLimit || 5;
           self.acceptedFormats = params.acceptedFormats || '|jpg|png|jpeg|bmp|gif|'; // Images only
           self.onAllUploaded = params.onAllUploaded;
+          self.uploadedImages = params.uploadedImages || [];
           self.uploader = createFileUploader();
           self.removeItem = removeItem;
           self.setAsLogo = setAsLogo;
 
-          function setAsLogo(item) {
-            function disableLogo(item) {
-              item.isLogo = false;
+          var helper = {
+            allImages: function() {
+              return self.uploadedImages.concat(self.uploader.queue);
+            },
+            isUploadedImage: function(item) {
+              return self.uploader.getIndexOfItem(item) < 0;
             }
-            _.each(self.uploader.queue, disableLogo);
-            item.isLogo = true;
+          };
+
+          function setAsLogo(item) {
+            var allImages = helper.allImages();
+            if (allImages.length > 1) {
+              _.each(allImages, disableLogo);
+              if (helper.isUploadedImage(item)) {
+                postSetLogo(item, true);
+              } else {
+                item.isLogo = true;
+              }
+            }
+
+            function disableLogo(item) {
+              if (item.isLogo === true) {
+                if (helper.isUploadedImage(item)) {
+                  postSetLogo(item, false);
+                } else {
+                  item.isLogo = false;
+                }
+              }
+            }
+          }
+
+          function postSetLogo(item, isLogo) {
+            if (helper.isUploadedImage(item)) {
+              // TODO
+              console.log('Set image as logo', isLogo, item);
+              item.isLogo = isLogo;
+            }
           }
 
           function removeItem(item){
-            self.uploader.removeFromQueue(item);
-            // logo is removed
-            if (item.isLogo && self.uploader.queue.length > 0) {
-              self.uploader.queue[0].isLogo = true; // make first image logo
+            if (helper.isUploadedImage(item)) {
+              // TODO
+              console.log('Removing server image ', item);
+            } else {
+              self.uploader.removeFromQueue(item);
             }
+            onRemoved();
+            function onRemoved() {}
+              console.log('allImages ', helper.allImages);
+              var allImages = helper.allImages();
+              if (item.isLogo && helper.allImages.length > 0) { // logo is removed
+                allImages[0].isLogo = true; // make first image logo
+              }
           }
 
           function createFileUploader() {
@@ -55,7 +96,7 @@ angular.module('myApp')
             });
             uploader.bind('afteraddingfile', function(e, item){
               // first img is logo by default
-              if (uploader.queue.length === 1) {
+              if (helper.allImages().length === 1) {
                 item.isLogo = true;
               }
             });
