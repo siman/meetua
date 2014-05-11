@@ -96,62 +96,94 @@ describe('save-event', function() {
     });
   });
   describe('update-event', function() {
-    it('should update event', function(done) {
-      async.series([createLogoImage, createImage], createEvent);
-
-      function createEvent(err, images) {
+    it('should save image on update', function(done) {
+      async.series([createLogoImage, createImage], function(err, images) {
         if (err) return done(err);
 
-        callSaveEvent(buildReqData({images: [images[0]/*logo*/]}))
+        createEvent(buildReqData(), function(err, event) {
+          if (err) return done(err);
+          updateEvent(event, images[0]);
+        });
+      });
+      function updateEvent(event, image) {
+        callSaveEvent(_.extend(event, {images: [image]}))
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
-            updateEvent(res.body.event, images);
+            expect(res.body.event._id).toBe(event._id);
+            expect(res.body.event.images.length).toBe(1);
+            done();
           });
       }
-      function updateEvent(event, images) {
-        callSaveEvent(_.extend(event, {images: images}))
+    });
+    it('should update logo', function(done) {
+      async.series([createLogoImage, createImage], function(err, images) {
+        if (err) return done(err);
+
+        createEvent(buildReqData({images: images}), function(err, event) {
+          if (err) return done(err);
+          updateEvent(event);
+        });
+      });
+      function findLogo(images) {
+        return _.findWhere(images, {isLogo: true});
+      }
+      function updateEvent(event) {
+        event.images[0].isLogo = !event.images[0].isLogo;
+        event.images[1].isLogo = !event.images[1].isLogo;
+        var expectedLogoId = findLogo(event.images)._id;
+        callSaveEvent(event)
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
             expect(res.body.event.images.length).toBe(2);
+            expect(findLogo(res.body.event.images)._id).toBe(expectedLogoId);
             done();
           });
       }
     });
   });
+
+  function createEvent(reqData, cb) {
+    callSaveEvent(reqData)
+      .expect(200)
+      .end(function(err, res) {
+        if (err) return cb(err);
+        cb(null, res.body.event);
+      });
+  }
+
+  function createImage(next) {
+    testUtil.createTestImage({isLogo: false}, function(image) {
+      next(null, image);
+    });
+  }
+  function createLogoImage(next) {
+    testUtil.createTestImage({isLogo: true}, function(image) {
+      next(null, image);
+    });
+  }
+
+  function buildReqData(opts) {
+    var reqData = {
+      name: 'pokatushka',
+      place: {
+        name: 'Kiev- stalica!',
+        latitude: 49,
+        longitude: 50
+      },
+      start: {
+        date: new Date(),
+        time: new Date()
+      },
+      end: {
+        date: new Date(),
+        time: new Date()
+      },
+      description: 'event description',
+      activity: 'bike',
+      images: []
+    };
+    return _.extend(reqData, opts);
+  }
 });
-
-function createImage(next) {
-  testUtil.createTestImage({isLogo: false}, function(image) {
-    next(null, image);
-  });
-}
-function createLogoImage(next) {
-  testUtil.createTestImage({isLogo: true}, function(image) {
-    next(null, image);
-  });
-}
-
-function buildReqData(opts) {
-  var reqData = {
-    name: 'pokatushka',
-    place: {
-      name: 'Kiev- stalica!',
-      latitude: 49,
-      longitude: 50
-    },
-    start: {
-      date: new Date(),
-      time: new Date()
-    },
-    end: {
-      date: new Date(),
-      time: new Date()
-    },
-    description: 'event description',
-    activity: 'bike',
-    images: []
-  };
-  return _.extend(reqData, opts);
-}

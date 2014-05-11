@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('myApp')
-    .factory('EventImageService', ['$fileUploader', '$cookies', '$http', function($fileUploader, $cookies, $http) {
+    .factory('EventImageService', ['$fileUploader', 'EventService', 'SharedEventService', '$cookies', '$window',
+    function($fileUploader, EventService, SharedEventService, $cookies, $window) {
         /**
          *
          * @param {Object} params
          * @param {Scope} params.scope
          * @param {Function} params.onAllUploaded function(uploadedImages)
-         * @param {Array} params.uploadedImages uploaded images, that are of mongoose Image schema type
          * @param {Event} [params.event]
          * @param {String} [params.uploadUrl]
          * @param {Number} [params.queueLimit]
@@ -21,19 +21,14 @@ angular.module('myApp')
           self.queueLimit = params.queueLimit || 5;
           self.acceptedFormats = params.acceptedFormats || '|jpg|png|jpeg|bmp|gif|'; // Images only
           self.onAllUploaded = params.onAllUploaded;
-          self.uploadedImages = params.uploadedImages || [];
           self.event = params.event || {};
           self.uploader = createFileUploader();
           self.removeItem = removeItem;
           self.setAsLogo = setAsLogo;
 
-          if (self.uploadedImages.length > 0 && !self.event._id) {
-            throw new Error('Event is required when uploaded images exist');
-          }
-
           var helper = {
             allImages: function() {
-              return self.uploadedImages.concat(self.uploader.queue);
+              return (self.event.images || []).concat(self.uploader.queue);
             },
             isUploadedImage: function(item) {
               return self.uploader.getIndexOfItem(item) < 0 && item._id;
@@ -54,17 +49,22 @@ angular.module('myApp')
 
           function removeItem(item) {
             if (helper.isUploadedImage(item)) {
-              // TODO
               console.log('Removing server image ', item);
+              EventService.postRemoveImage({eventId: self.event._id, imageId: item._id}, function() {
+                removeFromEvent(item);
+                SharedEventService.onRemoved(item, helper.allImages());
+                $window.location.reload(); // refresh so user understand that form changes are not kept
+              });
             } else {
               self.uploader.removeFromQueue(item);
+              SharedEventService.onRemoved(item, helper.allImages());
             }
-            onRemoved();
-            function onRemoved() {}
-              var allImages = helper.allImages();
-              if (item.isLogo && helper.allImages.length > 0) { // logo is removed
-                allImages[0].isLogo = true; // make first image logo
-              }
+
+            function removeFromEvent(item) {
+              self.event.images = _.reject(self.event.images, function(image) {
+                return image._id == item._id;
+              });
+            }
           }
 
           function createFileUploader() {

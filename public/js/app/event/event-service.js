@@ -1,5 +1,9 @@
 angular.module('myApp')
   .service('EventService', ['$http', '$window', function($http, $window) {
+    var errorHandler = function(err) {
+      console.error('Failed to save event ', err);
+    };
+
     this.postSave = function(requestData, doRedirect) {
       $http.post('/event/save', requestData).success(function(res){
         console.log('Event is saved successfully ', res);
@@ -11,8 +15,15 @@ angular.module('myApp')
           console.log('Redirecting to ', redirectUrl);
           $window.location = redirectUrl;
         }
-      }).error(function(err) {
-        console.error('Failed to save event ', err);
-      });
-    }
+      }).error(errorHandler);
+    };
+    /**
+     * @param opts
+     * @param opts.eventId
+     * @param opts.imageId
+     * @param cb
+     */
+    this.postRemoveImage = function(opts, cb) {
+      $http.post('/event/' + opts.eventId + '/rm-image/' + opts.imageId).success(cb).error(errorHandler);
+    };
   }]);

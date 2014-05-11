@@ -12,60 +12,112 @@ var Image = require('../../models/Image');
 var tmp = require('tmp');
 
 module.exports = function(req, res, next) {
-    var data = req.body;
     if (isCreate(req)) {
-      console.log('Create event request', data);
+      console.log('Create event request', req.body);
     } else {
-      console.log('Update event request', data);
+      console.log('Update event request', req.body);
     }
 
-    var images = req.body.images || [];
-    async.map(images, verifyAndCopyImage, buildAndSaveEvent(req, res, next));
+    var event;
+    var reqImages = req.body.images || [];
+
+    if (!isCreate(req)) {
+      Event.findById(req.body._id, function(err, eventFound) {
+        if (err) res.json(500, err);
+        if (!eventFound || !eventFound.author.equals(req.user._id)) return res.json(404, {error: 'Event is not found'});
+        event = eventFound;
+
+        // merge images overriding from request
+        var arr = _.partition((reqImages).concat(event.images || []), function(image) {
+          return !_.isUndefined(image._id);
+        });
+        var imagesWithId = _.uniq(arr[0], function(image) {
+          return image._id.toString();
+        });
+        var newImages = arr[1];
+        var allImages = imagesWithId.concat(newImages);
+        verifyLogoCount(allImages, doSave(newImages, imagesWithId));
+      });
+    } else {
+      verifyLogoCount(reqImages, doSave(reqImages, []));
+    }
+
+    function verifyLogoCount(images, cb) {
+      async.reduce(images, 0, countLogoImages, function(err, logoCount) {
+        if (err) return res.json(500, err);
+        console.log('verifyLogoCount', images.length, logoCount);
+        if (images.length > 0 && logoCount != 1) {
+          var errorMsg = 'Invalid logo count ' + logoCount;
+          console.log(errorMsg);
+          return res.json(400, {error: errorMsg});
+        }
+        cb();
+      });
+    }
+    function doSave(newImages, imagesWithId) {
+      return function() {
+        async.map(newImages, copyImage, buildAndSaveEvent(event, imagesWithId, req, res, next));
+      };
+    }
 };
 
 function isCreate(req) {
   return _.isUndefined(req.body._id);
 }
 
-function buildAndSaveEvent(req, res, next) {
-    function countLogoImages(acc, image, next) {
-      var add = image.isLogo ? 1 : 0;
-      next(null, acc + add);
-    }
-    return function(err, images) {
-        if (err) return next(err);
-        async.reduce(images, 0, countLogoImages, function(err, logoCount) {
-          if (err) return next(err);
-          if (images.length > 0 && logoCount != 1) return res.json(400, {error: 'Invalid logo count ' + logoCount});
+function countLogoImages(acc, image, next) {
+  var add = image.isLogo ? 1 : 0;
+  next(null, acc + add);
+}
 
+function buildAndSaveEvent(event, imagesWithId, req, res, next) {
+    return function(err, images) {
+        if (err) return res.json(500, err);
+
+        delete req.body.images;
+
+        if (event) {
+          updateEvent();
+        } else {
+          createEvent();
+        }
+
+        function createEvent() {
           var eventObj = _.extend(req.body, {
             images: _.map(images, function(image){
               return new Image(image);
             }),
             author: req.user._id
           });
-          var event = new Event(eventObj);
-          if (isCreate(req)) {
-            console.log('Creating event ', eventObj);
-            event.save(afterSave);
-          } else {
-            console.log('Updating event ', eventObj);
-            delete eventObj._id;
-            event.update(eventObj, afterSave);
-          }
-          function afterSave(err) {
+          console.log('Creating event ', eventObj);
+          event = new Event(eventObj);
+          event.save(afterSave(event));
+        }
+
+        function updateEvent() {
+          var eventObj = _.extend(event.toObject(), req.body);
+          eventObj.images = images.concat(imagesWithId);
+          delete eventObj._id;
+
+          console.log('Updating event by id', event._id, eventObj);
+          var respEvent = _.extend({}, eventObj, {_id: event._id});
+          Event.update({_id: event._id}, eventObj, afterSave(respEvent));
+        }
+
+        function afterSave(event) {
+          return function(err) {
             console.log('afterSave');
             if (err) return next(err);
-            var data = {event: event};
-            console.log('Sending response ', data);
-            req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!' : 'Ваше событие обновлено!' });
-            res.send(data);
+            var respJson = {event: event};
+            console.log('Sending response ', respJson);
+            req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!': 'Ваше событие обновлено!' });
+            res.send(respJson);
           }
-        });
+        }
     };
 }
 
-function verifyAndCopyImage(image, next) {
+function copyImage(image, next) {
     console.log('Verify image ', image);
 
   // Siman: Image uploading works for me if comment next line. Does it work on Linux as well?

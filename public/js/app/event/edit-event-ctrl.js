@@ -4,13 +4,13 @@ angular.module('myApp')
   .controller('EditEventCtrl', ['$scope', 'activities', 'EventImageService', 'EventService',
   function($scope, activities, EventImageService, EventService) {
     $scope.event = _myInit.event;
+    $scope.event.images = $scope.event.images || [];
     $scope.activities = activities;
     var imageService = $scope.imageService = EventImageService.create({
       scope: $scope,
       onAllUploaded: function submitAfterUpload(uploadedImages) {
         EventService.postSave(buildReqData(uploadedImages));
       },
-      uploadedImages: $scope.event.images,
       event: $scope.event
     });
     var uploader = $scope.uploader = imageService.uploader;
@@ -22,10 +22,10 @@ angular.module('myApp')
       }
     };
     function buildReqData(uploadedImages) {
-      var images = uploadedImages ? $scope.event.images.concat(uploadedImages) : $scope.event.images;
-      var reqData = _.extend({
-        images: images
-      }, $scope.event);
+      uploadedImages = uploadedImages || [];
+      var reqData = _.extend({}, $scope.event, {
+        images: uploadedImages.concat($scope.event.images)
+      });
       console.log('Request data ', reqData);
       return reqData;
     }

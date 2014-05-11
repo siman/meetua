@@ -28,6 +28,7 @@ var viewEvent = require('./controllers/event/view');
 var editEvent = require('./controllers/event/edit');
 var upload = require('./controllers/upload').handleUpload;
 var myEvents = require('./controllers/profile/my-events');
+var rmEventImage = require('./controllers/event/rm-image');
 
 var eventStore = require('./controllers/event/EventStore');
 
@@ -163,6 +164,7 @@ app.get('/event/create', passportConf.isAuthenticated, createEventPage);
 app.post('/event/save', passportConf.isAuthenticated, saveEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);
+app.post('/event/:id/rm-image/:imageId', passportConf.isAuthenticated, rmEventImage);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
