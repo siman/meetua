@@ -102,7 +102,7 @@ module.exports.post_participation = function(req, res, next) {
         if (err) return next(err);
 
 
-        if (status == 'added') Notifier.notifyParticipant(curUser, event);
+        if (status == 'added') Notifier.notifyParticipantOnJoin(curUser, event);
         res.json({status: status})
       });
     }
