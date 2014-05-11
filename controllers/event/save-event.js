@@ -50,8 +50,8 @@ function buildAndSaveEvent(req, res, next) {
             event.save(afterSave);
           } else {
             console.log('Updating event ', eventObj);
-            var withoutId = _.omit(eventObj, '_id');
-            event.update(withoutId, afterSave);
+            delete eventObj._id;
+            event.update(eventObj, afterSave);
           }
           function afterSave(err) {
             console.log('afterSave');
