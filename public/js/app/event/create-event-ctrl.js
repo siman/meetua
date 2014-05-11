@@ -6,7 +6,7 @@ angular.module('myApp')
     var imageService = $scope.imageService = EventImageService.create({
       scope: $scope,
       onAllUploaded: function submitAfterUpload(uploadedImages) {
-        EventService.doSendPost(buildReqData(uploadedImages));
+        EventService.postSave(buildReqData(uploadedImages));
       }
     });
     var uploader = $scope.uploader = imageService.uploader;
@@ -16,7 +16,7 @@ angular.module('myApp')
       if (uploader.queue.length > 0) {
         uploader.uploadAll();
       } else {
-        EventService.doSendPost(buildReqData());
+        EventService.postSave(buildReqData());
       }
     };
     function buildReqData(uploadedImages) {

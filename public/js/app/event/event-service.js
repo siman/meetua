@@ -1,6 +1,6 @@
 angular.module('myApp')
   .service('EventService', ['$http', '$window', function($http, $window) {
-    this.doSendPost = function(requestData) {
+    this.postSave = function(requestData) {
       $http.post('/event/save', requestData).success(function(res){
         console.log('Event is saved successfully ', res);
         var redirectUrl = '/event/' + res.event._id;
