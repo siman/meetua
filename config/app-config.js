@@ -12,7 +12,7 @@ module.exports = {
 
   notification: {
     MANDRILL_KEY: 'iiiPHm_fhC7JrK4vgExm0A',
-    MAIL_FROM: 'meetua@domain.conf'
+    MAIL_FROM: 'no-reply@meetua.com'
   }
 
 };
