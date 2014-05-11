@@ -11,6 +11,8 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 var CronJob = require('cron').CronJob;
+var _ = require('underscore');
+var notifyService = require('./controllers/util/notificationService');
 
 /**
  * Load controllers.
@@ -229,8 +231,13 @@ app.listen(app.get('port'), function() {
 eventStore.dbPreload();
 userController.dbPreload();
 
-new CronJob('* * * * * *', function () {
-  console.log('You will see this message every second');
+//Cron job to remind users about coming events
+new CronJob('00 00 10 * * *', function () {
+  function onFoundEvents(err, events) {
+    if (err) return console.log(err);
+    _.map(events, function(event){notifyService.notifyCommingSoonEvents(event)})
+  }
+  eventStore.findCommingSoon(onFoundEvents)
 }, null, true, "Europe/Kiev");
 
 module.exports = app;
