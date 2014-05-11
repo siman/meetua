@@ -53,7 +53,7 @@ exports.createTestImage = function(imageOpts, fileOpts, cb) {
     var image = _.extend({
       path: filePath,
       type: 'image/jpg',
-      name: 'my-image.jpg',
+      originalName: 'my-image.jpg',
       isLogo: false
     }, imageOpts || {});
     fs.writeSync(fd, content, 0, content.length, 0);

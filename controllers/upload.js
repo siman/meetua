@@ -34,7 +34,7 @@ exports.handleUpload = function(req, res, next) {
     form.parse(req, function(err, fields, files) {
         function extractFileResponseFields(file) {
             console.log('File uploaded: ', file);
-            return {name: file.name, type: file.type, path: file.path }
+            return {originalName: file.name, type: file.type, path: file.path }
         }
         if (err) return next(err);
         res.json(extractFileResponseFields(files.file));
