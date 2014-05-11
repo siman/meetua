@@ -1,6 +1,8 @@
 'use strict';
 
 var async = require('async');
+var path = require('path');
+var config = require('../config/app-config');
 
 /**
  *
@@ -43,4 +45,13 @@ exports.dbPreload = function(processor) {
       }
     })
   };
+};
+
+
+exports.savedImageNameToPath = function(name) {
+  return path.join(config.EVENT_IMG_DIR, name);
+};
+
+exports.uploadedImageNameToPath = function(name) {
+  return path.join(config.UPLOAD_DIR, name);
 };

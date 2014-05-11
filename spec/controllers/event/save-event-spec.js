@@ -60,10 +60,10 @@ describe('save-event', function() {
           .end(function(err, res) {
             if (err) return done(err);
             var copiedImage = res.body.event.images[0];
-            expect(copiedImage.name).toBe(reqImage.name);
+            expect(copiedImage.originalName).toBe(reqImage.originalName);
             expect(copiedImage.type).toBe(reqImage.type);
-            expect(fs.existsSync(copiedImage.path)).toBe(true);
-            expect(fs.existsSync(reqImage.path)).toBe(false);
+            expect(fs.existsSync(testUtil.savedImageNameToPath(copiedImage.name))).toBe(true);
+            expect(fs.existsSync(testUtil.uploadedImageNameToPath(reqImage.name))).toBe(false);
             done();
           });
       });
@@ -78,7 +78,7 @@ describe('save-event', function() {
     it('should generate unique name for image in the new dir and preserve file extension', function(done) {
       testUtil.createTestImage({isLogo: true}, {postfix: '.jpg'}, function(reqImage) {
         var existingImage = {
-          path: path.join(config.EVENT_IMG_DIR, path.basename(reqImage.path)),
+          path: testUtil.uploadedImageNameToPath(reqImage.name),
           content: 'existing image'
         };
         fs.writeFileSync(existingImage.path, existingImage.content);
@@ -88,8 +88,8 @@ describe('save-event', function() {
           .end(function(err, res) {
             if (err) return done(err);
             var savedImage = res.body.event.images[0];
-            expect(savedImage.path).not.toBe(existingImage.path);
-            expect(path.extname(savedImage.path)).toBe(path.extname(reqImage.path));
+            expect(testUtil.uploadedImageNameToPath(savedImage.name)).not.toBe(existingImage.path);
+            expect(path.extname(savedImage.name)).toBe(path.extname(reqImage.name));
             done();
           });
       });

@@ -69,15 +69,15 @@ function verifyAndCopyImage(image, next) {
     console.log('Verify image ', image);
 
   // Siman: Image uploading works for me if comment next line. Does it work on Linux as well?
-//    var imagePath = path.join('/', image.path); // removes any '..'
-    var imagePath = image.path;
+//    var imagePath = path.join('/', image.name); // removes any '..'
+    var imagePath = path.join(UPLOAD_DIR, image.name);
 
     fs.exists(imagePath, function(exists) {
         console.log('Image exists ', exists);
         console.log('uploadDir ', UPLOAD_DIR);
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
             moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
-                next(err, _.extend(image, {path: newPath}));
+                next(err, _.extend(image, {name: path.basename(newPath)}));
             });
         } else {
             next(null, image);

@@ -2,6 +2,10 @@ var mongoose = require('mongoose');
 var _ = require('underscore');
 var tmp = require('tmp');
 var fs = require('fs-extra');
+var path = require('path');
+var util = require('../controllers/util');
+
+_.extend(module.exports, util);
 
 exports.reqUser = function(user) {
     return function(req, res, next) {
@@ -51,7 +55,7 @@ exports.createTestImage = function(imageOpts, fileOpts, cb) {
   tmp.file(fileOpts || {}, function(err, filePath, fd) {
     var content = new Buffer('image content');
     var image = _.extend({
-      path: filePath,
+      name: path.basename(filePath),
       type: 'image/jpg',
       originalName: 'my-image.jpg',
       isLogo: false
