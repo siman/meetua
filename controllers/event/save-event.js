@@ -58,7 +58,7 @@ function buildAndSaveEvent(req, res, next) {
             if (err) return next(err);
             var data = {event: event};
             console.log('Sending response ', data);
-            req.flash('success', { msg: 'Ваше событие создано!' });
+            req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!' : 'Ваше событие обновлено!' });
             res.send(data);
           }
         });
