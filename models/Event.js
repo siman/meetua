@@ -32,7 +32,7 @@ var eventSchema = new mongoose.Schema({
 });
 
 eventSchema.virtual('prettyStartDate').get(function() {
-  return moment(this.start.date).format('dddd Do MMMM HH:mm');
+  return moment(this.start.dateTime).format('dddd Do MMMM HH:mm');
 });
 
 eventSchema.virtual('logoUrl').get(function() {
