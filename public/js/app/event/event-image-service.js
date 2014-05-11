@@ -61,7 +61,6 @@ angular.module('myApp')
             }
             onRemoved();
             function onRemoved() {}
-              console.log('allImages ', helper.allImages);
               var allImages = helper.allImages();
               if (item.isLogo && helper.allImages.length > 0) { // logo is removed
                 allImages[0].isLogo = true; // make first image logo

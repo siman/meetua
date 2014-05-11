@@ -20,9 +20,9 @@ angular.module('myApp')
       }
     };
     function buildReqData(uploadedImages) {
-      var reqData = _.extend($scope.event, {
-          images: uploadedImages
-      });
+      var reqData = _.extend({
+        images: uploadedImages
+      }, $scope.event);
       console.log('Request data ', reqData);
       return reqData;
     }

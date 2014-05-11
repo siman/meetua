@@ -23,9 +23,9 @@ angular.module('myApp')
     };
     function buildReqData(uploadedImages) {
       var images = uploadedImages ? $scope.event.images.concat(uploadedImages) : $scope.event.images;
-      var reqData = _.extend($scope.event, {
+      var reqData = _.extend({
         images: images
-      });
+      }, $scope.event);
       console.log('Request data ', reqData);
       return reqData;
     }
