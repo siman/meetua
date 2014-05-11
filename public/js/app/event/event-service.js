@@ -4,7 +4,7 @@ angular.module('myApp')
       console.error('Failed to save event ', err);
     };
 
-    this.postSave = function(requestData, doRedirect) {
+    this.postSave = function(requestData, doRedirect) { // TODO redirect to different urls on edit and create
       $http.post('/event/save', requestData).success(function(res){
         console.log('Event is saved successfully ', res);
         if (_.isUndefined(doRedirect)) {
