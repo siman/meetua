@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('EditEventCtrl', ['$scope', 'activities', 'EventImageService', 'EventService', function($scope, activities, EventImageService, EventService) {
+    .controller('EditEventCtrl', ['$scope', 'activities', 'EventImageService', 'EventService',
+    function($scope, activities, EventImageService, EventService) {
       $scope.event = _myInit.event;
       $scope.activities = activities;
       var imageService = $scope.imageService = EventImageService.create({
