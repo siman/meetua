@@ -26,7 +26,7 @@ var eventSchema = new mongoose.Schema({
         date: Date,
         time: Date
     },
-    images: [Image.schema]
+    images: [Image.schema] // default order, logo first TODO
 });
 
 eventSchema.virtual('prettyStartDate').get(function() {
