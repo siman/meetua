@@ -52,12 +52,12 @@ angular.module('myApp')
               console.log('Removing server image ', item);
               EventService.postRemoveImage({eventId: self.event._id, imageId: item._id}, function() {
                 removeFromEvent(item);
-                SharedEventService.onRemoved(item, helper.allImages());
+                SharedEventService.maybeChangeLogo(item, helper.allImages());
                 $window.location.reload(); // refresh so user understand that form changes are not kept
               });
             } else {
               self.uploader.removeFromQueue(item);
-              SharedEventService.onRemoved(item, helper.allImages());
+              SharedEventService.maybeChangeLogo(item, helper.allImages());
             }
 
             function removeFromEvent(item) {

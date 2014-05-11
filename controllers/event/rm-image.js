@@ -28,7 +28,7 @@ function rmImage(req, res, next) {
     function onRemoved() {
       var updateObject = event.toObject();
       updateObject.images = _.reject(updateObject.images, byId(imageId));
-      SharedEventService.onRemoved(image, updateObject.images);
+      SharedEventService.maybeChangeLogo(image, updateObject.images);
 
       delete updateObject._id;
       Event.update({_id: id}, updateObject, function(err) {
