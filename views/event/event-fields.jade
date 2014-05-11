@@ -24,7 +24,8 @@ mixin eventFields(isCreate)
       i.fa.fa-clock-o
       | Время
     .col-sm-2
-      input#startTime.form-control(type='text', name='startTime', ng-model='event.start.time', bs-timepicker)
+      input#startTime.form-control(type='text', name='startTime', ng-model='event.start.time',
+        data-time-format='HH:mm', data-time-type='number', bs-timepicker)
     .col-sm-2
   .form-group
     - var endDateDisabled = (isCreate ? 'eventForm.startDate.$invalid || eventForm.startDate.$pristine' : 'eventForm.startDate.$invalid')
@@ -40,8 +41,8 @@ mixin eventFields(isCreate)
         i.fa.fa-clock-o
         | Время
     .col-sm-2
-      input#endTime.form-control(type='text', name='endTime', ng-model='event.end.time', bs-timepicker
-      ng-disabled=endDateDisabled)
+      input#endTime.form-control(type='text', name='endTime', ng-model='event.end.time', bs-timepicker,
+        data-time-format='HH:mm', data-time-type='number', ng-disabled=endDateDisabled)
     .col-sm-2
   .form-group(ng-class="{'has-error' : eventForm.description.$invalid && eventForm.description.$dirty}")
     label(class='col-sm-2 control-label', for='description') Описание *

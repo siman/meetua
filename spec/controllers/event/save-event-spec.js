@@ -174,11 +174,11 @@ describe('save-event', function() {
       },
       start: {
         date: new Date(),
-        time: new Date()
+        time: 0
       },
       end: {
         date: new Date(),
-        time: new Date()
+        time: 0
       },
       description: 'event description',
       activity: 'bike',

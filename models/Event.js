@@ -20,11 +20,11 @@ var eventSchema = new mongoose.Schema({
     },
     start: {
         date: { type: Date, required: true },
-        time: { type: Date }
+        time: Number
     },
     end: {
         date: Date,
-        time: Date
+        time: Number
     },
     images: [Image.schema] // default order, logo first TODO
 });
