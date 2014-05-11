@@ -76,16 +76,7 @@ describe('save-event', function() {
       });
     });
     it('should generate unique name for image in the new dir and preserve file extension', function(done) {
-      tmp.file({postfix: '.jpg'}, function(err, filePath, fd) {
-        var content = new Buffer('image content');
-        var reqImage = {
-          path: filePath,
-          type: 'image/jpg',
-          name: 'my-image.jpg',
-          isLogo: true
-        };
-        fs.writeSync(fd, content, 0, content.length, 0);
-
+      testUtil.createTestImage({isLogo: true}, {postfix: '.jpg'}, function(reqImage) {
         var existingImage = {
           path: path.join(config.EVENT_IMG_DIR, path.basename(reqImage.path)),
           content: 'existing image'

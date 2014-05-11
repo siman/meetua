@@ -32,18 +32,30 @@ exports.mongoDisconnect = function(done) {
 };
 
 
-exports.createTestImage = function(imageOpts, cb) {
+/**
+ * @param imageOpts
+ * @param fileOpts
+ * @param cb
+ * @example createTestImage(cb)
+ * @example createTestImage({isLogo: true}, cb)
+ * @example createTestImage({isLogo: true}, {postfix: '.jpg'}, cb)
+ */
+exports.createTestImage = function(imageOpts, fileOpts, cb) {
   if (!cb) {
-    cb = imageOpts;
+    cb = fileOpts;
+    if (!fileOpts) {
+      cb = imageOpts;
+    }
   }
-  tmp.file(function(err, filePath, fd) {
+
+  tmp.file(fileOpts || {}, function(err, filePath, fd) {
     var content = new Buffer('image content');
     var image = _.extend({
       path: filePath,
       type: 'image/jpg',
       name: 'my-image.jpg',
       isLogo: false
-    }, imageOpts);
+    }, imageOpts || {});
     fs.writeSync(fd, content, 0, content.length, 0);
     cb(image);
   });
