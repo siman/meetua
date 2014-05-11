@@ -48,3 +48,5 @@ angular.module('myApp', [
       {name: 'en', textOver: 'Языки'},
       {name: 'code', textOver: 'IT'}
     ]);
+
+angular.module('myApp.shared', []);
