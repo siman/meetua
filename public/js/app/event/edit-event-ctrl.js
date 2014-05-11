@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('EditEventCtrl', ['$scope', 'activities', 'EventImageService', '$http', function($scope, activities, EventImageService, $http) {
+    .controller('EditEventCtrl', ['$scope', 'activities', 'EventImageService', 'EventService', function($scope, activities, EventImageService, EventService) {
       $scope.event = _myInit.event;
       $scope.activities = activities;
       var imageService = $scope.imageService = EventImageService.create({
         scope: $scope,
         onAllUploaded: function submitAfterUpload(uploadedImages) {
-          doSendPost(buildReqData(uploadedImages));
+          EventService.doSendPost(buildReqData(uploadedImages));
         },
         uploadedImages: $scope.event.images,
         event: $scope.event
@@ -17,7 +17,7 @@ angular.module('myApp')
         if (uploader.queue.length > 0) {
           uploader.uploadAll();
         } else {
-          doSendPost(buildReqData());
+          EventService.doSendPost(buildReqData());
         }
       };
       function buildReqData(uploadedImages) {
@@ -28,14 +28,4 @@ angular.module('myApp')
         console.log('Request data ', reqData);
         return reqData;
       }
-      function doSendPost(requestData) {
-        $http.post('/event/save', requestData).success(function(res){
-          console.log('Event is updated successfully ', res);
-          var redirectUrl = '/event/' + res.event._id;
-          console.log('Redirecting to ', redirectUrl);
-          $window.location = redirectUrl;
-        }).error(function(err) {
-          console.error('Failed to create event ', err);
-        });
-        }
   }]);
