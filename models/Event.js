@@ -20,11 +20,13 @@ var eventSchema = new mongoose.Schema({
     },
     start: {
         date: { type: Date, required: true },
-        time: Number
+        time: Number,
+        dateTime: Date
     },
     end: {
         date: Date,
-        time: Number
+        time: Number,
+        dateTime: Date
     },
     images: [Image.schema] // default order, logo first TODO
 });
@@ -52,5 +54,24 @@ eventSchema.virtual('isPassed').get(function() {
 });
 
 eventSchema.set('toJSON', {virtuals: true });
+
+eventSchema.pre('save', function(next) {
+  if (this.start) {
+    this.start.dateTime = mergeDateTime(this.start.date, this.start.time);
+  }
+  if (this.end) {
+    this.end.dateTime = mergeDateTime(this.end.date, this.end.time);
+  }
+  next();
+
+  function mergeDateTime(date, time) {
+    if (date && time) {
+      var dateTime = moment(date);
+      dateTime.add({ms: time});
+      return dateTime.toDate();
+    }
+  }
+});
+
 
 module.exports = mongoose.model('Event', eventSchema);
