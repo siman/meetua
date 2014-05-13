@@ -18,15 +18,11 @@ module.exports.dbPreload = util.dbPreload({
   entityName: "Event"
 });
 
-module.exports.findByAuthor = function () {
-  // TODO
-};
-
 module.exports.findCommingSoon = function (cb) {
   var todayEndOfDay = moment().endOf('day').toDate();
   var tomorrowEndOfDay = moment().endOf('day').add('days', 1).toDate();
 
-  return findEvents({'start.date': {'$gte': todayEndOfDay, '$lt':tomorrowEndOfDay}}, ['participants'], cb)
+  return findEvents({'start.dateTime': {'$gte': todayEndOfDay, '$lt':tomorrowEndOfDay}}, ['participants'], cb)
 };
 
 module.exports.findAll = function (cb) {

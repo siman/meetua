@@ -50,11 +50,13 @@ eventSchema.virtual('participantCount').get(function() {
 });
 
 eventSchema.virtual('isPassed').get(function() {
-  return moment(this.start.date).isBefore(moment());
+  return moment(this.start.dateTime).isBefore(moment());
 });
 
 eventSchema.set('toJSON', {virtuals: true });
 
+// FIXME: for Bezhan: this get called only on SAVE, not on UPDATE.
+// See http://mongoosejs.com/docs/middleware.html#notes
 eventSchema.pre('save', function(next) {
   if (this.start) {
     this.start.dateTime = mergeDateTime(this.start.date, this.start.time);
@@ -72,6 +74,5 @@ eventSchema.pre('save', function(next) {
     }
   }
 });
-
 
 module.exports = mongoose.model('Event', eventSchema);

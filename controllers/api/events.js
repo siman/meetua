@@ -15,8 +15,8 @@ var buildMyFilters = function(req) {
   var now = Date.now();
   return {
     my: {author: curUserId},
-    going: {participants: curUserId, 'start.date': {$gt: now}},
-    visited: {participants: curUserId, 'start.date': {$lte: now}}
+    going: {participants: curUserId, 'start.dateTime': {$gt: now}},
+    visited: {participants: curUserId, 'start.dateTime': {$lte: now}}
   };
 };
 
@@ -25,7 +25,7 @@ module.exports.get_my = function(req, res, next) {
   var eventType = req.query.type || 'my';
   var filter = buildMyFilters(req)[eventType];
   // TODO: Add pagination
-  Event.find(filter).sort({'start.date': 1}).exec(function(err, events) {
+  Event.find(filter).sort({'start.dateTime': 1}).exec(function(err, events) {
     if (err) return next(err);
     res.json(events);
   });
@@ -54,7 +54,7 @@ module.exports.get_myOverview = function(req, res, next) {
     });
 
   function findMyEvents(filterQuery, cb) {
-    var fullQuery = Event.find(filterQuery).sort({'start.date': 1});
+    var fullQuery = Event.find(filterQuery).sort({'start.dateTime': 1});
     if (conf.MAX_EVENTS_IN_OVERVIEW) {
       fullQuery = fullQuery.limit(conf.MAX_EVENTS_IN_OVERVIEW);
     }
