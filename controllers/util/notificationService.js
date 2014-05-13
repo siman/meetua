@@ -52,6 +52,7 @@ module.exports.notifyParticipantOnJoin = function(user, event) {
 
 function notifyComingSoonEvent(event) {
   console.log('Notify all participants about upcoming event');
+  // TODO Notify an author of event as well
   _.map(event.participants, function(user) {
     console.log('user: ', user);
     if (user.email && user.profile.receiveNotifications) {
