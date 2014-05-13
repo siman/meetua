@@ -5,6 +5,11 @@ mixin eventField(label, data)
     span.event_label #{label}:
     span #{data}
 
+block top_panel
+  if (isCurrentUserAnAuthor)
+    #on_my_event_panel.alert-warning
+      a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button") Редактировать
+
 block content
   if (!event)
     h1 Событие не найдено
