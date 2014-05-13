@@ -27,10 +27,8 @@ angular.module('myApp').controller('ViewEventCtrl',
     function changeParticipation(isPart) {
       if (isPart) {
         $scope.isPart = true;
-        $scope.partBtnName = 'Отказаться от участия?';
       } else {
         $scope.isPart = false;
-        $scope.partBtnName = 'Принять участие';
       }
     }
 

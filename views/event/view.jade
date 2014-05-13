@@ -45,7 +45,14 @@ block content
                     span.event_label Еще нет участников
 
                   button#partBtn.btn(ng-click="participate()",
-                    ng-class="{'btn-default': isPart, 'btn-success': !isPart}") {{partBtnName}}
+                    ng-class="{'btn-default': isPart, 'btn-success': !isPart}"
+                  )
+                    span(ng-show="!isPart")
+                      i.fa.fa-check
+                      | Принять участие
+                    span(ng-show="isPart")
+                      i.fa.fa-times
+                      | Отказаться от участия?
 
             h1 #{event.name}
           div.view_event
