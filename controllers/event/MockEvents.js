@@ -9,10 +9,10 @@ module.exports = [
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
-      "date" : "2014-04-29T21:00:00Z"
+      "date" : "2020-04-29T21:00:00Z"
     },
     "start" : {
-      "date" : "2014-04-21T21:00:00Z"
+      "date" : "2020-04-21T21:00:00Z"
     },
     "place" : {
       "name" : "Radisson Blu Hotel, Kyiv Podil, Kiev, Kyiv city, Ukraine",
@@ -29,10 +29,10 @@ module.exports = [
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
-      "date" : "2014-04-29T21:00:00Z"
+      "date" : "2020-04-29T21:00:00Z"
     },
     "start" : {
-      "date" : "2014-04-29T21:00:00Z"
+      "date" : "2020-04-29T21:00:00Z"
     },
     "place" : {
       "name" : "EasySoft, Киев, город Киев, Украина",
@@ -49,10 +49,10 @@ module.exports = [
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
-      "date" : "2014-05-28T21:00:00Z"
+      "date" : "2020-05-28T21:00:00Z"
     },
     "start" : {
-      "date" : "2014-05-12T21:00:00Z"
+      "date" : "2020-05-12T21:00:00Z"
     },
     "place" : {
       "name" : "ostrov Truhana",
@@ -69,10 +69,10 @@ module.exports = [
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
-      "date" : "2014-05-28T21:00:00Z"
+      "date" : "2020-05-28T21:00:00Z"
     },
     "start" : {
-      "date" : "2014-05-12T21:00:00Z"
+      "date" : "2020-05-12T21:00:00Z"
     },
     "place" : {
       "name" : "Comfy, Київ, місто Київ, Україна",
@@ -89,10 +89,10 @@ module.exports = [
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
-      "date" : "2014-06-28T21:00:00Z"
+      "date" : "2020-06-28T21:00:00Z"
     },
     "start" : {
-      "date" : "2014-06-12T21:00:00Z"
+      "date" : "2020-06-12T21:00:00Z"
     },
     "place" : {
       "name" : "Comfy, Київ, місто Київ, Україна",
@@ -109,10 +109,10 @@ module.exports = [
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
-      "date" : "2014-05-23T21:00:00Z"
+      "date" : "2020-05-23T21:00:00Z"
     },
     "start" : {
-      "date" : "2014-05-14T21:00:00Z"
+      "date" : "2020-05-14T21:00:00Z"
     },
     "place" : {
       "name" : "The House with Chimeras, Kiev, Kyiv city, Ukraine",
