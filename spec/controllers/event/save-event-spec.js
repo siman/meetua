@@ -95,7 +95,26 @@ describe('save-event', function() {
           });
       });
     });
-    // TODO
+    it('should add calculate dateTime field', function(done) {
+      var reqData = buildReqData({
+        start: {
+          date: moment({year: 2014, month: 3, day: 5}),
+          time: moment.duration('10:30').asMilliseconds()
+        },
+        end: {
+          date: moment({year: 2014, month: 3, day: 6}),
+          time: moment.duration('20:30').asMilliseconds()
+        }
+      });
+      callSaveEvent(reqData)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          expect(moment(res.body.event.start.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 5, hour: 10, minute: 30, second: 0}).format());
+          expect(moment(res.body.event.end.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 6, hour: 20, minute: 30, second: 0}).format());
+          done();
+        });
+    });
   });
   describe('update-event', function() {
     it('should save image on update', function(done) {
@@ -143,27 +162,6 @@ describe('save-event', function() {
             done();
           });
       }
-    });
-    it('should add calculate dateTime field', function(done) {
-      var reqData = buildReqData({
-        start: {
-          date: moment({year: 2014, month: 3, day: 5}),
-          time: moment.duration('10:30').asMilliseconds()
-        },
-        end: {
-          date: moment({year: 2014, month: 3, day: 6}),
-          time: moment.duration('20:30').asMilliseconds()
-        }
-      });
-      done();
-      callSaveEvent(reqData)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) return done(err);
-          expect(moment(res.body.event.start.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 5, hour: 10, minute: 30, second: 0}).format());
-          expect(moment(res.body.event.end.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 6, hour: 20, minute: 30, second: 0}).format());
-          done();
-        });
     });
   });
 
