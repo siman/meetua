@@ -41,7 +41,7 @@ module.exports.notifyParticipantOnJoin = function (user, event) {
 
 };
 
-module.exports.notifyCommingSoonEvents = function (event) {
+module.exports.notifyComingSoonEvents = function (event) {
   console.log('notfy coming sonn... ');
 
   _.map(event.participants, function(user) {
