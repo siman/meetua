@@ -20,7 +20,7 @@ module.exports.findComingSoon = function (cb) {
   var todayEndOfDay = moment().endOf('day').toDate();
   var tomorrowEndOfDay = moment().endOf('day').add('days', 1).toDate();
 
-  return findEvents({'start.dateTime': {'$gte': todayEndOfDay, '$lt':tomorrowEndOfDay}}, ['participants'], cb)
+  return findEvents({'start.dateTime': {'$gte': todayEndOfDay, '$lt':tomorrowEndOfDay}}, ['author', 'participants'], cb)
 };
 
 module.exports.findById = function(id, cb) {

@@ -42,23 +42,25 @@ var LinuxMailer = function() {
 
 var sendMail = conf.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 
-module.exports.notifyParticipantOnJoin = function(user, event) {
-  console.log('Notify on taking part in event. New participant:', user.profile.name);
+function notifyUser(user, event, templateName) {
   if (user.email && user.profile.receiveNotifications) {
     var params = { eventName: event.name };
-    sendMail(event, user, 'event-participate', params);
+    sendMail(event, user, templateName, params);
   }
+}
+
+module.exports.notifyParticipantOnJoin = function(user, event) {
+  console.log('Notify on taking part in event. New participant:', user.profile.name);
+  notifyUser(user, event, 'event-participate');
 };
 
 function notifyComingSoonEvent(event) {
   console.log('Notify all participants about upcoming event');
-  // TODO Notify an author of event as well
+  notifyUser(event.author, event, 'event-coming-soon');
   _.map(event.participants, function(user) {
-    console.log('user: ', user);
-    if (user.email && user.profile.receiveNotifications) {
-      var params = { eventName: event.name };
-      sendMail(event, user, 'event-coming-soon', params);
-    }
+    //Can I make this shorter?
+    if (JSON.stringify(user._id) != JSON.stringify(event.author._id))
+      notifyUser(user, event, 'event-coming-soon');
   });
 }
 
