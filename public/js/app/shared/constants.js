@@ -10,12 +10,14 @@
     {name: 'photo', textOver: 'Фото'},
     {name: 'en', textOver: 'Языки'},
     {name: 'code', textOver: 'IT'},
-    {name: 'other', textOver: 'Другое'} // TODO find image for 'other'
+    {name: 'other', textOver: 'Другое', hide: true /*temp*/} // TODO find image for 'other'
   ];
 
   if (isAngular) {
     angular.module('myApp.shared')
-      .constant('activities', activities);
+      .constant('activities', _.filter(activities, function(activity) {
+        return !activity.hide;
+      }));
   } else if (isNode) {
     module.exports.activities = activities;
   }
