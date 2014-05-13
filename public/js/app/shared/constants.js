@@ -9,7 +9,8 @@
     {name: 'hiking', textOver: 'Туризм'},
     {name: 'photo', textOver: 'Фото'},
     {name: 'en', textOver: 'Языки'},
-    {name: 'code', textOver: 'IT'}
+    {name: 'code', textOver: 'IT'},
+    {name: 'other', textOver: 'Другое'} // TODO find image for 'other'
   ];
 
   if (isAngular) {

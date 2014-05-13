@@ -163,6 +163,18 @@ describe('save-event', function() {
           });
       }
     });
+    it('should validate activity by enum', function(done) { // FIXME this test fails, validation doesn't occur on update
+      createEvent(buildReqData(), function(err, event) {
+        if (err) return done(err);
+        updateEvent(event);
+      });
+      function updateEvent(event) {
+        event.activity = 'unknown';
+        callSaveEvent(event)
+          .expect(400)
+          .end(done);
+      }
+    });
   });
 
   function createEvent(reqData, cb) {

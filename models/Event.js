@@ -6,13 +6,17 @@ var Image = require('./Image');
 var moment = require('moment');
 var _ = require('underscore');
 var path = require('path');
+var activities = require('../public/js/app/shared/constants').activities;
+var activityNames = _.map(activities, function(activity) {
+  return activity.name;
+});
 
 var eventSchema = new mongoose.Schema({
     name: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     participants: [{ type: Schema.Types.ObjectId, ref: "User" }],
     description: { type: String, required: true, trim: true },
-    activity: { type: String, required: true, default: 'other' },
+    activity: { type: String, required: true, default: 'other', enum: activityNames },
     place: {
         name: { type: String, required: true, trim: true },
         latitude: { type: Number, required: true },
