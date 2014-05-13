@@ -47,6 +47,10 @@ var passportConf = require('./config/passport');
 
 var app = express();
 
+app.response.renderNotFound = function() {
+  this.render('404', { status: 404 });
+};
+
 /**
  * Mongoose configuration.
  */
@@ -109,8 +113,7 @@ app.use(function(req, res, next) {
 });
 app.use(app.router);
 app.use(function(req, res) {
-  res.status(404);
-  res.render('404');
+  res.renderNotFound();
 });
 app.use(express.errorHandler());
 

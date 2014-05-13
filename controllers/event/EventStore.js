@@ -35,7 +35,8 @@ module.exports.findByActivity = function(act, cb) {
 
 module.exports.findById = function(id, cb) {
   return findEvents({_id: id}, ["author", "profile.name profile.picture"], function(err, events) {
-    cb(err, events[0]);
+    var event = events && events[0];
+    cb(err, event);
   });
 };
 

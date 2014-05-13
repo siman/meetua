@@ -10,8 +10,7 @@ module.exports = function(req, res) {
     console.log("id", id);
     console.log("found event", event);
     if (!event) {
-      res.status(404);
-      res.render("404");
+      res.renderNotFound();
     } else {
       res.render('event/view', {
         event: event,
