@@ -242,7 +242,7 @@ new CronJob('00 00 10 * * *', function () {
     if (err) return console.log(err);
     _.map(events, function(event){notifyService.notifyComingSoonEvent(event)})
   }
-  eventStore.findCommingSoon(onFoundEvents)
+  eventStore.findComingSoon(onFoundEvents)
 }, null, true, "Europe/Kiev");
 
 module.exports = app;

@@ -18,19 +18,11 @@ module.exports.dbPreload = util.dbPreload({
   entityName: "Event"
 });
 
-module.exports.findCommingSoon = function (cb) {
+module.exports.findComingSoon = function (cb) {
   var todayEndOfDay = moment().endOf('day').toDate();
   var tomorrowEndOfDay = moment().endOf('day').add('days', 1).toDate();
 
   return findEvents({'start.dateTime': {'$gte': todayEndOfDay, '$lt':tomorrowEndOfDay}}, ['participants'], cb)
-};
-
-module.exports.findAll = function (cb) {
-  return findEvents({}, [], cb);
-};
-
-module.exports.findByActivity = function(act, cb) {
-  return findEvents({activity: act}, [], cb);
 };
 
 module.exports.findById = function(id, cb) {
@@ -40,6 +32,7 @@ module.exports.findById = function(id, cb) {
   });
 };
 
+// TODO: Deprecated.
 function findEvents(findQuery, populationList, cb) {
   return Event.find(findQuery)
     .populate(populationList)

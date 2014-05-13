@@ -78,15 +78,14 @@ module.exports.get_findById = function(req, res, next) {
 module.exports.get_find = function(req, res, next) {
   var activity = req.query.act;
   console.log("act", activity);
-  function onFoundEvents(err, events) {
+  var filter = {'start.dateTime': {$gt:  Date.now()}};
+  if (activity) {
+    filter.activity = activity;
+  }
+  return Event.find(filter).exec(function(err, events) {
     if (err) return next(err);
     res.json(events);
-  }
-  if (activity) {
-    EventStore.findByActivity(activity, onFoundEvents);
-  } else {
-    EventStore.findAll(onFoundEvents);
-  }
+  });
 };
 
 /** Change participation status for event. */
