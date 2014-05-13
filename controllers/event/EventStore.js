@@ -9,8 +9,6 @@ var moment = require('moment');
 
 // TODO: Order by 'startDate asc' to show most recent events.
 
-// TODO: Preload test users: author of events, participants, etc.
-
 module.exports.dbPreload = util.dbPreload({
   count: Event.count.bind(Event),
   mockEntities: mockEvents,

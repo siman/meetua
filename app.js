@@ -10,7 +10,6 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
-var CronJob = require('cron').CronJob;
 var _ = require('underscore');
 var notifyService = require('./controllers/util/notificationService');
 
@@ -233,16 +232,10 @@ app.listen(app.get('port'), function() {
   console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
 });
 
+// DB preloading
 eventStore.dbPreload();
 userController.dbPreload();
 
-//Cron job to remind users about coming events
-new CronJob('00 00 10 * * *', function () {
-  function onFoundEvents(err, events) {
-    if (err) return console.log(err);
-    _.map(events, function(event){notifyService.notifyComingSoonEvent(event)})
-  }
-  eventStore.findComingSoon(onFoundEvents)
-}, null, true, "Europe/Kiev");
+notifyService.startCronJobs();
 
 module.exports = app;

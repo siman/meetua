@@ -43,14 +43,14 @@ var LinuxMailer = function() {
 var sendMail = conf.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 
 module.exports.notifyParticipantOnJoin = function(user, event) {
-  console.log('Notify on taking part in event. New participant', user.profile.name);
+  console.log('Notify on taking part in event. New participant:', user.profile.name);
   if (user.email && user.profile.receiveNotifications) {
     var params = { eventName: event.name };
     sendMail(event, user, 'event-participate', params);
   }
 };
 
-module.exports.notifyComingSoonEvent = function(event) {
+function notifyComingSoonEvent(event) {
   console.log('Notify all participants about upcoming event');
   _.map(event.participants, function(user) {
     console.log('user: ', user);
@@ -59,5 +59,21 @@ module.exports.notifyComingSoonEvent = function(event) {
       sendMail(event, user, 'event-coming-soon', params);
     }
   });
-};
+}
 
+module.exports.startCronJobs = function() {
+  console.log("Starting notification cron jobs...");
+
+  var CronJob = require('cron').CronJob;
+  var eventStore = require('../event/EventStore');
+
+  // Remind users about upcoming events.
+  // Runs every day at 10:00:00 AM.
+  new CronJob('00 00 10 * * *', function() {
+    eventStore.findComingSoon(function(err, events) {
+      if (err) return console.log(err);
+      _.map(events, notifyComingSoonEvent);
+    });
+  }, null, true, "Europe/Kiev");
+
+};
