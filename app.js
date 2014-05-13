@@ -237,7 +237,7 @@ userController.dbPreload();
 new CronJob('00 00 10 * * *', function () {
   function onFoundEvents(err, events) {
     if (err) return console.log(err);
-    _.map(events, function(event){notifyService.notifyComingSoonEvents(event)})
+    _.map(events, function(event){notifyService.notifyComingSoonEvent(event)})
   }
   eventStore.findCommingSoon(onFoundEvents)
 }, null, true, "Europe/Kiev");

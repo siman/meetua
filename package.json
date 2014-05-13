@@ -53,7 +53,7 @@
     "circular-json": "~0.1.6",
     "fs-extra": "~0.8.1",
     "node-mandrill": "~1.0.1",
-		"email-templates": "~0.1.8",
+    "email-templates": "~0.1.8",
     "cron": "~1.0.4"
   },
   "devDependencies": {
