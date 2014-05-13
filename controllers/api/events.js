@@ -53,11 +53,12 @@ module.exports.get_myOverview = function(req, res, next) {
       res.json(events);
     });
 
-  function findMyEvents(query, cb) {
-    Event.find(query)
-      .sort({'start.date': 1})
-      .limit(conf.MAX_EVENTS_IN_OVERVIEW)
-      .exec(cb);
+  function findMyEvents(filterQuery, cb) {
+    var fullQuery = Event.find(filterQuery).sort({'start.date': 1});
+    if (conf.MAX_EVENTS_IN_OVERVIEW) {
+      fullQuery = fullQuery.limit(conf.MAX_EVENTS_IN_OVERVIEW);
+    }
+    fullQuery.exec(cb);
   }
 };
 

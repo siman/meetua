@@ -11,7 +11,9 @@ module.exports = {
   IS_WINDOWS: process.platform === 'win32',
   IS_LINUX: process.platform === 'linux',
 
-  MAX_EVENTS_IN_OVERVIEW: 5,
+  // Uncomment to limit number of shown events on My events overview page.
+//  MAX_EVENTS_IN_OVERVIEW: 5,
+
   EVENT_IMG_DIR: './public/upload',
   UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload'),
 
