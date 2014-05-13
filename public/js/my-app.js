@@ -38,15 +38,6 @@ angular.module('myApp', [
       longitude: 30.521018
     },
     zoom: 11
-  })
-  .constant('activities', [  // TODO move into db in the future
-    {name: 'bike', textOver: 'Велосипед'},
-    {name: 'running', textOver: 'Бег'},
-    {name: 'workout', textOver: 'Workout'},
-    {name: 'hiking', textOver: 'Туризм'},
-    {name: 'photo', textOver: 'Фото'},
-    {name: 'en', textOver: 'Языки'},
-    {name: 'code', textOver: 'IT'}
-  ]);
+  });
 
 angular.module('myApp.shared', []);
