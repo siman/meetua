@@ -59,15 +59,17 @@ eventSchema.set('toJSON', {virtuals: true });
 // See http://mongoosejs.com/docs/middleware.html#notes
 eventSchema.pre('save', function(next) {
   if (this.start) {
-    this.start.dateTime = mergeDateTime(this.start.date, this.start.time);
+    this.start.dateTime = mergeDateTime(this.start.date, this.start.time || 0);
+    console.log('Calculated start.dateTime', this.start.dateTime);
   }
   if (this.end) {
     this.end.dateTime = mergeDateTime(this.end.date, this.end.time);
+    console.log('Calculated end.dateTime', this.end.dateTime);
   }
   next();
 
   function mergeDateTime(date, time) {
-    if (date && time) {
+    if (!_.isUndefined(date) && !_.isUndefined(time)) {
       var dateTime = moment(date);
       dateTime.add({ms: time});
       return dateTime.toDate();
