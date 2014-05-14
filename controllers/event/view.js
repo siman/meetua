@@ -5,7 +5,7 @@ var _ = require("underscore");
 
 module.exports = function(req, res) {
   var id = req.params.id;
-  store.findById(id, function(err, event) {
+  store.findById(id, ["author", "profile.name profile.picture"], function(err, event) {
     if (err) console.log('Error while looking for event by ID', err);
     console.log("id", id);
     console.log("found event", event);

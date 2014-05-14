@@ -66,7 +66,7 @@ module.exports.get_findById = function(req, res, next) {
   var id = req.query.id;
   console.log("id", id);
   if (id) {
-    EventStore.findById(id, function(err, event) {
+    EventStore.findById(id, [], function(err, event) {
       if (err) return next(err);
       res.json({event: event});
     });
@@ -94,7 +94,7 @@ module.exports.post_participation = function(req, res, next) {
   var act = req.query.act || 'add'; // valid values: add, remove.
   var curUser = req.user;
 
-  EventStore.findById(eventId, function(err, event) {
+  EventStore.findById(eventId, [], function(err, event) {
     if (err) next(err);
 
     function updateEvent(status) {

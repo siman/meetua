@@ -23,8 +23,8 @@ module.exports.findComingSoon = function (cb) {
   return findEvents({'start.dateTime': {'$gte': todayEndOfDay, '$lt':tomorrowEndOfDay}}, ['author', 'participants'], cb)
 };
 
-module.exports.findById = function(id, cb) {
-  return findEvents({_id: id}, ["author", "profile.name profile.picture"], function(err, events) {
+module.exports.findById = function(id, population, cb) {
+  return findEvents({_id: id}, population, function(err, events) {
     var event = events && events[0];
     cb(err, event);
   });

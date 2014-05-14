@@ -22,7 +22,7 @@ module.exports = function(req, res, next) {
     var reqImages = req.body.images || [];
 
     if (!isCreate(req)) {
-      Event.findById(req.body._id, function(err, eventFound) {
+      Event.findById(req.body._id, [], function(err, eventFound) {
         if (err) res.json(500, err);
         if (!eventFound || !eventFound.author.equals(req.user._id)) return res.json(404, {error: 'Event is not found'});
         event = eventFound;

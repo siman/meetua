@@ -12,7 +12,7 @@ function rmImage(req, res, next) {
   var imageId = req.params.imageId;
   var userId = req.user._id;
 
-  Event.findById(id, function(err, event) {
+  Event.findById(id, [], function(err, event) {
     if (err) return next(err);
     if (!event) res.send(404);
     if (!event.author.equals(userId)) res.send(403);
