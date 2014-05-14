@@ -109,7 +109,10 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
           return function(err) {
             console.log('afterSave');
             if (err) return next(err);
-            if(!isCreate(req)) notificationService.notifyParticipantOnEdit(event);
+
+            if(isCreate(req)) notificationService.notifyAuthorOnCreate(event);
+              else notificationService.notifyParticipantOnEdit(event);
+
             var respJson = {event: event};
             console.log('Sending response ', respJson);
             req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!': 'Ваше событие обновлено!' });

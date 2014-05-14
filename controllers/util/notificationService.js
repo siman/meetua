@@ -50,11 +50,19 @@ function notifyUser(user, event, templateName) {
   }
 }
 
+module.exports.notifyAuthorOnCreate = function (event) {
+  console.log('Notify author on event creation', event.name);
+  store.findById(event._id, ['author'], function (err, eventFound) {
+   console.log('auth', eventFound.author);
+   notifyUser(eventFound.author, eventFound, 'event-create');
+
+  })
+};
+
 module.exports.notifyParticipantOnEdit = function (event) {
   console.log('Notify on event changing', event.name);
-  var populatedEvent = store.findById(event._id, ['participants'], function (err, eventFound) {
+  store.findById(event._id, ['participants'], function (err, eventFound) {
       _.map(eventFound.participants, function (user) {
-        console.log('userrrrrrrrr', user);
         notifyUser(user, eventFound, 'event-edit');
       })
     }
