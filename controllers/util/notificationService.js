@@ -3,6 +3,7 @@
 var conf = require('../../config/app-config.js');
 var path = require('path');
 var _ = require('underscore');
+var store = require('../event/EventStore');
 
 var WindowsMailer = function() {
   return function(event, user, templateName, mailParams) {
@@ -48,6 +49,17 @@ function notifyUser(user, event, templateName) {
     sendMail(event, user, templateName, params);
   }
 }
+
+module.exports.notifyParticipantOnEdit = function (event) {
+  console.log('Notify on event changing', event.name);
+  var populatedEvent = store.findById(event._id, ['participants'], function (err, eventFound) {
+      _.map(eventFound.participants, function (user) {
+        console.log('userrrrrrrrr', user);
+        notifyUser(user, eventFound, 'event-edit');
+      })
+    }
+  )
+};
 
 module.exports.notifyParticipantOnJoin = function(user, event) {
   console.log('Notify on taking part in event. New participant:', user.profile.name);

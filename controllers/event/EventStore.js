@@ -24,6 +24,7 @@ module.exports.findComingSoon = function (cb) {
 };
 
 module.exports.findById = function(id, population, cb) {
+  console.log('id:', id);
   return findEvents({_id: id}, population, function(err, events) {
     var event = events && events[0];
     cb(err, event);

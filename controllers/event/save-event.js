@@ -10,6 +10,7 @@ var async = require('async');
 var Event = require('../../models/Event');
 var Image = require('../../models/Image');
 var tmp = require('tmp');
+var notificationService = require('../util/notificationService');
 
 module.exports = function(req, res, next) {
     if (isCreate(req)) {
@@ -108,6 +109,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
           return function(err) {
             console.log('afterSave');
             if (err) return next(err);
+            if(!isCreate(req)) notificationService.notifyParticipantOnEdit(event);
             var respJson = {event: event};
             console.log('Sending response ', respJson);
             req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!': 'Ваше событие обновлено!' });
