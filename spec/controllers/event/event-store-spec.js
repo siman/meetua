@@ -2,13 +2,14 @@ var testUtil = require('../../test-util');
 var dbPreload = require('../../../controllers/event/EventStore').dbPreload;
 var mockEvents = require('../../../controllers/event/MockEvents');
 var Event = require('../../../models/Event');
+var _ = require('underscore');
 
 describe('event store', function() {
   beforeEach(testUtil.mongoConnect);
   afterEach(testUtil.mongoDisconnect);
 
   it('should preload mock events in db when it\'s empty', function(done) {
-    Event.remove({}, function(err) {
+    removeAllEvents(function(err) {
       if (err) return done(err);
       doPreload();
     });
@@ -24,7 +25,7 @@ describe('event store', function() {
   });
 
   it('should not preload mock events when there are events in the db', function(done) {
-    Event.remove({}, function(err) {
+    removeAllEvents(function(err) {
       if (err) return done(err);
       new Event(mockEvents[0]).save(function(err, createdEvent) {
         doPreload();
@@ -41,3 +42,13 @@ describe('event store', function() {
     }
   });
 });
+
+function removeAllEvents(cb) {
+  Event.find({}, function(err, events) {
+    if (err) return cb(err);
+    _.each(events, function(event) {
+      event.remove();
+    });
+    cb(null);
+  });
+}

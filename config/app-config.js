@@ -5,6 +5,23 @@ var os = require('os');
 var moment = require('moment');
 moment.lang('ru');
 
+// patch mongoose bulk methods
+var mongoose = require('mongoose');
+var realModel = mongoose.model.bind(mongoose);
+mongoose.model = function(name, schema) {
+  var model = realModel(name, schema);
+  var unsupported = function() { throw new Error("Sorry Dave, I can't do that"); };
+  model.remove = unsupported;
+  model.findAndRemove = unsupported;
+  model.update = unsupported;
+  model.findByIdAndUpdate = unsupported;
+  model.findOneAndUpdate = unsupported;
+  model.findOneAndRemove = unsupported;
+  model.findByIdAndRemove = unsupported;
+  return model;
+};
+
+
 module.exports = {
 
   // http://nodejs.org/api/process.html#process_process_platform

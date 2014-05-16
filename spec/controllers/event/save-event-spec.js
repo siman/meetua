@@ -10,7 +10,7 @@ var express = require('express');
 var Event = require('../../../models/Event');
 var testUtil = require('../../test-util');
 var _ = require('underscore');
-var config = require('../../../config/app-config');
+var config = require('../../../config/app-config'); // patches mongoose
 var async = require('async');
 var notificationService = require('../../../controllers/util/notificationService');
 notificationService.notifyAuthorOnCreate = function() {}; // mock
@@ -166,7 +166,7 @@ describe('save-event', function() {
           });
       }
     });
-    it('should validate activity by enum', function(done) { // FIXME this test fails, validation doesn't occur on update
+    it('should validate activity by enum', function(done) {
       createEvent(buildReqData(), function(err, event) {
         if (err) return done(err);
         updateEvent(event);

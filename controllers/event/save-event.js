@@ -96,19 +96,16 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
         }
 
         function updateEvent() {
-          var eventObj = _.extend(event.toObject(), req.body);
-          eventObj.images = images.concat(imagesWithId);
-          delete eventObj._id;
+          _.extend(event, req.body, {images: images.concat(imagesWithId)});
 
-          console.log('Updating event by id', event._id, eventObj);
-          var respEvent = _.extend({}, eventObj, {_id: event._id});
-          Event.update({_id: event._id}, eventObj, afterSave(respEvent));
+          console.log('Updating event by id', event._id, event);
+          var respEvent = _.extend({}, event, {_id: event._id});
+          event.save(afterSave(respEvent));
         }
 
         function afterSave(event) {
           return function(err) {
-            console.log('afterSave');
-            if (err) return next(err);
+            if (err) return res.json(400, {error: err});
 
             if(isCreate(req)) notificationService.notifyAuthorOnCreate(event);
               else notificationService.notifyParticipantOnEdit(event);
