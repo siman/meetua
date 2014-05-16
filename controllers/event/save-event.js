@@ -24,7 +24,7 @@ module.exports = function(req, res, next) {
 
     if (!isCreate(req)) {
       Event.findById(req.body._id, function(err, eventFound) {
-        if (err) res.json(500, err);
+        if (err) res.json(500, err); // TODO find out standard way to pass erorrs when UI will have standard error handler
         if (!eventFound || !eventFound.author.equals(req.user._id)) return res.json(404, {error: 'Event is not found'});
         event = eventFound;
 
