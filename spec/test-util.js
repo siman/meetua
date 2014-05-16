@@ -1,3 +1,4 @@
+var appConfig = require('../config/app-config'); // patches mongoose for every test
 var mongoose = require('mongoose');
 var _ = require('underscore');
 var tmp = require('tmp');
