@@ -1,6 +1,7 @@
 'use strict';
 
 var Event = require('../../models/Event');
+var _ = require('underscore');
 
 module.exports = function (req, res, next) {
   console.log('cancel event');
@@ -13,10 +14,18 @@ module.exports = function (req, res, next) {
     if (err) return next(err);
     if (!event) return res.send(404);
 
-    res.render('event/canceled', {
-        title: 'Отмена события',
-        event: event
-      }
-    );
+    _.extend(event, {canceledOn: new Date()});
+
+    event.save(afterSave());
+    function afterSave() {
+      console.log('notify users...');
+
+      res.render('event/canceled', {
+          title: 'Отмена события',
+          event: event
+        }
+      );
+
+    }
   });
 };

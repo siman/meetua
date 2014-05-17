@@ -32,6 +32,7 @@ var eventSchema = new mongoose.Schema({
         time: Number,
         dateTime: Date
     },
+    canceledOn: { type: Date },
     images: [Image.schema] // default order, logo first TODO
 });
 
