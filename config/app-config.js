@@ -5,6 +5,8 @@ var os = require('os');
 var moment = require('moment');
 moment.lang('ru');
 
+var DOMAIN = 'meetua.com';
+
 // patch mongoose bulk methods
 var mongoose = require('mongoose');
 var realModel = mongoose.model.bind(mongoose);
@@ -36,7 +38,9 @@ module.exports = {
 
   notification: {
     MANDRILL_KEY: 'iiiPHm_fhC7JrK4vgExm0A',
-    MAIL_FROM: 'no-reply@meetua.com'
-  }
+    MAIL_FROM: 'no-reply@' + DOMAIN
+  },
+  domain: DOMAIN,
+  hostname: 'http://' + DOMAIN
 
 };

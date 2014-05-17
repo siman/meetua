@@ -17,6 +17,8 @@ var notifyService = require('./controllers/util/notificationService');
  * Load controllers.
  */
 
+var sitemap = require('./controllers/sitemap');
+sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
@@ -121,6 +123,7 @@ app.use(express.errorHandler());
  */
 
 app.get('/', homeController.index);
+app.get('/sitemap.xml', sitemap.getSitemap);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
