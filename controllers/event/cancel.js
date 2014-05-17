@@ -14,9 +14,9 @@ module.exports = function (req, res, next) {
     if (err) return next(err);
     if (!event) return res.send(404);
 
-    _.extend(event, {canceledOn: new Date()});
+    event.canceledOn = new Date();
 
-    event.save(afterSave());
+    event.save(afterSave);
     function afterSave() {
       console.log('notify users...');
 
