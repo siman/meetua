@@ -12,9 +12,10 @@ block top_panel
         a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
           i.fa.fa-edit
           | Редактировать
-        a.btn.btn-default.btn-sm(data-toggle="modal" data-target="#myModal" role="button")
-          i.fa.fa-times
-          | Отменить
+        if (!event.isPassed)
+          a.btn.btn-default.btn-sm(data-toggle="modal" data-target="#myModal" role="button")
+            i.fa.fa-times
+            | Отменить
       #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
         .modal-dialog
           .modal-content
