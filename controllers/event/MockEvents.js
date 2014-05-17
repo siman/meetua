@@ -15,9 +15,7 @@ module.exports = [
       "date" : "2020-04-21T21:00:00Z"
     },
     "place" : {
-      "name" : "Radisson Blu Hotel, Kyiv Podil, Kiev, Kyiv city, Ukraine",
-      "latitude" : 50.46355999999972,
-      "longitude" : 30.51819824865718
+      "name" : "Radisson Blu Hotel, Kyiv Podil, Kiev, Kyiv city, Ukraine"
     },
     "__v" : 0
   },

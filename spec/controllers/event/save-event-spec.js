@@ -55,6 +55,17 @@ describe('save-event', function() {
           })
         });
     });
+    it('should save event when latitude and longitude not selected', function(done) {
+      callSaveEvent(buildReqData({ place:{ name: 'Malibu', latitude: undefined, longitude: undefined }}))
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          Event.findOne({_id: res.body.event._id }, function(err, doc) {
+            expect(doc).toBeDefined();
+            done();
+          })
+        });
+    });
     it('should move image to the new dir creating dest dir if necessary', function(done) {
       testUtil.createTestImage({isLogo: true}, function(reqImage) {
         fs.removeSync(config.EVENT_IMG_DIR);

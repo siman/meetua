@@ -64,7 +64,8 @@ block content
               +eventField("Организатор", event.author.profile.name)
             div.event_desc #{event.description}
 
-      google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts")
+      google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts",
+        ng-if='event.place.latitude && event.place.longitude')
         marker(coords="event.place")
 
       #comments

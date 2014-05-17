@@ -18,6 +18,7 @@ angular.module('myApp').controller('SelectEventCtrl',
 
     $scope.onEventOut = function (event) {
       $scope.mapEvents = _.map($scope.foundEvents, function (ev) {
+        // TODO think: how to show event without lat & lng on home page ??
         return ev.place
       });
     };
