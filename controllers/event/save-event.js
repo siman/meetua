@@ -46,7 +46,6 @@ module.exports = function(req, res, next) {
     function verifyLogoCount(images, cb) {
       async.reduce(images, 0, countLogoImages, function(err, logoCount) {
         if (err) return res.json(500, err);
-        console.log('verifyLogoCount', images.length, logoCount);
         if (images.length > 0 && logoCount != 1) {
           var errorMsg = 'Invalid logo count ' + logoCount;
           console.log(errorMsg);
