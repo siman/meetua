@@ -33,6 +33,7 @@ module.exports.findById = function(id, population, cb) {
 
 // TODO: Deprecated.
 function findEvents(findQuery, populationList, cb) {
+  _.extend(findQuery, {canceledOn: {$exists: false}});
   return Event.find(findQuery)
     .populate(populationList)
     .exec(cb);

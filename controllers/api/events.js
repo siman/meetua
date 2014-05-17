@@ -14,9 +14,10 @@ var buildMyFilters = function(req) {
   var curUserId = req.user._id;
   var now = Date.now();
   return {
-    my: {author: curUserId},
-    going: {participants: curUserId, 'start.dateTime': {$gt: now}},
-    visited: {participants: curUserId, 'start.dateTime': {$lte: now}}
+    my: {author: curUserId, canceledOn: {$exists: false}},
+    myCanceled: {author: curUserId, canceledOn: {$exists: true}},
+    going: {participants: curUserId, 'start.dateTime': {$gt: now}, canceledOn: {$exists: false}},
+    visited: {participants: curUserId, 'start.dateTime': {$lte: now}, canceledOn: {$exists: false}}
   };
 };
 
@@ -46,6 +47,10 @@ module.exports.get_myOverview = function(req, res, next) {
       visited: function(cb) {
         // TODO: Check also end date that it is <= now.
         findMyEvents(filters.visited, cb);
+      },
+      myCanceled: function(cb) {
+        // Created by me
+        findMyEvents(filters.myCanceled, cb);
       }
     },
     function(err, events) {
@@ -78,7 +83,10 @@ module.exports.get_findById = function(req, res, next) {
 module.exports.get_find = function(req, res, next) {
   var activity = req.query.act;
   console.log("act", activity);
-  var filter = {'start.dateTime': {$gt:  Date.now()}};
+  var filter = {
+    'start.dateTime': {$gt:  Date.now()},
+    canceledOn: {$exists: false}
+  };
   if (activity) {
     filter.activity = activity;
   }

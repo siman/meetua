@@ -6,7 +6,8 @@ angular.module('myApp').controller('MyEventsCtrl',
     $scope.events = {
       my: [],
       visited: [],
-      going: []
+      going: [],
+      myCanceled: []
     };
 
     function init() {
