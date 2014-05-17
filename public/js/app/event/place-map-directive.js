@@ -4,8 +4,8 @@ angular.module('myApp')
   .directive('placeMap', ['BASE_MAP', 'KIEV_MAP', '$timeout', function(BASE_MAP, KIEV_MAP, $timeout) {
     function controller($scope) {
       $scope.updateMapLatLng = function(lat, lng) {
-        $scope.map.center.latitude = $scope.lat = lat;
-        $scope.map.center.longitude = $scope.lng = lng;
+        $scope.map.center.latitude/*map*/  = $scope.map.marker.center.latitude/*marker*/ = $scope.lat/*parent scope*/ = lat;
+        $scope.map.center.longitude = $scope.map.marker.center.longitude = $scope.lng = lng;
       };
       $scope.placeOptions={
         country: 'ua'
@@ -23,6 +23,8 @@ angular.module('myApp')
           }
         }
       });
+      // marker must have separate center object, since map center is changed on drag, but marker should stay on place
+      $scope.map.marker.center = _.extend({}, $scope.map.center);
     }
     function link(scope) {
       scope.$watch('details', function(details){
