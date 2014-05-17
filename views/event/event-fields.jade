@@ -58,9 +58,9 @@ mixin eventFields(isCreate)
     .col-sm-8
       div(ng-class="{ 'drop-zone': uploader.isHTML5 }", ng-file-over='ng-file-over', ng-file-drop)
         | Перетяните изображения сюда
-      input(ng-file-select='ng-file-select', type='file')
         //TODO refactor: uploader can take already uploaded images
         // @see https://github.com/nervgh/angular-file-upload#faq
+      input(ng-file-select='ng-file-select', type='file')
       .col-sm-3(ng-repeat="image in event.images", ng-click="imageService.setAsLogo(image)", ng-show="uploader.isHTML5")
         .event_img(ng-class="{ 'pointer': !image.isLogo }")
           i.pointer.glyphicon.glyphicon-remove-circle.remove_img(confirmed-click='imageService.removeItem(image)',
