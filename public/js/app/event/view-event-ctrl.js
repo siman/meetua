@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$scope', '$http', 'BASE_MAP', 'currentUserService', 'myApiService',
-  function ($scope, $http, BASE_MAP, currentUserService, myApiService) {
+  ['$scope', '$http', 'BASE_MAP', 'currentUserService', 'myApiService', 'ErrorService',
+  function ($scope, $http, BASE_MAP, currentUserService, myApiService, ErrorService) {
     var event = _myInit.event;
     console.log("Event", event);
 
@@ -47,10 +47,11 @@ angular.module('myApp').controller('ViewEventCtrl',
             });
         }).
         error(function(data, status, headers, config) {
-          // TODO show on UI that failed to participate in event.
           $partBtn.removeAttr('disabled');
           changeParticipation(false);
-          console.error('Failed to change participation in event', data);
+          var msg = 'Не удалось принять участие. Повторите попытку позже. ' + (data.error ? data.error : data);
+          console.error(msg, data);
+          ErrorService.alert(msg);
         });
     };
 
