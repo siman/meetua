@@ -64,11 +64,9 @@ eventSchema.set('toJSON', {virtuals: true });
 eventSchema.pre('save', function(next) {
   if (this.start) {
     this.start.dateTime = mergeDateTime(this.start.date, this.start.time || 0);
-    console.log('Calculated start.dateTime', this.start.dateTime);
   }
   if (this.end) {
     this.end.dateTime = mergeDateTime(this.end.date, this.end.time);
-    console.log('Calculated end.dateTime', this.end.dateTime);
   }
   next();
 
