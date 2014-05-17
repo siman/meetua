@@ -8,9 +8,22 @@ mixin eventField(label, data)
 block top_panel
   if (isCurrentUserAnAuthor)
     #on_my_event_panel.alert-warning
-      a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
-        i.fa.fa-edit
-        | Редактировать
+      div.event_edit_panel
+        a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
+          i.fa.fa-edit
+          | Редактировать
+        a.btn.btn-default.btn-sm(data-toggle="modal" data-target="#myModal" role="button")
+          i.fa.fa-times
+          | Отменить
+      #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+        .modal-dialog
+          .modal-content
+            .modal-body#event_remove_warning
+             | Вы уверены, что хотите отменить событие? Все участники будут уведомлены об отмене.
+            .modal-footer
+              button.btn.btn-default(type='button', data-dismiss='modal') Нет
+              a.button.btn.btn-primary(href="/event/#{event._id}/cancel", type='button') Да
+
 
 block content
   if (!event)
