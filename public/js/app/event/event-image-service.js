@@ -2,7 +2,8 @@
 
 angular.module('myApp')
     .factory('EventImageService', ['$fileUploader', 'EventService', 'SharedEventService', '$cookies', '$window',
-    function($fileUploader, EventService, SharedEventService, $cookies, $window) {
+    'ErrorService',
+    function($fileUploader, EventService, SharedEventService, $cookies, $window, ErrorService) {
         /**
          *
          * @param {Object} params
@@ -86,6 +87,12 @@ angular.module('myApp')
               if (helper.allImages().length === 1) {
                 item.isLogo = true;
               }
+            });
+            uploader.bind('error', function(event, xhr, item, response) {
+              var msg = 'Не удалось сохранить изображение ' + item.file.name + '. ' + (response.error ? response.error : response);
+              console.error(msg);
+              ErrorService.alert(msg);
+              item.remove(); // from queue
             });
             uploader.bind('completeall', function submitAfterUpload(event, uploadItems, progress) {
               function getItemUploadResponse(item){

@@ -1,6 +1,7 @@
 'use strict';
 
 var MAX_SIZE = 2*1024*1024; // 2MB
+var MAX_SIZE_PRETTY = "2 mb"; // 2MB
 var path = require('path');
 var os = require('os');
 var config = require('../config/app-config');
@@ -18,12 +19,12 @@ exports.handleUpload = function(req, res, next) {
 
     var size = parseInt(req.headers['content-length'], 10);
     if (!size || size < 0) {
-        res.send(JSON.stringify({error: "No size specified."}));
+        res.json(400, {error: "Размер файла не указан."});
         return;
     }
 
     if (size > MAX_SIZE) {
-        res.send(JSON.stringify({error: "Too big."}));
+        res.json(400, {error: 'Слишком большой размер. Максимальный размер: ' + MAX_SIZE_PRETTY});
         return;
     }
 
