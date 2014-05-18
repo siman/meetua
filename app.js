@@ -44,11 +44,16 @@ var renderTpl = require('./controllers/render-tpl').renderTpl;
 var secrets = require('./config/secrets');
 var passportConf = require('./config/passport');
 
-/**
- * Create Express server.
- */
-
 var app = express();
+
+app.set('ipaddress', '127.0.0.1'); // TODO refactor to use appConfig instead of plain strings
+app.set('port', 3000);
+app.set('mongodb-url', secrets.db);
+
+secrets.db = app.get('mongodb-url');
+
+var openShiftApp = new OpenShiftApp();
+openShiftApp.initialize(app);
 
 app.response.renderNotFound = function() {
   this.render('404', { status: 404 });
@@ -233,13 +238,6 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
 /**
  * Start Express server.
  */
-
-app.set('ipaddress', '127.0.0.1'); // TODO refactor to use appConfig instead of plain strings
-app.set('port', 3000);
-app.set('mongodb-url', secrets.db);
-
-var openShiftApp = new OpenShiftApp();
-openShiftApp.initialize(app);
 
 app.listen(app.get('port'), app.get('ipaddress'), function() {
   console.log("✔ Express server listening on %s:%d in %s mode", app.get('ipaddress'), app.get('port'), app.get('env'));
