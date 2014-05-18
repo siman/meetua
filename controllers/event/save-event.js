@@ -72,7 +72,7 @@ function countLogoImages(acc, image, next) {
 
 function buildAndSaveEvent(event, imagesWithId, req, res, next) {
     return function(err, images) {
-        if (err) return res.json(500, err);
+        if (err) return res.json(400, err);
 
         delete req.body.images;
 
@@ -126,14 +126,14 @@ function copyImage(image, next) {
     var imagePath = path.join(UPLOAD_DIR, image.name);
 
     fs.exists(imagePath, function(exists) {
-        console.log('Image exists ', exists);
+        console.log('Image ', imagePath, 'exists ', exists);
         console.log('uploadDir ', UPLOAD_DIR);
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
             moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
                 next(err, _.extend(image, {name: path.basename(newPath)}));
             });
         } else {
-            next(null, image);
+            next(new Error('Image name is invalid'), null);
         }
     });
 }
@@ -146,6 +146,7 @@ function copyImage(image, next) {
  * @param next
  */
 function moveFile(srcPath, destDir, next) {
+    console.log('move', srcPath, '->', destDir, 'is requested');
     tmp.tmpName({ dir: destDir, prefix: 'event-', postfix: path.extname(srcPath), tries: 100},
       function(err, destPath) {
         console.log('Created unique name ', destPath);

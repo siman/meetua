@@ -129,6 +129,14 @@ describe('save-event', function() {
           done();
         });
     });
+    it('should prevent directory traversal attack', function(done) {
+      createLogoImage(function(err, image) {
+        image.name = '../../passwd';
+        callSaveEvent(buildReqData({images: [image]}))
+          .expect(400)
+          .end(done);
+      });
+    });
   });
   describe('update-event', function() {
     it('should save image on update', function(done) {
