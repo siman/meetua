@@ -2,6 +2,7 @@
 
 var Event = require('../../models/Event');
 var _ = require('underscore');
+var notificationService = require('../util/notificationService');
 
 module.exports = function (req, res, next) {
   console.log('cancel event');
@@ -18,7 +19,7 @@ module.exports = function (req, res, next) {
 
     event.save(afterSave);
     function afterSave() {
-      console.log('notify users...');
+      notificationService.notifyOnCancel(event);
 
       res.render('event/canceled', {
           title: 'Отмена события',

@@ -20,20 +20,29 @@ module.exports.findComingSoon = function (cb) {
   var todayEndOfDay = moment().endOf('day').toDate();
   var tomorrowEndOfDay = moment().endOf('day').add('days', 1).toDate();
 
-  return findEvents({'start.dateTime': {'$gte': todayEndOfDay, '$lt':tomorrowEndOfDay}}, ['author', 'participants'], cb)
+  return findEvents({'start.dateTime': {'$gte': todayEndOfDay, '$lt': tomorrowEndOfDay}, canceledOn: {$exists: false}},
+    ['author', 'participants'], cb)
 };
 
 module.exports.findById = function(id, population, cb) {
-  console.log('id:', id);
-  return findEvents({_id: id}, population, function(err, events) {
+  return findSingleEvent(id, population, cb, false)
+};
+
+module.exports.findCanceledById = function(id, population, cb) {
+  return findSingleEvent(id, population, cb, true)
+};
+
+function findSingleEvent(id, population, cb, isCanceled) {
+  var filter = {_id: id,
+         canceledOn: {$exists: isCanceled}};
+  return findEvents(filter, population, function(err, events) {
     var event = events && events[0];
     cb(err, event);
   });
-};
+}
 
 // TODO: Deprecated.
 function findEvents(findQuery, populationList, cb) {
-  findQuery.canceledOn = {$exists: false};
   return Event.find(findQuery)
     .populate(populationList)
     .exec(cb);

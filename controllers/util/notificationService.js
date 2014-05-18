@@ -78,11 +78,22 @@ function notifyComingSoonEvent(event) {
   console.log('Notify all participants about upcoming event');
   notifyUser(event.author, event, 'event-coming-soon');
   _.map(event.participants, function(user) {
-    //Can I make this shorter?
-    if (JSON.stringify(user._id) != JSON.stringify(event.author._id))
+    if (!user._id.equals(event.author._id))
       notifyUser(user, event, 'event-coming-soon');
   });
 }
+
+module.exports.notifyOnCancel = function (event) {
+  console.log('Notify on event cancel', event.name);
+  store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) {
+      console.log('eventFound:', eventFound);
+      notifyUser(eventFound.author, eventFound, 'event-cancel');
+      _.map(eventFound.participants, function (user) {
+        notifyUser(user, eventFound, 'event-cancel');
+      })
+    }
+  )
+};
 
 module.exports.startCronJobs = function() {
   console.log("Starting notification cron jobs...");
