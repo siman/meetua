@@ -11,6 +11,10 @@
     "selenium-server": "./node_modules/protractor/bin/webdriver-manager start",
     "e2e-test": "./node_modules/protractor/bin/protractor spec-e2e/protractor_conf.js"
   },
+  "engines": {
+    "node": ">= 0.10.28",
+    "npm": ">= 1.4.9"
+  },
   "dependencies": {
     "async": "~0.7.0",
     "bcrypt-nodejs": "~0.0.3",
