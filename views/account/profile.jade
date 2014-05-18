@@ -2,37 +2,37 @@ extends ../layout
 
 block content
   .page-header
-    h3 Profile Information
+    h3 Личные данные
 
   form.form-horizontal(action='/account/profile', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group
-      label.col-sm-2.control-label(for='email') Email
+      label.col-sm-2.control-label(for='email') Почтовый ящик
       .col-sm-4
         input.form-control(type='email', name='email', id='email', value='#{user.email}')
     .form-group
-      label.col-sm-2.control-label(for='name') Name
+      label.col-sm-2.control-label(for='name') Имя
       .col-sm-4
         input.form-control(type='text', name='name', id='name', value='#{user.profile.name}')
     .form-group
-      label.col-sm-2.control-label(for='gender') Gender
+      label.col-sm-2.control-label(for='gender') Пол
       .col-sm-4
         label.radio
           input(type='radio', checked=user.profile.gender=='male', name='gender', value='male', data-toggle='radio')
-          span Male
+          span Мужской
         label.radio
           input(type='radio', checked=user.profile.gender=='female', name='gender', value='female', data-toggle='radio')
-          span Female
+          span Женский
     .form-group
-      label.col-sm-2.control-label(for='location') Location
+      label.col-sm-2.control-label(for='location') Адрес
       .col-sm-4
         input.form-control(type='text', name='location', id='location', value='#{user.profile.location}')
     .form-group
-      label.col-sm-2.control-label(for='website') Website
+      label.col-sm-2.control-label(for='website') Сайт
       .col-sm-4
         input.form-control(type='text', name='website', id='website', value='#{user.profile.website}')
     .form-group
-      label.col-sm-2.control-label(for='notification') Получать уведомления
+      label.col-sm-2.control-label(for='notification') Получать почтовые уведомления
       .col-sm-4
         label.checkbox
           input(type='checkbox', name='notification', id='notofication' checked=user.profile.receiveNotifications==true)
@@ -44,68 +44,68 @@ block content
       .col-sm-offset-2.col-sm-4
         button.btn.btn.btn-primary(type='submit')
           i.fa.fa-magnet
-          | Update Profile
+          | Обновить профиль
 
 
   if secrets.localAuth
     .page-header
-      h3 Change Password
+      h3 Изменить пароль
 
     form.form-horizontal(action='/account/password', method='POST')
       input(type='hidden', name='_csrf', value=_csrf)
       .form-group
-        label.col-sm-3.control-label(for='password') New Password
+        label.col-sm-3.control-label(for='password') Новый пароль
         .col-sm-4
           input.form-control(type='password', name='password', id='password')
       .form-group
-        label.col-sm-3.control-label(for='confirmPassword') Confirm Password
+        label.col-sm-3.control-label(for='confirmPassword') Новый пароль ещё раз
         .col-sm-4
           input.form-control(type='password', name='confirmPassword', id='confirmPassword')
       .form-group
         .col-sm-offset-3.col-sm-4
           button.btn.btn.btn-primary(type='submit')
             i.fa.fa-keyboard-o
-            | Change Password
+            | Сохранить новый пароль
 
   .page-header
-    h3 Delete Account
+    h3 Удалить профиль
 
-  p You can delete your account, but keep in mind this action is irreversible.
+  p Вы можете удалить свой профиль, но имейте ввиду, что это действие не может быть отменено.
   form(action='/account/delete', method='POST')
     input(type='hidden', name='_csrf', value=token)
     button.btn.btn-danger(type='submit')
       i.fa.fa-trash-o
-      | Delete my account
+      | Удалить мой профиль
 
   .page-header
-    h3 Linked Accounts
+    h3 Связанные аккаунты
 
   if secrets.googleAuth
     if user.google
-      p: a.text-danger(href='/account/unlink/google') Unlink your Google account
+      p: a.text-danger(href='/account/unlink/google') Отвязать мой Google аккаунт
     else
-      p: a(href='/auth/google') Link your Google account
+      p: a(href='/auth/google') Привязать Google аккаунт
 
   if secrets.facebookAuth
     if user.facebook
-      p: a.text-danger(href='/account/unlink/facebook') Unlink your Facebook account
+      p: a.text-danger(href='/account/unlink/facebook') Отвязать мой Facebook аккаунт
     else
-      p: a(href='/auth/facebook') Link your Facebook account
+      p: a(href='/auth/facebook') Привязать Facebook аккаунт
 
   if secrets.twitterAuth
     if user.twitter
-      p: a.text-danger(href='/account/unlink/twitter') Unlink your Twitter account
+      p: a.text-danger(href='/account/unlink/twitter') Отвязать мой Twitter аккаунт
     else
-      p: a(href='/auth/twitter') Link your Twitter account
+      p: a(href='/auth/twitter') Привязать Twitter аккаунт
 
   if secrets.githubAuth
     if user.github
-      p: a.text-danger(href='/account/unlink/github') Unlink your GitHub account
+      p: a.text-danger(href='/account/unlink/github') Отвязать мой GitHub аккаунт
     else
-      p: a(href='/auth/github') Link your GitHub account
+      p: a(href='/auth/github') Привязать GitHub аккаунт
 
   if secrets.linkedinAuth
     if user.linkedin
-      p: a.text-danger(href='/account/unlink/linkedin') Unlink your LinkedIn account
+      p: a.text-danger(href='/account/unlink/linkedin') Отвязать мой LinkedIn аккаунт
     else
-      p: a(href='/auth/linkedin') Link your LinkedIn account
+      p: a(href='/auth/linkedin') Привязать LinkedIn аккаунт
