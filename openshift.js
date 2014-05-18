@@ -23,6 +23,7 @@ module.exports = function() {
     self.setupPortAndAddress = function(app) {
         app.set('port', process.env.OPENSHIFT_NODEJS_PORT || app.get('port'));
         app.set('ipaddress', process.env.OPENSHIFT_NODEJS_IP || app.get('ipaddress'));
+        app.set('mongodb-url', (process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME) || app.get('mongodb-url'));
     };
 
 

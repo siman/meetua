@@ -55,15 +55,6 @@ app.response.renderNotFound = function() {
 };
 
 /**
- * Mongoose configuration.
- */
-
-mongoose.connect(secrets.db);
-mongoose.connection.on('error', function() {
-  console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
-});
-
-/**
  * Express configuration.
  */
 
@@ -243,8 +234,9 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
  * Start Express server.
  */
 
-app.set('ipaddress', '127.0.0.1');
+app.set('ipaddress', '127.0.0.1'); // TODO refactor to use appConfig instead of plain strings
 app.set('port', 3000);
+app.set('mongodb-url', secrets.db);
 
 var openShiftApp = new OpenShiftApp();
 openShiftApp.initialize(app);
@@ -253,9 +245,20 @@ app.listen(app.get('port'), app.get('ipaddress'), function() {
   console.log("✔ Express server listening on %s:%d in %s mode", app.get('ipaddress'), app.get('port'), app.get('env'));
 });
 
-// DB preloading
-eventStore.dbPreload();
-userController.dbPreload();
+/**
+ * Mongoose configuration.
+ */
+
+mongoose.connect(app.get('mongodb-url'));
+mongoose.connection.on('error', function() {
+  console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
+});
+
+if (!openShiftApp.isOpenShiftEnv) {
+  // DB preloading
+  eventStore.dbPreload();
+  userController.dbPreload();
+}
 
 notifyService.startCronJobs();
 
