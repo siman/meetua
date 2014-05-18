@@ -2,6 +2,7 @@
 
 var store = require("./EventStore");
 var _ = require("underscore");
+var config = require('../../config/app-config');
 
 module.exports = function(req, res) {
   var id = req.params.id;
@@ -12,8 +13,15 @@ module.exports = function(req, res) {
     if (!event) {
       res.renderNotFound();
     } else {
+      var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+      var tweet = (event.name + config.socialTweetLinkLength > 139 ? event.name.substring(0, (139 - config.socialTweetLinkLength)) : event.name);
+      var social = {
+        path: fullUrl,
+        tweet: tweet
+      };
       res.render('event/view', {
         event: event,
+        social: social,
         // If current user is an author of event
         isCurrentUserAnAuthor: event.author && req.user && event.author._id.equals(req.user._id)
       });
