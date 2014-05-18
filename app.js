@@ -12,6 +12,7 @@ var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 var _ = require('underscore');
 var notifyService = require('./controllers/util/notificationService');
+var OpenShiftApp = require('./openshift');
 
 /**
  * Load controllers.
@@ -70,7 +71,6 @@ var hour = 3600000;
 var day = (hour * 24);
 var month = (day * 30);
 
-app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(connectAssets({
@@ -243,8 +243,14 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
  * Start Express server.
  */
 
-app.listen(app.get('port'), function() {
-  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
+app.set('ipaddress', '127.0.0.1');
+app.set('port', 3000);
+
+var openShiftApp = new OpenShiftApp();
+openShiftApp.initialize(app);
+
+app.listen(app.get('port'), app.get('ipaddress'), function() {
+  console.log("✔ Express server listening on %s:%d in %s mode", app.get('ipaddress'), app.get('port'), app.get('env'));
 });
 
 // DB preloading
