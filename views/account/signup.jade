@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  form.form-horizontal(id='signup-form', method='POST')
+  form.form-horizontal(id='signup-form', method='POST', action='/signup')
     input(type='hidden', name='_csrf', value=_csrf)
     legend Создать аккаунт
     .form-group
