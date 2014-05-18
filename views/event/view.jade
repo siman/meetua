@@ -6,25 +6,15 @@ mixin eventField(label, data)
     span #{data}
 
 block top_panel
-  if (isCurrentUserAnAuthor)
+  if (isCurrentUserAnAuthor && !event.isPassed)
     #on_my_event_panel.alert-warning
       div.event_edit_panel
         a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
           i.fa.fa-edit
           | Редактировать
-        if (!event.isPassed)
-          a.btn.btn-default.btn-sm(data-toggle="modal" data-target="#myModal" role="button")
-            i.fa.fa-times
-            | Отменить
-      #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
-        .modal-dialog
-          .modal-content
-            .modal-body#event_remove_warning
-             | Вы уверены, что хотите отменить событие? Все участники будут уведомлены об отмене.
-            .modal-footer
-              button.btn.btn-default(type='button', data-dismiss='modal') Нет
-              a.button.btn.btn-primary(href="/event/#{event._id}/cancel", type='button') Да
-
+        a.btn.btn-default.btn-sm(data-toggle="modal", data-target="#cancel_modal", role="button")
+          i.fa.fa-times
+          | Отменить
 
 block content
   if (!event)
@@ -81,6 +71,18 @@ block content
       google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts",
         ng-if='event.place.latitude && event.place.longitude')
         marker(coords="event.place")
+
+      #cancel_modal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog
+          .modal-content
+            .modal-header
+              h4.modal-title Отмена события
+            .modal-body#event_remove_warning
+              p Вы уверены, что хотите отменить событие?
+              p Все участники будут уведомлены об отмене.
+            .modal-footer
+              a.button.btn.btn-primary(href="/event/#{event._id}/cancel", type='button') Да, отменить событие
+              button.btn.btn-default(type='button', data-dismiss='modal') Не отменять
 
       #comments
         include ../partials/disqus
