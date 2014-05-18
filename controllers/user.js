@@ -9,6 +9,7 @@ var User = require('../models/User');
 var secrets = require('../config/secrets');
 var util = require('./util');
 var mockUsers = require('./user-mock-store');
+var appConfig = require('../config/app-config');
 
 /**
  * GET /login
@@ -18,7 +19,7 @@ var mockUsers = require('./user-mock-store');
 exports.getLogin = function(req, res) {
   if (req.user) return res.redirect('/');
   res.render('account/login', {
-    title: 'Login'
+    title: 'Войти'
   });
 };
 
@@ -30,8 +31,8 @@ exports.getLogin = function(req, res) {
  */
 
 exports.postLogin = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
+  req.assert('email', 'Неверный email').isEmail();
+  req.assert('password', 'Пароль не указан').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -48,7 +49,7 @@ exports.postLogin = function(req, res, next) {
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
-      req.flash('success', { msg: 'Success! You are logged in.' });
+      req.flash('success', { msg: 'Вы вошли на сайт!' });
       res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
@@ -72,7 +73,7 @@ exports.logout = function(req, res) {
 exports.getSignup = function(req, res) {
   if (req.user) return res.redirect('/');
   res.render('account/signup', {
-    title: 'Create Account'
+    title: 'Создать аккаунт'
   });
 };
 
@@ -84,9 +85,9 @@ exports.getSignup = function(req, res) {
  */
 
 exports.postSignup = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('email', 'Неверный email').isEmail();
+  req.assert('password', 'Пароль должен иметь длину минимум 4 символа').len(4);
+  req.assert('confirmPassword', 'Пароли не совпадают').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -103,7 +104,7 @@ exports.postSignup = function(req, res, next) {
   user.save(function(err) {
     if (err) {
       if (err.code === 11000) {
-        req.flash('errors', { msg: 'User with that email already exists.' });
+        req.flash('errors', { msg: 'Пользователь с таким email уже cуществует' });
       }
       return res.redirect('/signup');
     }
@@ -121,7 +122,7 @@ exports.postSignup = function(req, res, next) {
 
 exports.getAccount = function(req, res) {
   res.render('account/profile', {
-    title: 'Account Management'
+    title: 'Личные данные'
   });
 };
 
@@ -142,7 +143,7 @@ exports.postUpdateProfile = function(req, res, next) {
 
     user.save(function(err) {
       if (err) return next(err);
-      req.flash('success', { msg: 'Profile information updated.' });
+      req.flash('success', { msg: 'Изменения сохранены.' });
       res.redirect('/account');
     });
   });
@@ -155,8 +156,8 @@ exports.postUpdateProfile = function(req, res, next) {
  */
 
 exports.postUpdatePassword = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('password', 'Пароль должен иметь длину минимум 4 символа').len(4);
+  req.assert('confirmPassword', 'Пароли не совпадают').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -172,7 +173,7 @@ exports.postUpdatePassword = function(req, res, next) {
 
     user.save(function(err) {
       if (err) return next(err);
-      req.flash('success', { msg: 'Password has been changed.' });
+      req.flash('success', { msg: 'Пароль успешно изменён.' });
       res.redirect('/account');
     });
   });
@@ -209,7 +210,7 @@ exports.getOauthUnlink = function(req, res, next) {
 
     user.save(function(err) {
       if (err) return next(err);
-      req.flash('info', { msg: provider + ' account has been unlinked.' });
+      req.flash('info', { msg: provider + ' аккаунт успешно отвязан.' });
       res.redirect('/account');
     });
   });
@@ -230,11 +231,11 @@ exports.getReset = function(req, res) {
     .where('resetPasswordExpires').gt(Date.now())
     .exec(function(err, user) {
       if (!user) {
-        req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+        req.flash('errors', { msg: 'Ссылка, по которой вы перешли, неверная или устарела.' });
         return res.redirect('/forgot');
       }
       res.render('account/reset', {
-        title: 'Password Reset'
+        title: 'Изменение пароля'
       });
     });
 };
@@ -245,8 +246,8 @@ exports.getReset = function(req, res) {
  */
 
 exports.postReset = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long.').len(4);
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+  req.assert('password', 'Пароль должен иметь длину минимум 4 символа.').len(4);
+  req.assert('confirm', 'Пароли должны совпадать.').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -262,7 +263,7 @@ exports.postReset = function(req, res, next) {
         .where('resetPasswordExpires').gt(Date.now())
         .exec(function(err, user) {
           if (!user) {
-            req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+            req.flash('errors', { msg: 'Ссылка, по которой вы перешли, неверная или устарела.' });
             return res.redirect('back');
           }
 
@@ -289,12 +290,12 @@ exports.postReset = function(req, res, next) {
       var mailOptions = {
         to: user.email,
         from: 'hackathon@starter.com',
-        subject: 'Your Hackathon Starter password has been changed',
-        text: 'Hello,\n\n' +
-          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+        subject: 'Ваш пароль успешно изменён',
+        text: 'Здравствуйте,\n\n' +
+          'Уведомляем Вас, что пароль для Вашего аккаунта ' + user.email + ' был изменён.\n'
       };
       smtpTransport.sendMail(mailOptions, function(err) {
-        req.flash('success', { msg: 'Success! Your password has been changed.' });
+        req.flash('success', { msg: 'Ваш пароль был успешно изменён.' });
         done(err);
       });
     }
@@ -314,7 +315,7 @@ exports.getForgot = function(req, res) {
     return res.redirect('/');
   }
   res.render('account/forgot', {
-    title: 'Forgot Password'
+    title: 'Восстановление пароля'
   });
 };
 
@@ -325,7 +326,7 @@ exports.getForgot = function(req, res) {
  */
 
 exports.postForgot = function(req, res, next) {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
+  req.assert('email', 'Неверный email.').isEmail();
 
   var errors = req.validationErrors();
 
@@ -344,7 +345,7 @@ exports.postForgot = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
-          req.flash('errors', { msg: 'No account with that email address exists.' });
+          req.flash('errors', { msg: 'Пользователь с таким email не найден.' });
           return res.redirect('/forgot');
         }
 
@@ -367,14 +368,14 @@ exports.postForgot = function(req, res, next) {
       var mailOptions = {
         to: user.email,
         from: 'hackathon@starter.com',
-        subject: 'Reset your password on Hackathon Starter',
-        text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+        subject: 'Восстановление пароля на ' + appConfig.domain,
+        text: 'Вы получили это письмо, потому что вы (или кто-то другой) запросил восстановление пароля для Вашего аккаунта на.\n\n' +
+          'Пожалуйста, кликните по ссылке ниже или вставьте её в адресную строку Вашего браузера чтобы восстановить пароль :\n\n' +
+          appConfig.hostname + '/reset/' + token + '\n\n' +
+          'Если вы не запрашивали восстановление пароля, проигнорируйте это сообщение и Ваш пароль останется прежним.\n'
       };
       smtpTransport.sendMail(mailOptions, function(err) {
-        req.flash('info', { msg: 'An e-mail has been sent to ' + user.email + ' with further instructions.' });
+        req.flash('info', { msg: 'Письмо с инструкциями по восстановлению пароля было выслано на ' + user.email + '.' });
         done(err, 'done');
       });
     }
