@@ -15,6 +15,7 @@
     "node": ">= 0.10.28",
     "npm": ">= 1.4.9"
   },
+  "main": "app.js", // openshift runs this
   "dependencies": {
     "async": "~0.7.0",
     "bcrypt-nodejs": "~0.0.3",
