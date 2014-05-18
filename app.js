@@ -123,6 +123,15 @@ app.use(express.errorHandler());
  * Application routes.
  */
 
+
+// nocache middleware, Use when you don't want browser to cache the request (e.g. on back button click)
+function nocache(req, res, next) {
+  res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.set('Expires', '-1');
+  res.set('Pragma', 'no-cache');
+  next();
+}
+
 app.get('/', homeController.index);
 app.get('/sitemap.xml', sitemap.getSitemap);
 app.get('/login', userController.getLogin);
@@ -180,6 +189,7 @@ var meetuaEventsApi = require('./controllers/api/events');
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find);
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
+app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, nocache);
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
 
