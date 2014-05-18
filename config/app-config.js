@@ -41,6 +41,8 @@ module.exports = {
     MAIL_FROM: 'no-reply@' + DOMAIN
   },
   domain: DOMAIN,
-  hostname: 'http://' + DOMAIN
+  hostname: 'http://' + DOMAIN,
+
+  socialTweetLinkLength: 22
 
 };
