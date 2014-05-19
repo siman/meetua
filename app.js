@@ -72,7 +72,7 @@ app.set('view engine', 'jade');
 app.use(connectAssets({
   paths: ['public/css', 'public/js'],
   helperContext: app.locals,
-  build: false
+  build: openShiftApp.isOpenShiftEnv() ? true : false
 }));
 app.use(express.compress());
 app.use(express.logger('dev'));
@@ -252,7 +252,7 @@ mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
 
-if (!openShiftApp.isOpenShiftEnv) {
+if (!openShiftApp.isOpenShiftEnv()) {
   // DB preloading
   eventStore.dbPreload();
   userController.dbPreload();
