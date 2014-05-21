@@ -26,12 +26,10 @@ function rmImage(req, res, next) {
       onRemoved();
     });
     function onRemoved() {
-      var updateObject = event.toObject();
-      updateObject.images = _.reject(updateObject.images, byId(imageId));
-      SharedEventService.maybeChangeLogo(image, updateObject.images);
+      event.images = _.reject(event.images, byId(imageId));
+      SharedEventService.maybeChangeLogo(image, event.images);
 
-      delete updateObject._id;
-      Event.update({_id: id}, updateObject, function(err) {
+      event.save(function(err) {
         if (err) return res.json(500, {error: err});
         res.send(200);
       });
