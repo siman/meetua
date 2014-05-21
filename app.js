@@ -50,10 +50,10 @@ app.set('ipaddress', '127.0.0.1'); // TODO refactor to use appConfig instead of 
 app.set('port', 3000);
 app.set('mongodb-url', secrets.db);
 
-secrets.db = app.get('mongodb-url');
-
 var openShiftApp = new OpenShiftApp();
 openShiftApp.initialize(app);
+
+secrets.db = app.get('mongodb-url');
 
 app.response.renderNotFound = function() {
   this.render('404', { status: 404 });
