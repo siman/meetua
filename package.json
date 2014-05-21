@@ -1,9 +1,9 @@
 {
-  "name": "hackathon-starter",
-  "version": "0.0.0",
+  "name": "meetua",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "git@bitbucket.org:meetua/meetua.git"
   },
   "scripts": {
     "start": "nodemon app.js",
