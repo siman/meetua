@@ -60,13 +60,15 @@
     "node-mandrill": "~1.0.1",
     "email-templates": "~0.1.8",
     "cron": "~1.0.4",
-    "sitemap": "~0.7.2"
+    "sitemap": "~0.7.2",
+    "memwatch": "0.2.2"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
     "supertest": "~0.10.0",
     "tmp": "0.0.23",
-    "protractor": "~0.22.0"
+    "protractor": "~0.22.0",
+    "webkit-devtools-agent": "~0.2.4"
   }
 }

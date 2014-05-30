@@ -1,8 +1,25 @@
+var memwatch = require('memwatch');
+var hd = new memwatch.HeapDiff();
+
+memwatch.on('leak', function(info) {
+  console.log('!!! Leak !!!', info);
+  var diff = hd.end();
+  var details = diff.change.details;
+  details = _.sortBy(details, function(det) { return - det.size_bytes;}).slice(0, 20);
+  diff.change.details = {};
+  console.log('HeapDiff', diff);
+  console.log('Change details', details);
+});
+memwatch.on('stats', function(stats) {
+  console.log('Stats', stats);
+});
+
 /**
  * Module dependencies.
  */
 
 var express = require('express');
+var _ = require('underscore');
 var MongoStore = require('connect-mongo')(express);
 var flash = require('express-flash');
 var path = require('path');
@@ -10,9 +27,9 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
-var _ = require('underscore');
 var notifyService = require('./controllers/util/notificationService');
 var OpenShiftApp = require('./openshift');
+var devToolsAgent = require('webkit-devtools-agent');
 
 /**
  * Load controllers.
@@ -22,7 +39,7 @@ var sitemap = require('./controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
+//var apiController = require('./controllers/api');
 //var contactController = require('./controllers/contact');
 var createEventPage = require('./controllers/event/create-page');
 var saveEvent = require('./controllers/event/save-event');
@@ -146,27 +163,27 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
-app.get('/api', apiController.getApi);
-app.get('/api/lastfm', apiController.getLastfm);
-app.get('/api/nyt', apiController.getNewYorkTimes);
-app.get('/api/aviary', apiController.getAviary);
-app.get('/api/paypal', apiController.getPayPal);
-app.get('/api/paypal/success', apiController.getPayPalSuccess);
-app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-app.get('/api/steam', apiController.getSteam);
-app.get('/api/scraping', apiController.getScraping);
-app.get('/api/twilio', apiController.getTwilio);
-app.post('/api/twilio', apiController.postTwilio);
-app.get('/api/clockwork', apiController.getClockwork);
-app.post('/api/clockwork', apiController.postClockwork);
-app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
-app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);
-app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
-app.get('/api/github', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getGithub);
-app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTwitter);
-app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
-app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
-app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
+//app.get('/api', apiController.getApi);
+//app.get('/api/lastfm', apiController.getLastfm);
+//app.get('/api/nyt', apiController.getNewYorkTimes);
+//app.get('/api/aviary', apiController.getAviary);
+//app.get('/api/paypal', apiController.getPayPal);
+//app.get('/api/paypal/success', apiController.getPayPalSuccess);
+//app.get('/api/paypal/cancel', apiController.getPayPalCancel);
+//app.get('/api/steam', apiController.getSteam);
+//app.get('/api/scraping', apiController.getScraping);
+//app.get('/api/twilio', apiController.getTwilio);
+//app.post('/api/twilio', apiController.postTwilio);
+//app.get('/api/clockwork', apiController.getClockwork);
+//app.post('/api/clockwork', apiController.postClockwork);
+//app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
+//app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);
+//app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
+//app.get('/api/github', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getGithub);
+//app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTwitter);
+//app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
+//app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
+//app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 
 var feedback = require('./controllers/feedback');
 app.get('/tpl/*', renderTpl);
@@ -240,7 +257,7 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
  */
 
 app.listen(app.get('port'), app.get('ipaddress'), function() {
-  console.log("✔ Express server listening on %s:%d in %s mode", app.get('ipaddress'), app.get('port'), app.get('env'));
+  console.log("✔ Express server listening on %s:%d in %s mode. Process id is %s", app.get('ipaddress'), app.get('port'), app.get('env'), process.pid);
 });
 
 /**
