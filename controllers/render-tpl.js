@@ -6,7 +6,7 @@ var renderTpl = function(req, res, next) {
 
 var _renderTpl = function(path, res) {
   var directoryTraversal = path.indexOf('..') !== -1;
-  var inTpl = path.indexOf('/tpl') === 0;
+  var inTpl = path.indexOf('/tpl') === 0; // FIXME path.html -> path
   if (directoryTraversal || !inTpl) {
     res.send(400); // bad request
   } else {
