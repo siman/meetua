@@ -25,11 +25,7 @@ angular.module('myApp').controller('ViewEventCtrl',
     }
 
     function changeParticipation(isPart) {
-      if (isPart) {
-        $scope.isPart = true;
-      } else {
-        $scope.isPart = false;
-      }
+      $scope.isPart = isPart;
     }
 
     $scope.participate = function() {
