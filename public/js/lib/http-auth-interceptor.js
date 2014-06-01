@@ -1,6 +1,7 @@
 /*global angular:true, browser:true */
 
 /**
+ * @see https://github.com/witoldsz/angular-http-auth
  * @license HTTP Auth Interceptor Module for AngularJS
  * (c) 2012 Witold Szczerba
  * License: MIT
