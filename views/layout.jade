@@ -18,7 +18,7 @@ html
 
     != css('styles')
     != js('includes')
-  body(ng-app='myApp')
+  body(ng-app='myApp', ng-controller='applicationCtrl')
     #wrap
       include partials/navigation
       block top_panel
