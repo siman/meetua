@@ -182,6 +182,7 @@ app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
 var meetuaEventsApi = require('./controllers/api/events');
+app.post('/api/meetua/user/login', userController.postLoginRest);
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticatedRest, meetuaEventsApi.get_my);
