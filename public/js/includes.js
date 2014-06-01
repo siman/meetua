@@ -19,6 +19,7 @@
 //= require lib/angular-locale_ru-ru
 //= require lib/angular-route-1.2.16
 //= require lib/angular-cookies-1.2.16
+//= require lib/http-auth-interceptor
 //= require lib/angular-file-upload-0.5.5
 //= require lib/ng-bs-daterangepicker-0.0.1
 //= require lib/angular-google-maps-1.0.18

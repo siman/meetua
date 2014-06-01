@@ -9,7 +9,8 @@ angular.module('myApp', [
     'angularFileUpload',
     'google-maps',
     'ngCookies',
-    'mgcrea.ngStrap'
+    'mgcrea.ngStrap',
+    'http-auth-interceptor'
   ]).run(function () {
     moment.lang('ru');
     console.log('momentjs lang ', moment.lang());
