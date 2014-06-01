@@ -174,7 +174,7 @@ app.get('/feedback', feedback.get_feedback);
 app.get('/event/create', passportConf.isAuthenticated, createEventPage);
 app.post('/event/save', passportConf.isAuthenticated, saveEvent);
 app.get('/event/:id', viewEvent);
-app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);
+app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
 app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
 app.post('/event/:id/rm-image/:imageId', passportConf.isAuthenticated, rmEventImage);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
@@ -182,12 +182,12 @@ app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
 var meetuaEventsApi = require('./controllers/api/events');
-app.get('/api/meetua/events/find', meetuaEventsApi.get_find);
+app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
-app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
+app.get('/api/meetua/events/my', passportConf.isAuthenticatedRest, meetuaEventsApi.get_my);
 app.get('/api/meetua/events/myOverview', nocache);
-app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
-app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
+app.get('/api/meetua/events/myOverview', passportConf.isAuthenticatedRest, meetuaEventsApi.get_myOverview);
+app.post('/api/meetua/events/participation', passportConf.isAuthenticatedRest, meetuaEventsApi.post_participation);
 
 /**
  * OAuth routes for sign-in.
