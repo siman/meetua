@@ -39,7 +39,7 @@ angular.module('myApp').controller('ViewEventCtrl',
       var params = {eventId: event._id, act: $scope.isPart ? 'remove' : 'add'};
       $http({method: 'POST', url: myApiService.buildUrl('/events/participation'), params: params}).
         success(function(data, status, headers, config) {
-          $partBtn.removeAttr('disabled');
+          $partBtn.removeAttr('disabled');  // FIXME controller shouldn't modify DOM. It's directive's responsibility
           changeParticipation(data.status === 'added');
           $http({method: 'GET', url: myApiService.buildUrl('/events/findById'), params: {id: $scope.event._id}}).
             success(function(res) {
