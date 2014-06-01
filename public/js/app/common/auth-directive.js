@@ -2,15 +2,18 @@
  * Created by oleksandr at 6/1/14 1:47 PM
  */
 angular.module('myApp')
-  .directive('angAuth', [function() {
+  .directive('angAuth', ['AuthModal', 'AuthInterceptorService', function(AuthModal, AuthInterceptorService) {
     function link($scope) {
-      $scope.$on('event:auth-loginRequired', function() {
-        console.log('loginRequired');
-        // TODO
-      });
-      $scope.$on('event:auth-loginConfirmed', function() {
-        console.log('loginConfirmed');
-        // TODO
+      $scope.$on('event:auth-loginRequired', function(event, rejection) {
+        // directive is great place to call modal, since directive is bound to element in the DOM
+        // and can even e.g. pass to the modal an element to stick with.
+        AuthModal.open().then(function(user) {
+          $scope.currentUser = user; // save as application-wide object
+          AuthInterceptorService.loginConfirmed();
+        }, function() {
+            AuthInterceptorService.loginCancelled(null/*data for event broadcast*/, rejection);
+          }
+        );
       });
     }
     return {
