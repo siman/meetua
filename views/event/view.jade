@@ -61,6 +61,8 @@ block content
                         i.fa.fa-times
                         | Отказаться от участия?
 
+              include ../partials/share-event
+
             h1 #{event.name}
           div.view_event
             +eventField("Когда", event.prettyStartDate)
@@ -68,8 +70,6 @@ block content
             if event.author
               +eventField("Организатор", event.author.profile.name)
             div.event_desc #{event.description}
-          div.social
-            include ../partials/share-event
 
       google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts",
         ng-if='event.place.latitude && event.place.longitude')
