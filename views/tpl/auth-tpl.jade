@@ -1,22 +1,21 @@
-.container
-  .row
-    .alert.alert-danger.animated.fadeIn(ng-show='errors')
-      div(ng-repeat='error in errors') {{ error.msg }}
-  .row
-    form(ng-submit='submit(auth)', name="authForm", novalidate)
-      .col-sm-8.col-sm-offset-2
-        .form-group(ng-class="{'has-error' : authForm.email.$invalid && authForm.email.$dirty}")
-          label.control-label(for='email') Email
-          input.form-control(type='text', name='email', ng-model='auth.email', placeholder='Email', autofocus=true, required)
-        .form-group(ng-class="{'has-error' : authForm.password.$invalid && authForm.password.$dirty}")
-          label.control-label(for='password') Пароль
-          input.form-control(type='password', name='password', ng-model='auth.password', placeholder='Пароль', required)
-        .form-group
-          button.btn.btn-primary(type='submit', ng-disabled='authForm.$invalid')
-            i.fa.fa-unlock-alt
-            | Войти
-          a.btn.btn-link(href='/forgot') Забыли пароль ?
-        .panel.panel-dafault
-          h3: span.social-border Войти как пользователь
-          .panel-footer
-            include ../partials/social-auth
+.row
+  .alert.alert-danger.animated.fadeIn(ng-show='errors')
+    div(ng-repeat='error in errors') {{ error.msg }}
+.row
+  form(ng-submit='submit(auth)', name="authForm", novalidate)
+    .col-sm-8.col-sm-offset-2
+      .form-group(ng-class="{'has-error' : authForm.email.$invalid && authForm.email.$dirty}")
+        label.control-label(for='email') Email
+        input.form-control(type='text', name='email', ng-model='auth.email', placeholder='Email', autofocus=true, required)
+      .form-group(ng-class="{'has-error' : authForm.password.$invalid && authForm.password.$dirty}")
+        label.control-label(for='password') Пароль
+        input.form-control(type='password', name='password', ng-model='auth.password', placeholder='Пароль', required)
+      .form-group
+        button.btn.btn-primary(type='submit', ng-disabled='authForm.$invalid')
+          i.fa.fa-unlock-alt
+          | Войти
+        a.btn.btn-link(href='/forgot') Забыли пароль ?
+      .panel.panel-dafault
+        h3: span.social-border Войти как пользователь
+        .panel-footer
+          include ../partials/social-auth

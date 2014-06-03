@@ -48,4 +48,4 @@ angular.module('myApp')
         }
       }
     };
-  }])
+  }]);

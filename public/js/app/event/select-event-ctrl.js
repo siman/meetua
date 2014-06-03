@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('SelectEventCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'myApiService', 'activities',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, myApiService, activities) {
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = [];
@@ -39,7 +39,7 @@ angular.module('myApp').controller('SelectEventCtrl',
 
     function findEvents(actName) {
       var params = _.isUndefined(actName) ? {} : {act: actName};
-      $http({method: 'GET', url: myApiService.buildUrl('/events/find'), params: params}).
+      $http({method: 'GET', url: util.apiUrl('/events/find'), params: params}).
         success(function (data) {
           $scope.foundEvents = data;
           $scope.mapEvents = _.map(data, function (ev) {

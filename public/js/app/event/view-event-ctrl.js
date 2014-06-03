@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$scope', '$http', 'BASE_MAP', 'currentUserService', 'myApiService', 'ErrorService',
-  function ($scope, $http, BASE_MAP, currentUserService, myApiService, ErrorService) {
+  ['$scope', '$http', 'BASE_MAP', 'currentUserService', 'util', 'ErrorService',
+  function ($scope, $http, BASE_MAP, currentUserService, util, ErrorService) {
     var event = _myInit.event;
     console.log("Event", event);
 
@@ -33,11 +33,11 @@ angular.module('myApp').controller('ViewEventCtrl',
       $partBtn.attr('disabled', 'disabled');
 
       var params = {eventId: event._id, act: $scope.isPart ? 'remove' : 'add'};
-      $http({method: 'POST', url: myApiService.buildUrl('/events/participation'), params: params}).
+      $http({method: 'POST', url: util.apiUrl('/events/participation'), params: params}).
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');  // FIXME: to Siman: controller shouldn't modify DOM. It's directive's responsibility
           changeParticipation(data.status === 'added');
-          $http({method: 'GET', url: myApiService.buildUrl('/events/findById'), params: {id: $scope.event._id}}).
+          $http({method: 'GET', url: util.apiUrl('/events/findById'), params: {id: $scope.event._id}}).
             success(function(res) {
               $scope.event = res.event;
             });
