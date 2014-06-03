@@ -6,7 +6,7 @@ angular.module('myApp')
    *
    * @return promise. Resolves the promise on login success. Rejects the promise on modal close.
    */
-  .factory('AuthModal', ['$modal', '$q', '$http', 'API_BASE_URL', function($modal, $q, $http, API_BASE_URL) {
+  .factory('AuthModal', ['$modal', '$q', '$http', 'util', function($modal, $q, $http, util) {
     var modal = $modal({
       title: 'Войти',
       html: true,
@@ -21,7 +21,7 @@ angular.module('myApp')
 
       modal.show();
       modal.$scope.submit = function(auth) {
-        $http.post(API_BASE_URL + '/user/login', auth).then(function(res) {
+        $http.post(util.apiUrl('/user/login'), auth).then(function(res) {
           modal.hide();
           modal.$scope.errors = [];
           deferred.resolve(res.data.user);
