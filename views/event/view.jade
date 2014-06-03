@@ -38,7 +38,7 @@ block content
           div
             .pull-right
               if (!isCurrentUserAnAuthor)
-                #partBox
+                #partBox.ng-cloak
                   div(ng-show="event.isPassed")
                     div Событие уже прошло
                   div(ng-show="!event.isPassed")
