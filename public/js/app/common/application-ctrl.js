@@ -7,5 +7,6 @@ angular.module('myApp')
    * Don't add any other objects to it, since we have to keep global objects as little as possible.
    */
   .controller('applicationCtrl', ['$scope', function($scope) {
-    $scope.currentUser = {};
+    $scope.currentUser = _myInit.currentUser;
+    console.log("Current user", $scope.currentUser);
   }]);

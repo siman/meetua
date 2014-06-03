@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$scope', '$http', 'BASE_MAP', 'currentUserService', 'util', 'ErrorService',
-  function ($scope, $http, BASE_MAP, currentUserService, util, ErrorService) {
+  ['$scope', '$http', 'BASE_MAP', 'util', 'ErrorService',
+  function ($scope, $http, BASE_MAP, util, ErrorService) {
     var event = _myInit.event;
     console.log("Event", event);
 
@@ -17,11 +17,19 @@ angular.module('myApp').controller('ViewEventCtrl',
     });
 
     function init() {
-      var curUserId = currentUserService.userId;
-      var isPart = _.find(event.participants, function(partId) {
-        return partId === curUserId;
-      });
+      var isPart = isCurrentUserTakingPartInEvent();
       changeParticipation(isPart);
+    }
+
+    function isCurrentUserTakingPartInEvent() {
+      if ($scope.currentUser) {
+        var curUserId = $scope.currentUser._id;
+        return _.find(event.participants, function(partId) {
+          return partId === curUserId;
+        });
+      } else {
+        return false;
+      }
     }
 
     function changeParticipation(isPart) {
