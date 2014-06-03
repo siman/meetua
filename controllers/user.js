@@ -30,7 +30,7 @@ exports.getLogin = function(req, res) {
  * @param password
  */
 
-exports.postLogin = function(req, res, next) {
+exports.postLogin = function(req, res, next) {  // TODO delete this version when only angular login is used
   req.assert('email', 'Неверный email').isEmail();
   req.assert('password', 'Пароль не указан').notEmpty();
 
@@ -51,6 +51,28 @@ exports.postLogin = function(req, res, next) {
       if (err) return next(err);
       req.flash('success', { msg: 'Вы вошли на сайт!' });
       res.redirect(req.session.returnTo || '/');
+    });
+  })(req, res, next);
+};
+
+exports.postLoginRest = function(req, res, next) {
+  req.assert('email', 'Неверный email').isEmail();
+  req.assert('password', 'Пароль не указан').notEmpty();
+
+  var errors = req.validationErrors(true);
+
+  if (errors) {
+    return res.json(400, errors);
+  }
+
+  passport.authenticate('local', function(err, user, info) {
+    if (err) return next(err);
+    if (!user) {
+      return res.json(400, {'user': {param: 'user', msg: 'Неверный email или пароль'}});
+    }
+    req.logIn(user, function(err) {
+      if (err) return next(err);
+      res.json(200, { user: user });
     });
   })(req, res, next);
 };

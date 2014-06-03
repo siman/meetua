@@ -45,7 +45,7 @@ angular.module('myApp').controller('ViewEventCtrl',
         error(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');
           changeParticipation(false);
-          var msg = 'Не удалось принять участие. Повторите попытку позже. ' + (data.error ? data.error : data);
+          var msg = 'Не удалось принять участие.  ' + (data.error ? data.error : data);
           console.error(msg, data);
           ErrorService.alert(msg);
         });

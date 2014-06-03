@@ -18,11 +18,11 @@ html
 
     != css('styles')
     != js('includes')
-  body
+  body(ng-app='myApp', ng-controller='applicationCtrl')
     #wrap
       include partials/navigation
       block top_panel
-      .container-fluid(ng-app='myApp')
+      .container-fluid
         include partials/flash
         block content
     include partials/footer
