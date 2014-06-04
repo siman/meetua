@@ -96,6 +96,7 @@ app.use(function(req, res, next) {
   res.locals._csrf = req.csrfToken();
   res.locals.secrets = secrets;
   res.cookie('XSRF-TOKEN', req.csrfToken());
+  res.header('Content-Language', 'ru');
   next();
 });
 app.use(flash());
