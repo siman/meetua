@@ -20,6 +20,7 @@ module.exports = function(req, res) {
         tweet: tweet
       };
       res.render('event/view', {
+        title: event.name,
         event: event,
         social: social,
         // If current user is an author of event

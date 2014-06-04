@@ -7,10 +7,13 @@ html
     meta(name='description', content='Лучшие события Киева')
     meta(name='csrf-token', content=_csrf)
     meta(name='author', content='')
-    title #{title} | MeetUA
+
+    - var formattedTitle = title ? title + ' - ' : ''
+    title #{formattedTitle}MeetUA - Лучшие события Киева!
+
     script(src='//maps.googleapis.com/maps/api/js?libraries=places&sensor=false')
 
-    script.
+    script
       var _myInit = {};
 
     include mixins
