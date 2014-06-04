@@ -31,7 +31,7 @@
             li: a(href='/api/meetua/events/myOverview') events/myOverview
             li: a(href='/api/meetua/events/my') events/my
 
-      ul.nav.navbar-nav.navbar-right(ang-auth)
+      ul.nav.navbar-nav.navbar-right(auth)
         if !user
           li(class=title=='Login'?'active':undefined)
             a(href='/login') Войти

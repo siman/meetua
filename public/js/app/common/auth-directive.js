@@ -2,7 +2,7 @@
  * Created by oleksandr at 6/1/14 1:47 PM
  */
 angular.module('myApp')
-  .directive('angAuth', ['AuthModal', 'AuthInterceptorService', function(AuthModal, AuthInterceptorService) {
+  .directive('auth', ['AuthModal', 'AuthInterceptorService', function(AuthModal, AuthInterceptorService) {
     function link($scope) {
       $scope.$on('event:auth-loginRequired', function(event, rejection) {
         // directive is great place to call modal, since directive is bound to element in the DOM
