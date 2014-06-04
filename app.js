@@ -96,11 +96,17 @@ app.use(function(req, res, next) {
   res.locals._csrf = req.csrfToken();
   res.locals.secrets = secrets;
   res.cookie('XSRF-TOKEN', req.csrfToken());
-  res.header('Content-Language', 'ru');
   next();
 });
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: month }));
+
+// Set of next headers should be after middleware for static serving
+// because we want cache for static assets but not for dynamic pages
+// as API responses or view event page.
+app.use(headersForLanguage);
+app.use(headersForNoCache);
+
 app.use(function(req, res, next) {
   // Keep track of previous URL
   if (req.method !== 'GET') return next();
@@ -116,18 +122,22 @@ app.use(function(req, res) {
 });
 app.use(express.errorHandler());
 
+/** Use when you don't want browser to cache the request (e.g. on back button click) */
+function headersForNoCache(req, res, next) {
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-age=0');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next();
+}
+
+function headersForLanguage(req, res, next) {
+  res.header('Content-Language', 'ru');
+  next();
+}
+
 /**
  * Application routes.
  */
-
-
-// nocache middleware, Use when you don't want browser to cache the request (e.g. on back button click)
-function nocache(req, res, next) {
-  res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  res.set('Expires', '-1');
-  res.set('Pragma', 'no-cache');
-  next();
-}
 
 app.get('/', homeController.index);
 app.get('/sitemap.xml', sitemap.getSitemap);
@@ -187,7 +197,6 @@ app.post('/api/meetua/user/login', userController.postLoginRest);
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticatedRest, meetuaEventsApi.get_my);
-app.get('/api/meetua/events/myOverview', nocache);
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticatedRest, meetuaEventsApi.get_myOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticatedRest, meetuaEventsApi.post_participation);
 
