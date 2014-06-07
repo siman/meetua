@@ -6,6 +6,11 @@ mixin eventField(label, data)
     span #{data}
 
 block top_panel
+  if (event.isPassed)
+    #on_my_event_panel.alert-warning
+      div.event_edit_panel
+      | Событие уже прошло
+
   if (isCurrentUserAnAuthor && !event.isPassed)
     #on_my_event_panel.alert-warning
       div.event_edit_panel
