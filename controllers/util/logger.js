@@ -1,9 +1,23 @@
 var winston = require('winston');
+var path = require('path');
+var fs = require('fs-extra');
+var config = require('../../config/app-config');
+var logDir = path.join(config.PERSISTENT_DATA_DIR, config.LOG_DIR_NAME);
+console.log('logdir ', logDir);
+
+fs.ensureDir(logDir, function(err) {
+  logger.debug(err);
+});
 
 var logger = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({timestamp: true, level: 'debug'}),
-    new (winston.transports.File)({ filename: 'somefile.log' })
+    new (winston.transports.DailyRotateFile)({
+      filename: logDir + '/' + config.LOG_FILE_NAME,
+      datePattern: '.yyyy-MM-dd',
+      level: 'debug',
+      json: false
+    })
   ]
 });
 

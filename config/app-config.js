@@ -37,6 +37,8 @@ module.exports = {
   PERSISTENT_DATA_DIR: process.env.PERSISTENT_DATA_DIR || path.join(process.cwd(), '../PERSISTENT_DATA_DIR'),
   EVENT_IMG_DIR: './public/upload',
   UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload'),
+  LOG_DIR_NAME: 'logs',
+  LOG_FILE_NAME: 'service.log',
 
   notification: {
     MANDRILL_KEY: 'iiiPHm_fhC7JrK4vgExm0A',
