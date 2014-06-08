@@ -74,7 +74,9 @@ eventSchema.pre('save', function(next) {
   function mergeDateTime(date, time) {
     if (!_.isUndefined(date) && !_.isUndefined(time)) {
       var dateTime = moment(date);
-      dateTime.add({ms: time});
+      //angular bs-timepicker set -2hours for number format
+      //cant find how to fix this properly
+      dateTime.add({ms: time}).add('hours', 2);
       return dateTime.toDate();
     }
   }
