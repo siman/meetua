@@ -249,8 +249,9 @@ exports.getReset = function(req, res) {
     return res.redirect('/');
   }
 
+  var resetPasswordToken = req.params.token;
   User
-    .findOne({ resetPasswordToken: req.params.token })
+    .findOne({ resetPasswordToken: resetPasswordToken })
     .where('resetPasswordExpires').gt(Date.now())
     .exec(function(err, user) {
       if (!user) {
@@ -258,7 +259,8 @@ exports.getReset = function(req, res) {
         return res.redirect('/forgot');
       }
       res.render('account/reset', {
-        title: 'Изменение пароля'
+        title: 'Изменение пароля',
+        token: resetPasswordToken
       });
     });
 };
@@ -303,21 +305,7 @@ exports.postReset = function(req, res, next) {
         });
     },
     function(user, done) {
-      var smtpTransport = nodemailer.createTransport('SMTP', {
-        service: 'SendGrid',
-        auth: {
-          user: secrets.sendgrid.user,
-          pass: secrets.sendgrid.password
-        }
-      });
-      var mailOptions = {
-        to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Ваш пароль успешно изменён',
-        text: 'Здравствуйте,\n\n' +
-          'Уведомляем Вас, что пароль для Вашего аккаунта ' + user.email + ' был изменён.\n'
-      };
-      smtpTransport.sendMail(mailOptions, function(err) {
+      notificationService.notifyUserPasswordReset(user, function(err) {
         req.flash('success', { msg: 'Ваш пароль был успешно изменён.' });
         done(err);
       });
@@ -381,23 +369,7 @@ exports.postForgot = function(req, res, next) {
       });
     },
     function(token, user, done) {
-      var smtpTransport = nodemailer.createTransport('SMTP', {
-        service: 'SendGrid',
-        auth: {
-          user: secrets.sendgrid.user,
-          pass: secrets.sendgrid.password
-        }
-      });
-      var mailOptions = {
-        to: user.email,
-        from: 'hackathon@starter.com',
-        subject: 'Восстановление пароля на ' + appConfig.domain,
-        text: 'Вы получили это письмо, потому что вы (или кто-то другой) запросил восстановление пароля для Вашего аккаунта на.\n\n' +
-          'Пожалуйста, кликните по ссылке ниже или вставьте её в адресную строку Вашего браузера чтобы восстановить пароль :\n\n' +
-          appConfig.hostname + '/reset/' + token + '\n\n' +
-          'Если вы не запрашивали восстановление пароля, проигнорируйте это сообщение и Ваш пароль останется прежним.\n'
-      };
-      smtpTransport.sendMail(mailOptions, function(err) {
+      notificationService.notifyUserForgotPassword(user, token, function(err) {
         req.flash('info', { msg: 'Письмо с инструкциями по восстановлению пароля было выслано на ' + user.email + '.' });
         done(err, 'done');
       });

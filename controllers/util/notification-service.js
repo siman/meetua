@@ -1,6 +1,6 @@
 'use strict';
 
-var conf = require('../../config/app-config.js');
+var appConfig = require('../../config/app-config.js');
 var path = require('path');
 var _ = require('underscore');
 var store = require('../event/EventStore');
@@ -11,37 +11,45 @@ var WindowsMailer = function() {
   };
 };
 
+var commonMailParams = {
+  appConfig: appConfig
+};
+
 var LinuxMailer = function() {
   var templatesDir = path.resolve(__dirname, '../..',  'config','email-templates');
   var emailTemplates = require('email-templates');
-  var mandrill = require('node-mandrill')(conf.notification.MANDRILL_KEY);
+  var mandrill = require('node-mandrill')(appConfig.notification.MANDRILL_KEY);
 
-  return function(event, user, templateName, mailParams) {
+  // TODO delete 'event' parameter ?
+  return function(event, user, templateName, mailParams, cb) {
     emailTemplates(templatesDir, function (err, template) {
-      if (err) {
-        console.log(err);
-      } else {
-        template(templateName, mailParams, function (err, html, text) {
-          mandrill('/messages/send', {
-            message: {
-              to: [
-                {email: user.email}
-              ],
-              from_email: conf.notification.MAIL_FROM,
-              subject: 'meetua subject',
-              html: html
-            }
-          }, function (error, response) {
-            if (error) console.log(JSON.stringify(error));
-            else console.log(response);
-          });
+      if (err) return cb(err);
+
+      mailParams = _.extend({}, mailParams, commonMailParams);
+      template(templateName, mailParams, function (err, html, text) {
+        if (err) return cb(err);
+
+        var messageObj = {
+          message: {
+            to: [
+              {email: user.email}
+            ],
+            from_email: appConfig.notification.MAIL_FROM,
+            subject: 'meetua subject',
+            html: html
+          }
+        };
+        console.log(JSON.stringify(messageObj));
+        mandrill('/messages/send', messageObj, function (err, response) {
+          if (err) return cb(err);
+          cb(null, response);
         });
-      }
+      });
     });
   };
 };
 
-var sendMail = conf.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
+var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 
 function notifyUser(user, event, templateName) {
   if (user.email && user.profile.receiveNotifications) {
@@ -82,6 +90,14 @@ function notifyComingSoonEvent(event) {
       notifyUser(user, event, 'event-coming-soon');
   });
 }
+
+module.exports.notifyUserPasswordReset = function(user, cb) {
+  sendMail(null, user, 'user-password-reset', {user: user}, cb);
+};
+
+module.exports.notifyUserForgotPassword = function(user, token, cb) {
+  sendMail(null, user, 'user-forgot-password', {user: user, token: token}, cb);
+};
 
 module.exports.notifyOnCancel = function (event) {
   console.log('Notify on event cancel', event.name);
