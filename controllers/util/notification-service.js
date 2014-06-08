@@ -20,8 +20,7 @@ var LinuxMailer = function() {
   var emailTemplates = require('email-templates');
   var mandrill = require('node-mandrill')(appConfig.notification.MANDRILL_KEY);
 
-  // TODO delete 'event' parameter ?
-  return function(event, user, templateName, mailParams, cb) {
+  return function(user, templateName, mailParams, cb) {
     emailTemplates(templatesDir, function (err, template) {
       if (err) return cb(err);
 
@@ -54,7 +53,7 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 function notifyUser(user, event, templateName) {
   if (user.email && user.profile.receiveNotifications) {
     var params = { eventName: event.name };
-    sendMail(event, user, templateName, params);
+    sendMail(user, templateName, params);
   }
 }
 
@@ -92,11 +91,11 @@ function notifyComingSoonEvent(event) {
 }
 
 module.exports.notifyUserPasswordReset = function(user, cb) {
-  sendMail(null, user, 'user-password-reset', {user: user}, cb);
+  sendMail(user, 'user-password-reset', {user: user}, cb);
 };
 
 module.exports.notifyUserForgotPassword = function(user, token, cb) {
-  sendMail(null, user, 'user-forgot-password', {user: user, token: token}, cb);
+  sendMail(user, 'user-forgot-password', {user: user, token: token}, cb);
 };
 
 module.exports.notifyOnCancel = function (event) {
