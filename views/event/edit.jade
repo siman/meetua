@@ -10,5 +10,4 @@ block content
   form.form-horizontal(role='form', method='POST', ng-controller='EditEventCtrl',
     ng-submit='submit()', name='eventForm', novalidate
   )
-    .alert.alert-warning {{event}}
     +eventFields(false)
