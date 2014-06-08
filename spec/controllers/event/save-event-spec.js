@@ -110,7 +110,7 @@ describe('save-event', function() {
           });
       });
     });
-    it('should add calculate dateTime field', function(done) {
+    it('should calculate dateTime field with correct timezone', function(done) {
       var reqData = buildReqData({
         start: {
           date: moment({year: 2014, month: 3, day: 5}),
@@ -118,15 +118,15 @@ describe('save-event', function() {
         },
         end: {
           date: moment({year: 2014, month: 3, day: 6}),
-          time: moment.duration('20:30').asMilliseconds()
+          time: moment.duration('20:30').asMilliseconds() // UI sends in UTC
         }
       });
       callSaveEvent(reqData)
         .expect(200)
         .end(function(err, res) {
           if (err) return done(err);
-          expect(moment(res.body.event.start.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 5, hour: 10, minute: 30, second: 0}).format());
-          expect(moment(res.body.event.end.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 6, hour: 20, minute: 30, second: 0}).format());
+          expect(moment(res.body.event.start.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 5, hour: 12, minute: 30, second: 0}).format());
+          expect(moment(res.body.event.end.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 6, hour: 22, minute: 30, second: 0}).format());
           done();
         });
     });
