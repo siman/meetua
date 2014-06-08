@@ -23,13 +23,9 @@ var eventSchema = new mongoose.Schema({
         longitude: Number
     },
     start: {
-        date: { type: Date, required: true },
-        time: Date,
-        dateTime: Date
+        dateTime: { type: Date, require: true }
     },
     end: {
-        date: Date,
-        time: Date,
         dateTime: Date
     },
     canceledOn: { type: Date },
@@ -59,23 +55,5 @@ eventSchema.virtual('isPassed').get(function() {
 });
 
 eventSchema.set('toJSON', {virtuals: true });
-
-eventSchema.pre('save', function(next) {
-  if (this.start) {
-    this.start.dateTime = mergeDateTime(this.start.date, this.start.time || 0);
-  }
-  if (this.end) {
-    this.end.dateTime = mergeDateTime(this.end.date, this.end.time);
-  }
-  next();
-
-  function mergeDateTime(date, time) {
-    if (!_.isUndefined(date) && !_.isUndefined(time)) {
-      var dateTime = moment(date);
-      dateTime.add(time);
-      return dateTime.toDate();
-    }
-  }
-});
 
 module.exports = mongoose.model('Event', eventSchema);

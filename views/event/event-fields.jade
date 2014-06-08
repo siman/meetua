@@ -18,13 +18,13 @@ mixin eventFields(isCreate)
       i.fa.fa-calendar
       | Начало в *
     .col-sm-4(ng-class="{'has-error' : eventForm.startDate.$invalid && eventForm.startDate.$dirty}")
-      input#startDate.form-control(ng-model='event.start.date', type='text', name='startDate', bs-datepicker,
+      input#startDate.form-control(ng-model='event.start.dateTime', type='text', name='startDate', bs-datepicker,
       required, min-date='today')
     .col-sm-2: label.checkbox.pull-right(for='startTime')
       i.fa.fa-clock-o
       | Время
     .col-sm-2
-      input#startTime.form-control(type='text', name='startTime', ng-model='event.start.time',
+      input#startTime.form-control(type='text', name='startTime', ng-model='event.start.dateTime',
         data-time-format='HH:mm', bs-timepicker)
     .col-sm-2
   .form-group
@@ -33,15 +33,15 @@ mixin eventFields(isCreate)
       i.fa.fa-calendar
       | Окончание в
     .col-sm-4
-      input#endDate.form-control(ng-model='event.end.date', type='text', name='endDate', bs-datepicker
-      ng-disabled=endDateDisabled, min-date="{{event.start.date}}")
+      input#endDate.form-control(ng-model='event.end.dateTime', type='text', name='endDate', bs-datepicker
+      ng-disabled=endDateDisabled, min-date="{{event.start.dateTime}}")
     .col-sm-2
       label.checkbox.pull-right(for='endTime',
       ng-disabled=endDateDisabled)
         i.fa.fa-clock-o
         | Время
     .col-sm-2
-      input#endTime.form-control(type='text', name='endTime', ng-model='event.end.time', bs-timepicker,
+      input#endTime.form-control(type='text', name='endTime', ng-model='event.end.dateTime', bs-timepicker,
         data-time-format='HH:mm', ng-disabled=endDateDisabled)
     .col-sm-2
   .form-group(ng-class="{'has-error' : eventForm.description.$invalid && eventForm.description.$dirty}")

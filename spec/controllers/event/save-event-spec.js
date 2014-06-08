@@ -110,26 +110,6 @@ describe('save-event', function() {
           });
       });
     });
-    it('should add calculate dateTime field', function(done) {
-      var reqData = buildReqData({
-        start: {
-          date: moment({year: 2014, month: 3, day: 5}),
-          time: moment.duration('10:30').asMilliseconds()
-        },
-        end: {
-          date: moment({year: 2014, month: 3, day: 6}),
-          time: moment.duration('20:30').asMilliseconds()
-        }
-      });
-      callSaveEvent(reqData)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) return done(err);
-          expect(moment(res.body.event.start.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 5, hour: 10, minute: 30, second: 0}).format());
-          expect(moment(res.body.event.end.dateTime).format()).toBe(moment({year: 2014, month: 3, day: 6, hour: 20, minute: 30, second: 0}).format());
-          done();
-        });
-    });
     it('should prevent directory traversal attack', function(done) {
       createLogoImage(function(err, image) {
         image.name = '../../passwd';
@@ -229,12 +209,10 @@ describe('save-event', function() {
         longitude: 50
       },
       start: {
-        date: new Date(),
-        time: 0
+        dateTime: new Date()
       },
       end: {
-        date: new Date(),
-        time: 0
+        dateTime: new Date()
       },
       description: 'event description',
       activity: 'bike',
