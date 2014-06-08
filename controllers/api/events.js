@@ -5,7 +5,7 @@ var async = require('async');
 var conf = require('../../config/app-config');
 var Event = require('../../models/Event');
 var EventStore = require('../event/EventStore');
-var Notifier = require('../util/notificationService');
+var Notifier = require('../util/notification-service');
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile.
 

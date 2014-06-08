@@ -2,7 +2,7 @@
 
 var Event = require('../../models/Event');
 var _ = require('underscore');
-var notificationService = require('../util/notificationService');
+var notificationService = require('../util/notification-service');
 
 module.exports = function (req, res, next) {
   console.log('cancel event');

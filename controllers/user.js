@@ -10,6 +10,7 @@ var secrets = require('../config/secrets');
 var util = require('./util');
 var mockUsers = require('./user-mock-store');
 var appConfig = require('../config/app-config');
+var notificationService = require('./util/notification-service');
 
 /**
  * GET /login

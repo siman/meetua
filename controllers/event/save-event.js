@@ -10,7 +10,7 @@ var async = require('async');
 var Event = require('../../models/Event');
 var Image = require('../../models/Image');
 var tmp = require('tmp');
-var notificationService = require('../util/notificationService');
+var notificationService = require('../util/notification-service');
 
 maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
   if (err) throw err;

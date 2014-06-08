@@ -11,7 +11,7 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 var _ = require('underscore');
-var notifyService = require('./controllers/util/notificationService');
+var notifyService = require('./controllers/util/notification-service');
 var OpenShiftApp = require('./openshift');
 
 /**
