@@ -74,7 +74,6 @@ eventSchema.pre('save', function(next) {
   function mergeDateTime(date, time) {
     if (!_.isUndefined(date) && !_.isUndefined(time)) {
       var dateTime = moment(date);
-      dateTime.add(new Date(time));
       return dateTime.toDate();
     }
   }
