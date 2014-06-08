@@ -1,7 +1,7 @@
 var Event = require('../../models/Event');
 var _ = require('underscore');
 var fs = require('fs-extra');
-var util = require('../util');
+var util = require('../utils');
 var SharedEventService = require('../../public/js/app/shared/event-service');
 
 function rmImage(req, res, next) {

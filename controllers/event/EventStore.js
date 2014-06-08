@@ -4,7 +4,7 @@ var _ = require("underscore");
 var async = require("async");
 var mockEvents = require("./MockEvents");
 var Event = require('../../models/Event');
-var util = require('../util');
+var util = require('../utils');
 var moment = require('moment');
 
 // TODO: Order by 'startDate asc' to show most recent events.
