@@ -6,7 +6,7 @@ var _ = require('underscore');
 var store = require('../event/EventStore');
 
 var WindowsMailer = function() {
-  return function(event, user, templateName, mailParams) {
+  return function() {
     console.log("Mock for sending email on Windows platform");
   };
 };
