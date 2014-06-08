@@ -50,6 +50,13 @@ var LinuxMailer = function() {
 
 var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 
+/**
+ * @param user
+ * @param subject
+ * @param event
+ * @param templateName
+ * @param [cb]
+ */
 function notifyUser(user, subject, event, templateName, cb) {
   if (user.email && user.profile.receiveNotifications) {
     var params = { eventName: event.name };
@@ -57,28 +64,28 @@ function notifyUser(user, subject, event, templateName, cb) {
   }
 }
 
-module.exports.notifyAuthorOnCreate = function (event) {
+module.exports.notifyAuthorOnCreate = function (event, cb) {
   console.log('Notify author on event creation', event.name);
   store.findById(event._id, ['author'], function (err, eventFound) {
    console.log('auth', eventFound.author);
-   notifyUser(eventFound.author, 'Вы создали новое событие', eventFound, 'event-create');
+   notifyUser(eventFound.author, 'Вы создали новое событие', eventFound, 'event-create', cb);
 
   })
 };
 
-module.exports.notifyParticipantOnEdit = function (event) {
+module.exports.notifyParticipantOnEdit = function (event, cb) {
   console.log('Notify on event changing', event.name);
   store.findById(event._id, ['participants'], function (err, eventFound) {
       _.map(eventFound.participants, function (user) {
-        notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit');
+        notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit', cb);
       })
     }
   )
 };
 
-module.exports.notifyParticipantOnJoin = function(user, event) {
+module.exports.notifyParticipantOnJoin = function(user, event, cb) {
   console.log('Notify on taking part in event. New participant:', user.profile.name);
-  notifyUser(user, 'Вы собираетесь принять участие', event, 'event-participate');
+  notifyUser(user, 'Вы собираетесь принять участие', event, 'event-participate', cb);
 };
 
 function notifyComingSoonEvent(event) {
@@ -98,13 +105,13 @@ module.exports.notifyUserForgotPassword = function(user, token, cb) {
   sendMail(user, 'Восстановление пароля', 'user-forgot-password', {user: user, token: token}, cb);
 };
 
-module.exports.notifyOnCancel = function (event) {
+module.exports.notifyOnCancel = function (event, cb) {
   console.log('Notify on event cancel', event.name);
   store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) {
       console.log('eventFound:', eventFound);
       notifyUser(eventFound.author, 'Ближайшее событие', eventFound, 'event-cancel');
       _.map(eventFound.participants, function (user) {
-        notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel');
+        notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel', cb);
       })
     }
   )

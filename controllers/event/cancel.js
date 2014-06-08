@@ -19,13 +19,15 @@ module.exports = function (req, res, next) {
 
     event.save(afterSave);
     function afterSave() {
-      notificationService.notifyOnCancel(event);
+      notificationService.notifyOnCancel(event, function sendResponse(err) {
+        if (err) return next(err);
+        res.render('event/canceled', {
+            title: 'Отмена события',
+            event: event
+          }
+        );
+      });
 
-      res.render('event/canceled', {
-          title: 'Отмена события',
-          event: event
-        }
-      );
 
     }
   });

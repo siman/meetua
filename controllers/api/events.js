@@ -110,8 +110,10 @@ module.exports.post_participation = function(req, res, next) {
         if (err) return next(err);
 
 
-        if (status == 'added') Notifier.notifyParticipantOnJoin(curUser, event);
-        res.json({status: status})
+        if (status == 'added') Notifier.notifyParticipantOnJoin(curUser, event, function sendResponse(err) {
+          if (err) return res.send(500);
+          res.json({status: status})
+        });
       });
     }
 
