@@ -12,6 +12,10 @@ var Image = require('../../models/Image');
 var tmp = require('tmp');
 var notificationService = require('../util/notificationService');
 
+maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
+  if (err) throw err;
+});
+
 module.exports = function(req, res, next) {
     if (isCreate(req)) {
       console.log('Create event request', req.body);
