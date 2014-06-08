@@ -23,13 +23,14 @@
         li(class=title=='Отзывы'?'active':undefined)
           a(href='/feedback') Отзывы
 
-        li.dropdown(class=title=='MeetUA API'?'active':undefined)
-          a.dropdown-toggle(href='#', data-toggle='dropdown') API&nbsp;
-            i.caret
-          ul.dropdown-menu
-            li: a(href='/api/meetua/events/find') events/find
-            li: a(href='/api/meetua/events/myOverview') events/myOverview
-            li: a(href='/api/meetua/events/my') events/my
+        if !appConfig.IS_PRODUCTION
+          li.dropdown(class=title=='MeetUA API'?'active':undefined)
+            a.dropdown-toggle(href='#', data-toggle='dropdown') API&nbsp;
+              i.caret
+            ul.dropdown-menu
+              li: a(href='/api/meetua/events/find') events/find
+              li: a(href='/api/meetua/events/myOverview') events/myOverview
+              li: a(href='/api/meetua/events/my') events/my
 
       ul.nav.navbar-nav.navbar-right(auth)
         if !user

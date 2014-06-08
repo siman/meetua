@@ -18,6 +18,7 @@ var OpenShiftApp = require('./openshift');
  * Load controllers.
  */
 
+var appConfig = require('./config/app-config');
 var sitemap = require('./controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
 var homeController = require('./controllers/home');
@@ -94,6 +95,7 @@ app.use(function(req, res, next) {
   res.locals.user = req.user;
   res.locals._csrf = req.csrfToken();
   res.locals.secrets = secrets;
+  res.locals.appConfig = appConfig;
   res.cookie('XSRF-TOKEN', req.csrfToken());
   next();
 });
