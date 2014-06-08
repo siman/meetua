@@ -3,6 +3,7 @@
 var async = require('async');
 var path = require('path');
 var config = require('../config/app-config');
+var logger = require('./util/logger.js')('util');
 
 /**
  *
@@ -18,12 +19,12 @@ exports.dbPreload = function(processor) {
   return function(cb) {
     processor.count(function(err, entitySize) {
       if (entitySize > 0) {
-        console.log("Found", entitySize, processor.entityName + "s in MongoDB. Preloading is not required");
+        logger.info("Found", entitySize, processor.entityName + "s in MongoDB. Preloading is not required");
         if (cb) {
           cb();
         }
       } else {
-        console.log("Preloading MongoDB with mocked ", processor.entityName, "...");
+        logger.debug("Preloading MongoDB with mocked ", processor.entityName, "...");
         async.reduce(processor.mockEntities, 0,
           function(savedSize, mockEntity, callback) {
             var newEntity = new processor.entityConstructor(mockEntity);
@@ -36,7 +37,7 @@ exports.dbPreload = function(processor) {
               callback(null, savedSize);
             })
           }, function(err, savedSize) {
-            console.log("MongoDB has been preloaded with", savedSize, "out of", processor.mockEntities.length, processor.entityName + "s");
+            logger.info("MongoDB has been preloaded with", savedSize, "out of", processor.mockEntities.length, processor.entityName + "s");
             if (cb) {
               cb();
             }
