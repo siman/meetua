@@ -7,6 +7,8 @@ var moment = require('moment');
 var _ = require('underscore');
 var path = require('path');
 var activities = require('../public/js/app/shared/constants').activities;
+var logger = require('../controllers/util/logger')('Event.js');
+
 var activityNames = _.map(activities, function(activity) {
   return activity.name;
 });
@@ -38,7 +40,7 @@ eventSchema.virtual('prettyStartDate').get(function() {
 
 eventSchema.virtual('logoUrl').get(function() {
   var logo = _.find(this.images, function(img) { return img.isLogo; });
-  console.log("Found logo", logo);
+  logger.debug("Found logo", logo);
   if (logo) {
     return logo.url;
   } else {

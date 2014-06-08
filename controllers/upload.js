@@ -7,6 +7,7 @@ var os = require('os');
 var config = require('../config/app-config');
 var UPLOAD_DIR = config.UPLOAD_DIR;
 var fs = require('fs-extra');
+var logger = require('./util/logger')('upload.js');
 
 fs.mkdirp(UPLOAD_DIR, function(err) {
     if (err) throw err;
@@ -28,13 +29,13 @@ exports.handleUpload = function(req, res, next) {
         return;
     }
 
-    console.log('Uploading file ...');
+    logger.debug('Uploading file ...');
     var form = new formidable.IncomingForm();
     form.keepExtensions = true;
     form.uploadDir = UPLOAD_DIR;
     form.parse(req, function(err, fields, files) {
         function extractFileResponseFields(file) {
-            console.log('File uploaded: ', file);
+            logger.debug('File uploaded: ', file);
             return {originalName: file.name, type: file.type, name: path.basename(file.path) }
         }
         if (err) return next(err);

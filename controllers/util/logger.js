@@ -3,7 +3,6 @@ var path = require('path');
 var fs = require('fs-extra');
 var config = require('../../config/app-config');
 var logDir = path.join(config.PERSISTENT_DATA_DIR, config.LOG_DIR_NAME);
-console.log('logdir ', logDir);
 
 fs.ensureDir(logDir, function(err) {
   logger.debug(err);
@@ -26,16 +25,16 @@ module.exports = function (module) {
   var filename = module;
   return {
     debug : function (msg, vars) {
-      logger.debug(filename + ':' + getMsg(arguments));
+      logger.debug('[' + filename + ']' + getMsg(arguments));
     },
     info : function (msg, vars) {
-      logger.debug(filename + ':' + getMsg(arguments));
+      logger.debug('[' + filename + ']' + getMsg(arguments));
     },
     warn : function (msg, vars) {
-      logger.warn(filename + ':' + getMsg(arguments));
+      logger.warn('[' + filename + ']' + getMsg(arguments));
     },
     error : function (msg, vars) {
-      logger.error(filename + ':' + getMsg(arguments));
+      logger.error('[' + filename + ']' + getMsg(arguments));
     }
   }
 };

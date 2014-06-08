@@ -3,9 +3,10 @@
 var Event = require('../../models/Event');
 var _ = require('underscore');
 var notificationService = require('../util/notification-service');
+var logger = require('../util/logger')('cancel.js');
 
 module.exports = function (req, res, next) {
-  console.log('cancel event');
+  logger.debug('cancel event');
   if (!req.user) return res.send(403);
 
   var eventId = req.params.id;

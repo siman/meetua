@@ -3,7 +3,7 @@
 var async = require('async');
 var path = require('path');
 var config = require('../config/app-config');
-var logger = require('./util/logger.js')('util');
+var logger = require('./util/logger.js')('util.js');
 
 /**
  *

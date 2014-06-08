@@ -3,13 +3,14 @@
 var store = require("./EventStore");
 var _ = require("underscore");
 var config = require('../../config/app-config');
+var logger = require('../util/logger')('view.js');
 
 module.exports = function(req, res) {
   var id = req.params.id;
   store.findById(id, ["author", "profile.name profile.picture"], function(err, event) {
-    if (err) console.log('Error while looking for event by ID', err);
-    console.log("id", id);
-    console.log("found event", event);
+    if (err) logger.debug('Error while looking for event by ID', err);
+    logger.debug("id", id);
+    logger.debug("found event", event);
     if (!event) {
       res.renderNotFound();
     } else {

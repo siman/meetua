@@ -6,6 +6,7 @@ var conf = require('../../config/app-config');
 var Event = require('../../models/Event');
 var EventStore = require('../event/EventStore');
 var Notifier = require('../util/notification-service');
+var logger = require('../util/logger')('event.js');
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile.
 
@@ -69,7 +70,7 @@ module.exports.get_myOverview = function(req, res, next) {
 
 module.exports.get_findById = function(req, res, next) {
   var id = req.query.id;
-  console.log("id", id);
+  logger.debug("id", id);
   if (id) {
     EventStore.findById(id, [], function(err, event) {
       if (err) return next(err);
@@ -82,7 +83,7 @@ module.exports.get_findById = function(req, res, next) {
 
 module.exports.get_find = function(req, res, next) {
   var activity = req.query.act;
-  console.log("act", activity);
+  logger.debug("act", activity);
   var filter = {
     'start.dateTime': {$gt:  Date.now()},
     canceledOn: {$exists: false}
@@ -121,15 +122,15 @@ module.exports.post_participation = function(req, res, next) {
 
     var alreadyPartInx = event.participants.indexOf(curUser._id);
     if (act === 'remove' && alreadyPartInx >= 0) {
-//      console.log("remove");
+//      logger.debug("remove");
       event.participants.splice(alreadyPartInx, 1);
       updateEvent('removed');
     } else if (act === 'add' && alreadyPartInx < 0) {
-//      console.log("add");
+//      logger.debug("add");
       event.participants.push(curUser._id);
       updateEvent('added');
     } else {
-//      console.log("else");
+//      logger.debug("else");
       res.json({status: 'added'});
     }
   });

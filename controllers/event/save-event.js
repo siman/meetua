@@ -11,6 +11,7 @@ var Event = require('../../models/Event');
 var Image = require('../../models/Image');
 var tmp = require('tmp');
 var notificationService = require('../util/notification-service');
+var logger = require('../util/logger')('save-event.js');
 
 maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
   if (err) throw err;
@@ -18,9 +19,9 @@ maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG
 
 module.exports = function(req, res, next) {
     if (isCreate(req)) {
-      console.log('Create event request', req.body);
+      logger.debug('Create event request', req.body);
     } else {
-      console.log('Update event request', req.body);
+      logger.debug('Update event request', req.body);
     }
 
     var event;
@@ -52,7 +53,7 @@ module.exports = function(req, res, next) {
         if (err) return res.json(500, err);
         if (images.length > 0 && logoCount != 1) {
           var errorMsg = 'Invalid logo count ' + logoCount;
-          console.log(errorMsg);
+          logger.debug(errorMsg);
           return res.json(400, {error: errorMsg});
         }
         cb();
@@ -93,7 +94,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
             }),
             author: req.user._id
           });
-          console.log('Creating event ', eventObj);
+          logger.debug('Creating event ', eventObj);
           event = new Event(eventObj);
           event.save(afterSave(event));
         }
@@ -101,7 +102,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
         function updateEvent() {
           _.extend(event, req.body, {images: images.concat(imagesWithId)});
 
-          console.log('Updating event by id', event._id, event);
+          logger.debug('Updating event by id', event._id, event);
           var respEvent = _.extend({}, event, {_id: event._id});
           event.save(afterSave(respEvent));
         }
@@ -120,7 +121,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
               },
               function sendResponse(err) {
                 var respJson = {event: event};
-                console.log('Sending response ', respJson);
+                logger.debug('Sending response ', respJson);
                 req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!': 'Ваше событие обновлено!' });
                 res.send(respJson);
               }
@@ -131,15 +132,15 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
 }
 
 function copyImage(image, next) {
-    console.log('Verify image ', image);
+    logger.debug('Verify image ', image);
 
   // Siman: Image uploading works for me if comment next line. Does it work on Linux as well?
 //    var imagePath = path.join('/', image.name); // removes any '..'
     var imagePath = path.join(UPLOAD_DIR, image.name);
 
     fs.exists(imagePath, function(exists) {
-        console.log('Image ', imagePath, 'exists ', exists);
-        console.log('uploadDir ', UPLOAD_DIR);
+        logger.debug('Image ', imagePath, 'exists ', exists);
+        logger.debug('uploadDir ', UPLOAD_DIR);
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
           maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
             if (err) return next(err);
@@ -174,11 +175,11 @@ function maybeCreateImgDir(imgDir, persistentDir, next) {
  * @param next
  */
 function moveFile(srcPath, destDir, next) {
-    console.log('move', srcPath, '->', destDir, 'is requested');
+    logger.debug('move', srcPath, '->', destDir, 'is requested');
     tmp.tmpName({ dir: destDir, prefix: 'event-', postfix: path.extname(srcPath), tries: 100},
       function(err, destPath) {
-        console.log('Created unique name ', destPath);
-        console.log('Moving ', srcPath, ' to ', destPath);
+        logger.debug('Created unique name ', destPath);
+        logger.debug('Moving ', srcPath, ' to ', destPath);
         fs.copy(srcPath, destPath, function(err) {
             if (err) return next(err);
 
