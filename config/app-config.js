@@ -33,6 +33,7 @@ module.exports = {
   // Uncomment to limit number of shown events on My events overview page.
 //  MAX_EVENTS_IN_OVERVIEW: 5,
 
+  PERSISTENT_DATA_DIR: process.env.PERSISTENT_DATA_DIR || path.join(process.cwd(), '../PERSISTENT_DATA_DIR'),
   EVENT_IMG_DIR: './public/upload',
   UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload'),
 

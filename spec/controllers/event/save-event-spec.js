@@ -18,6 +18,7 @@ notificationService.notifyParticipantOnEdit = function() {}; // mock
 var moment = require('moment');
 config.UPLOAD_DIR = os.tmpDir();
 config.EVENT_IMG_DIR = path.join(os.tmpDir(), 'event-imgs');
+config.PERSISTENT_DATA_DIR = path.join(os.tmpDir(), 'PERSISTENT_DATA_DIR');
 
 var saveEvent = require('../../../controllers/event/save-event');
 

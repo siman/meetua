@@ -129,13 +129,29 @@ function copyImage(image, next) {
         console.log('Image ', imagePath, 'exists ', exists);
         console.log('uploadDir ', UPLOAD_DIR);
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
+          maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
+            if (err) return next(err);
             moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
                 next(err, _.extend(image, {name: path.basename(newPath)}));
             });
+          });
         } else {
-            next(new Error('Image name is invalid'), null);
+            next(new Error('Image name is invalid'));
         }
     });
+}
+
+function maybeCreateImgDir(imgDir, persistentDir, next) {
+  fs.exists(imgDir, function(alreadyExists) {
+    if (alreadyExists) return next(null);
+
+    fs.mkdirp(persistentDir, function(err) {
+      if (err) return next(err);
+      fs.symlink(persistentDir, imgDir, function(err) { // symlink imgDir -> persistentDir
+        next(err);
+      });
+    });
+  });
 }
 
 /**
