@@ -20,7 +20,7 @@ var LinuxMailer = function() {
   var emailTemplates = require('email-templates');
   var mandrill = require('node-mandrill')(appConfig.notification.MANDRILL_KEY);
 
-  return function sendMailLinux(user, subject, templateName, mailParams, cb) {
+  return function sendMailLinux(email, subject, templateName, mailParams, cb) {
     emailTemplates(templatesDir, function (err, template) {
       if (err) return cb(err);
 
@@ -31,7 +31,7 @@ var LinuxMailer = function() {
         var messageObj = {
           message: {
             to: [
-              {email: user.email}
+              {email: email}
             ],
             from_email: appConfig.notification.MAIL_FROM,
             subject: subject,
@@ -60,7 +60,7 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 function notifyUser(user, subject, event, templateName, cb) {
   if (user.email && user.profile.receiveNotifications) {
     var params = { eventName: event.name };
-    sendMail(user, subject, templateName, params, cb || function() {});
+    sendMail(user.email, subject, templateName, params, cb || function() {});
   }
 }
 
@@ -98,11 +98,11 @@ function notifyComingSoonEvent(event) {
 }
 
 module.exports.notifyUserPasswordReset = function(user, cb) {
-  sendMail(user, 'Пароль изменён', 'user-password-reset', {user: user}, cb);
+  sendMail(user.email, 'Пароль изменён', 'user-password-reset', {user: user}, cb);
 };
 
 module.exports.notifyUserForgotPassword = function(user, token, cb) {
-  sendMail(user, 'Восстановление пароля', 'user-forgot-password', {user: user, token: token}, cb);
+  sendMail(user.email, 'Восстановление пароля', 'user-forgot-password', {user: user, token: token}, cb);
 };
 
 module.exports.notifyOnCancel = function (event, cb) {
