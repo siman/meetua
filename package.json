@@ -61,9 +61,7 @@
     "email-templates": "~0.1.8",
     "cron": "~1.0.4",
     "sitemap": "~0.7.2",
-    "winston": "~0.7.3",
-    "log4js": "0.6.14",
-    "time":"0.10.0"
+    "winston": "~0.7.3"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
