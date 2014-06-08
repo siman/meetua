@@ -24,12 +24,12 @@ var eventSchema = new mongoose.Schema({
     },
     start: {
         date: { type: Date, required: true },
-        time: Number,
+        time: Date,
         dateTime: Date
     },
     end: {
         date: Date,
-        time: Number,
+        time: Date,
         dateTime: Date
     },
     canceledOn: { type: Date },
@@ -60,8 +60,6 @@ eventSchema.virtual('isPassed').get(function() {
 
 eventSchema.set('toJSON', {virtuals: true });
 
-// FIXME: for Bezhan: this get called only on SAVE, not on UPDATE.
-// See http://mongoosejs.com/docs/middleware.html#notes
 eventSchema.pre('save', function(next) {
   if (this.start) {
     this.start.dateTime = mergeDateTime(this.start.date, this.start.time || 0);
@@ -74,6 +72,7 @@ eventSchema.pre('save', function(next) {
   function mergeDateTime(date, time) {
     if (!_.isUndefined(date) && !_.isUndefined(time)) {
       var dateTime = moment(date);
+      dateTime.add(time);
       return dateTime.toDate();
     }
   }
