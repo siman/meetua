@@ -20,7 +20,7 @@ var LinuxMailer = function() {
   var emailTemplates = require('email-templates');
   var mandrill = require('node-mandrill')(appConfig.notification.MANDRILL_KEY);
 
-  return function(user, templateName, mailParams, cb) {
+  return function sendMailLinux(user, subject, templateName, mailParams, cb) {
     emailTemplates(templatesDir, function (err, template) {
       if (err) return cb(err);
 
@@ -34,11 +34,11 @@ var LinuxMailer = function() {
               {email: user.email}
             ],
             from_email: appConfig.notification.MAIL_FROM,
-            subject: 'meetua subject',
+            subject: subject,
             html: html
           }
         };
-        console.log(JSON.stringify(messageObj));
+        console.log('message', JSON.stringify(messageObj));
         mandrill('/messages/send', messageObj, function (err, response) {
           if (err) return cb(err);
           cb(null, response);
@@ -50,10 +50,10 @@ var LinuxMailer = function() {
 
 var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 
-function notifyUser(user, event, templateName) {
+function notifyUser(user, subject, event, templateName, cb) {
   if (user.email && user.profile.receiveNotifications) {
     var params = { eventName: event.name };
-    sendMail(user, templateName, params);
+    sendMail(user, subject, templateName, params, cb || function() {});
   }
 }
 
@@ -61,7 +61,7 @@ module.exports.notifyAuthorOnCreate = function (event) {
   console.log('Notify author on event creation', event.name);
   store.findById(event._id, ['author'], function (err, eventFound) {
    console.log('auth', eventFound.author);
-   notifyUser(eventFound.author, eventFound, 'event-create');
+   notifyUser(eventFound.author, 'Вы создали новое событие', eventFound, 'event-create');
 
   })
 };
@@ -70,7 +70,7 @@ module.exports.notifyParticipantOnEdit = function (event) {
   console.log('Notify on event changing', event.name);
   store.findById(event._id, ['participants'], function (err, eventFound) {
       _.map(eventFound.participants, function (user) {
-        notifyUser(user, eventFound, 'event-edit');
+        notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit');
       })
     }
   )
@@ -78,7 +78,7 @@ module.exports.notifyParticipantOnEdit = function (event) {
 
 module.exports.notifyParticipantOnJoin = function(user, event) {
   console.log('Notify on taking part in event. New participant:', user.profile.name);
-  notifyUser(user, event, 'event-participate');
+  notifyUser(user, 'Вы собираетесь принять участие', event, 'event-participate');
 };
 
 function notifyComingSoonEvent(event) {
@@ -91,20 +91,20 @@ function notifyComingSoonEvent(event) {
 }
 
 module.exports.notifyUserPasswordReset = function(user, cb) {
-  sendMail(user, 'user-password-reset', {user: user}, cb);
+  sendMail(user, 'Пароль изменён', 'user-password-reset', {user: user}, cb);
 };
 
 module.exports.notifyUserForgotPassword = function(user, token, cb) {
-  sendMail(user, 'user-forgot-password', {user: user, token: token}, cb);
+  sendMail(user, 'Восстановление пароля', 'user-forgot-password', {user: user, token: token}, cb);
 };
 
 module.exports.notifyOnCancel = function (event) {
   console.log('Notify on event cancel', event.name);
   store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) {
       console.log('eventFound:', eventFound);
-      notifyUser(eventFound.author, eventFound, 'event-cancel');
+      notifyUser(eventFound.author, 'Ближайшее событие', eventFound, 'event-cancel');
       _.map(eventFound.participants, function (user) {
-        notifyUser(user, eventFound, 'event-cancel');
+        notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel');
       })
     }
   )
