@@ -33,20 +33,17 @@
               li: a(href='/api/meetua/events/my') events/my
 
       ul.nav.navbar-nav.navbar-right(auth)
-        if !user
-          li(class=title=='Login'?'active':undefined)
+          - var hideWhenUser = user ? 'ng-hide' : undefined
+          - var showWhenUser = user ? undefined : 'ng-hide'
+          li(class=title=='Login'?'active':undefined + ' ' + hideWhenUser, ng-hide='currentUser')
             a(href='/login') Войти
           if secrets.localAuth
-            li(class=title=='Create Account'?'active':undefined)
+            li(class=title=='Create Account'?'active':undefined + ' ' + hideWhenUser, ng-hide='currentUser')
               a(href='/signup') Создать аккаунт
-        else
-          li.dropdown(class=title=='Account Management'?'active':undefined)
+          li.dropdown(class=title=='Account Management'?'active':undefined + ' ' + showWhenUser, ng-show='currentUser', ng-cloak)
             a.dropdown-toggle(href='#', data-toggle='dropdown')
-              if user.profile.picture
-                img.profile-image(src='#{user.profile.picture}')
-              else
-                img.profile-image(src='#{user.gravatar(60)}')
-              | #{user.profile.name || user.email || user.id}&nbsp;
+              img.profile-image(profile-picture-src='currentUser')
+              | {{currentUser.profile.name || currentUser.email || currentUser.id}}&nbsp;
               i.caret
             ul.dropdown-menu
               li: a(href='/account') Мой аккаунт
