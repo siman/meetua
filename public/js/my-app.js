@@ -4,7 +4,6 @@
 angular.module('myApp', [
     'ngRoute',
     'myApp.shared',
-    'ngBootstrap',
     'ngAutocomplete',
     'angularFileUpload',
     'google-maps',
