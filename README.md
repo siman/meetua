@@ -8,4 +8,4 @@ https://bitbucket.org/meetua/meetua/issues?status=new&status=open&milestone=M1&s
 `cd /work/meetua`
 `export NODE_ENV=production;nohup node app &`
 or
-`forever start app.js`
+`export NODE_ENV=production;forever start app.js`
