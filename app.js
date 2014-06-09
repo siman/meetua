@@ -72,7 +72,7 @@ app.set('view engine', 'jade');
 app.use(connectAssets({
   paths: ['public/css', 'public/js'],
   helperContext: app.locals,
-  build: openShiftApp.isOpenShiftEnv() ? true : false
+  build: appConfig.IS_PRODUCTION || openShiftApp.isOpenShiftEnv()
 }));
 app.use(express.compress());
 app.use(express.logger('dev'));
