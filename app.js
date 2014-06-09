@@ -46,8 +46,7 @@ var passportConf = require('./config/passport');
 
 var app = express();
 
-app.set('ipaddress', '127.0.0.1'); // TODO refactor to use appConfig instead of plain strings
-app.set('port', 3000);
+app.set('port', appConfig.IS_PRODUCTION ? 80 : 3000); // TODO refactor to use appConfig instead of plain strings
 app.set('mongodb-url', secrets.db);
 
 var openShiftApp = new OpenShiftApp();
@@ -249,8 +248,8 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
  * Start Express server.
  */
 
-app.listen(app.get('port'), app.get('ipaddress'), function() {
-  console.log("✔ Express server listening on %s:%d in %s mode", app.get('ipaddress'), app.get('port'), app.get('env'));
+app.listen(app.get('port'), function() {
+  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
 });
 
 /**
