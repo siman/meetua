@@ -15,6 +15,7 @@
 //= require lib/daterangepicker-1.3.5
 //= require lib/bootstrap.min
 //= require lib/underscore-1.6.0.min
+//= require lib/md5.min
 //= require lib/angular-1.2.16
 //= require lib/angular-locale_ru-ru
 //= require lib/angular-route-1.2.16
