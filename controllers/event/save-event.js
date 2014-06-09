@@ -111,21 +111,19 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
           return function(err) {
             if (err) return res.json(400, {error: err});
 
-            async.series([ // TODO test
-              function notify(done) {
-                if (isCreate(req)) {
-                  notificationService.notifyAuthorOnCreate(event, done)
-                } else {
-                  notificationService.notifyParticipantOnEdit(event, done);
-                }
-              },
-              function sendResponse(err) {
-                var respJson = {event: event};
-                logger.debug('Sending response ', respJson);
-                req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!': 'Ваше событие обновлено!' });
-                res.send(respJson);
-              }
-            ]);
+            var onNotifyComplete = function(err, resp) {
+              console.log('Notification response: %s, error: %s', resp, err);
+            };
+            if (isCreate(req)) {
+              notificationService.notifyAuthorOnCreate(event, onNotifyComplete)
+            } else {
+              notificationService.notifyParticipantOnEdit(event, onNotifyComplete);
+            }
+
+            var respJson = {event: event};
+            logger.debug('Sending response ', respJson);
+            req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!': 'Ваше событие обновлено!' });
+            res.send(respJson);
           }
         }
     };
