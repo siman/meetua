@@ -112,7 +112,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
             if (err) return res.json(400, {error: err});
 
             var onNotifyComplete = function(err, resp) {
-              console.log('Notification response: %s, error: %s', resp, err);
+              logger.debug('Notification response: %s, error: %s', resp, err);
             };
             if (isCreate(req)) {
               notificationService.notifyAuthorOnCreate(event, onNotifyComplete)
