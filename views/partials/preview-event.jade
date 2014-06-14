@@ -3,7 +3,7 @@
     div(ng-show="!event.logoUrl")
       div.no_image
     div(ng-show="event.logoUrl")
-      img.event_logo(ng-src="{{event.logoUrl}}")
+      dimensioned-img(src='event.logoUrl', width='120')
 
   div
     a.event_title(ng-href="/event/{{event._id}}") {{event.name}}

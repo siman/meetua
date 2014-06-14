@@ -29,11 +29,11 @@ block content
     div#view_event_page(ng-controller='ViewEventCtrl')
       .row(style="margin-bottom: 10px")
         .col-md-1
-          div.event_logo_box
+          div.event_logo_box(ng-cloak)
             div(ng-show="!event.logoUrl")
               div.no_image
             div(ng-show="event.logoUrl")
-              img.event_logo(ng-src="{{event.logoUrl}}")
+              dimensioned-img(src='event.logoUrl', width='120')
 
           // TODO: Show activity as text or icon?
           //.act_bar
