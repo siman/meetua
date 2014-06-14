@@ -1,0 +1,2 @@
+#!/bin/sh
+mongodump -o /work/PERSISTENT_DATA_DIR/mongodumps/`date "+%Y-%m-%d"`
