@@ -1,5 +1,5 @@
 angular.module('myApp')
-  .directive('ngThumb', ['$window', function($window) {
+  .directive('ngThumb', ['$window', 'util', function($window, util) {
     var helper = {
       support: !!($window.FileReader && $window.CanvasRenderingContext2D),
       isFile: function(item) {
@@ -41,8 +41,9 @@ angular.module('myApp')
         var canvas = element.find('canvas');
 
         function onLoadImage() {
-          var width = params.width || this.width / this.height * params.height;
-          var height = params.height || this.height / this.width * params.width;
+          var dimensions = util.calculateImgDimensions(this, params);
+          var width = dimensions.width;
+          var height = dimensions.height;
           canvas.attr({ width: width, height: height });
           canvas[0].getContext('2d').drawImage(this, 0, 0, width, height);
         }
