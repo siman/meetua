@@ -2,13 +2,11 @@
 
 var _ = require('underscore');
 var async = require('async');
-var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
 var secrets = require('../config/secrets');
 var utils = require('./utils');
 var mockUsers = require('./user-mock-store');
-var appConfig = require('../config/app-config');
 var notificationService = require('./util/notification-service');
 
 /**
