@@ -6,6 +6,8 @@ https://bitbucket.org/meetua/meetua/issues?status=new&status=open&milestone=M1&s
 
 ## PROD (Digital Ocean)
 
+http://80.240.138.171
+
 ### Src dir
 
 `cd /home/meetua/meetua`
@@ -44,6 +46,11 @@ npm install forever -g
 ### MongoDB
 
 http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
+
+### Open port 80
+
+To allow incoming web traffic:
+`sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT`
 
 ### Backups
 
