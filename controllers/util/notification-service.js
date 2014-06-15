@@ -76,7 +76,7 @@ function notifyUser(user, subject, event, templateName, cb) {
   if (user.email && user.profile.receiveNotifications) {
     var params = { eventName: event.name };
     sendMail(user.email, subject, templateName, params, cb || function() {});
-  }
+  } else cb()
 }
 
 module.exports.notifyAuthorOnCreate = function (event, cb) {
