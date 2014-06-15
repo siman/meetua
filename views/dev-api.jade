@@ -1,0 +1,15 @@
+extends layout
+
+block content
+
+  h4.modal-title Dev api
+
+  ul
+    li: a(href='/api/meetua/events/find', target='_blank') events/find
+    li: a(href='/api/meetua/events/myOverview', target='_blank') events/myOverview
+    li: a(href='/api/meetua/events/my', target='_blank') events/my
+    li
+      form(action='/api/meetua/notify/participant-on-join', method='POST', target='_blank')
+        input(type='hidden', name='_csrf', value=_csrf)
+        input(type='text', name='eventId', placeholder='event id')
+        input(type='submit', value='Notify participant on join')

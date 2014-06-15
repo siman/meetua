@@ -197,6 +197,13 @@ app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticatedRest, meetuaEventsApi.get_my);
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticatedRest, meetuaEventsApi.get_myOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticatedRest, meetuaEventsApi.post_participation);
+if (!appConfig.IS_PRODUCTION) {
+  var devApi = require('./controllers/api/dev');
+  app.get('/dev-api', function(req, res, next) {
+    res.render('dev-api', { title: 'MeetUA API' });
+  });
+  app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticatedRest, devApi.postNotifyParticipantOnJoin);
+}
 
 /**
  * OAuth routes for sign-in.
