@@ -19,7 +19,7 @@ or
 
 ## Install checklist
 
-### Other
+### Helpful soft
 
 ```sh
 sudo apt-get install mc
@@ -30,8 +30,6 @@ sudo apt-get install htop
 
 ```sh
 sudo apt-get install git
-git config --global user.name "MeetUA Prod"
-git config --global user.email "prod@meetua.com"
 ```
 
 ### Node
@@ -44,13 +42,27 @@ npm install forever -g
 ```
 
 ### MongoDB
+
 http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
 ### Backups
 
-Mongo backup script should be put to file `/etc/cron.daily/mongoalldump`
+Mongo backup script should be put to file `/etc/cron.daily/mongoalldump`. Set execution mode.
 
 ```sh
 #!/bin/sh
 mongodump -o /home/meetua/meetua/dumps/mongodb/`date "+%Y-%m-%d"`
+```
+
+### Other
+
+To enable git autocompletion (if absent) add next line to user's `.bashrc`
+```sh
+source /etc/bash_completion.d/git
+```
+
+Setup global username and email for git. Useful when commiting from prod:
+```sh
+git config --global user.name "MeetUA Prod"
+git config --global user.email "prod@meetua.com"
 ```
