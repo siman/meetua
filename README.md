@@ -32,6 +32,7 @@ git config --global user.email "prod@meetua.com"
 ```sh
 sudo apt-get install nodejs
 sudo apt-get install npm
+sudo apt-get install nodejs-legacy
 npm install forever -g
 ```
 
