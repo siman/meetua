@@ -1,3 +1,10 @@
-h1
-    | Вы собираетесь принять участие в:
-    = ' ' + eventName
+extends ../email-layout
+
+block content
+  h1.h1 Вы идете на событие "#{event.name}"
+  br
+  strong Просмотреть детали события: &nbsp;
+  a(href=event.url()) #{event.name}
+  br
+  br
+  | Не забудьте пригласить своих друзей. Желаем Вам приятно провести время!

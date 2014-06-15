@@ -8,6 +8,7 @@ var _ = require('underscore');
 var path = require('path');
 var activities = require('../public/js/app/shared/constants').activities;
 var logger = require('../controllers/util/logger')('Event.js');
+var appConfig = require('../config/app-config');
 
 var activityNames = _.map(activities, function(activity) {
   return activity.name;
@@ -57,5 +58,9 @@ eventSchema.virtual('isPassed').get(function() {
 });
 
 eventSchema.set('toJSON', {virtuals: true });
+
+eventSchema.methods.url = function() {
+  return appConfig.hostname + '/event/' + this._id;
+};
 
 module.exports = mongoose.model('Event', eventSchema);

@@ -1,3 +1,7 @@
-h1
-    | Изменилось описание события:
-    = ' ' + eventName
+extends ../email-layout
+
+block content
+  h1.h1 Успешно изменено событие "#{event.name}"
+  br
+  strong Просмотреть детали события: &nbsp;
+  a(href=event.url()) #{event.name}

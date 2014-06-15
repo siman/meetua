@@ -9,7 +9,17 @@ exports.postNotifyParticipantOnJoin = function(req, res, next) {
   EventStore.findById(req.body.eventId, '', function(err, event) {
     if (err) return next(err);
     notifyService.notifyParticipantOnJoin(req.user, event, function(err) {
-      if (err) return res.send(500, err);
+      if (err) return next(err);
+      res.send(200, 'sent');
+    });
+  });
+};
+
+exports.postNotifyParticipantOnEdit = function(req, res, next) {
+  EventStore.findById(req.body.eventId, '', function(err, event) {
+    if (err) return next(err);
+    notifyService.notifyParticipantOnEdit(event, function(err) {
+      if (err) return next(err);
       res.send(200, 'sent');
     });
   });

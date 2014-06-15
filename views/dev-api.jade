@@ -13,3 +13,8 @@ block content
         input(type='hidden', name='_csrf', value=_csrf)
         input(type='text', name='eventId', placeholder='event id')
         input(type='submit', value='Notify participant on join')
+    li
+      form(action='/api/meetua/notify/participant-on-edit', method='POST', target='_blank')
+        input(type='hidden', name='_csrf', value=_csrf)
+        input(type='text', name='eventId', placeholder='event id')
+        input(type='submit', value='Notify participant on edit')

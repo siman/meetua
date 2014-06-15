@@ -34,7 +34,10 @@ var LinuxMailer = function() {
 
       mailParams = _.extend({}, mailParams, commonMailParams);
       template(templateName, mailParams, function (err, html, text) {
-        if (err) return cb(err);
+        if (err) {
+          logger.error('Failed to send email.', err);
+          return cb(err);
+        }
 
         var messageObj = {
           message: {
@@ -48,7 +51,10 @@ var LinuxMailer = function() {
         };
         logger.debug('message', JSON.stringify(messageObj));
         mandrill('/messages/send', messageObj, function (err, response) {
-          if (err) return cb(err);
+          if (err) {
+            logger.error('Failed to send email.', err);
+            return cb(err);
+          }
           cb(null, response);
         });
       });
@@ -74,7 +80,7 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
  */
 function notifyUser(user, subject, event, templateName, cb) {
   if (user.email && user.profile.receiveNotifications) {
-    var params = { eventName: event.name };
+    var params = { event: event };
     sendMail(user.email, subject, templateName, params, cb || function() {});
   } else cb()
 }
@@ -100,7 +106,7 @@ module.exports.notifyParticipantOnEdit = function (event, cb) {
 
 module.exports.notifyParticipantOnJoin = function(user, event, cb) {
   logger.debug('Notify on taking part in event. New participant:', user.profile.name);
-  notifyUser(user, 'Вы собираетесь принять участие', event, 'event-participate', cb);
+  notifyUser(user, 'Вы идете на событие', event, 'event-participate', cb);
 };
 
 function notifyComingSoonEvent(event) {

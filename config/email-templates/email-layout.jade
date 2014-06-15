@@ -1,0 +1,46 @@
+center
+  table#backgroundTable(border='0', cellpadding='0', cellspacing='0', height='100%', width='100%')
+    tr
+      td(align='center', valign='top')
+        table#templateContainer(border='0', cellpadding='0', cellspacing='0', width='600')
+          tr
+            td(align='center', valign='top')
+              table#templateHeader(border='0', cellpadding='0', cellspacing='0', width='600')
+                tr
+                  td.headerContent
+                    //<img src="http://gallery.mailchimp.com/653153ae841fd11de66ad181a/images/placeholder_600.gif" style="max-width:600px;" id="headerImage campaign-icon" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+          tr
+            td(align='center', valign='top')
+              table#templateBody(border='0', cellpadding='0', cellspacing='0', width='600')
+                tr
+                  td.bodyContent(valign='top')
+                    table(border='0', cellpadding='20', cellspacing='0', width='100%')
+                      tr
+                        td(valign='top')
+                          div(mc:edit='std_content00')
+                            block content
+                      tr
+                        td(valign='top')
+                          div(mc:edit='std_content00')
+                            | Также у Вас есть возможность оставить отзыв о работе нашего сервиса &nbsp;
+                            a(href='#{appConfig.hostname}/feedback') здесь
+
+          tr
+            td(align='center', valign='top')
+              table#templateFooter(border='0', cellpadding='10', cellspacing='0', width='600')
+                tr
+                  td.footerContent(valign='top')
+                    table(border='0', cellpadding='10', cellspacing='0', width='100%')
+                      tr
+                        td(colspan='2', valign='middle')
+                          div#copyright(mc:edit='std_footer')
+                            em Copyright © *|CURRENT_YEAR|* #{appConfig.domain}, All rights reserved.
+                      tr
+                        td#utility(colspan='2', valign='middle')
+                          div(mc:edit='std_utility')
+                            // FIXME ASiman when notification widget is implemented
+                            // send to the page with notification widget ??
+                            a(href='*|UNSUB|*') unsubscribe from this list
+                            | |
+                            a(href='*|UPDATE_PROFILE|*') update subscription preferences
+        br

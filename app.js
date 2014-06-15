@@ -203,6 +203,7 @@ if (!appConfig.IS_PRODUCTION) {
     res.render('dev-api', { title: 'MeetUA API' });
   });
   app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticatedRest, devApi.postNotifyParticipantOnJoin);
+  app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticatedRest, devApi.postNotifyParticipantOnEdit);
 }
 
 /**
