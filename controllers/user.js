@@ -8,6 +8,7 @@ var secrets = require('../config/secrets');
 var utils = require('./utils');
 var mockUsers = require('./user-mock-store');
 var notificationService = require('./util/notification-service');
+var logger = require('./util/logger')('user.js');
 
 /**
  * GET /login
@@ -369,6 +370,40 @@ exports.postForgot = function(req, res, next) {
   ], function(err) {
     if (err) return next(err);
     res.redirect('/forgot');
+  });
+};
+
+exports.getUnsubscribe = function(req, res, next) {
+  async.waterfall([
+    function(done) {
+      req.assert('token', 'Ссылка неверная или устарела').notEmpty();
+      req.assert('email', 'Ссылка неверная или устарела').notEmpty();
+      done(req.validationErrors());
+    },
+    function(done) {
+      User.findOne({ email: req.params.email.toLowerCase(), unsubscribeToken: req.params.token }, function(err, user) {
+        if (!user) return done({ msg: 'Ссылка неверная или устарела' });
+
+        logger.debug('unsubscribe user', user.email);
+
+        user.unsubscribeToken = undefined;
+        user.receiveNotifications = false;
+
+        user.save(function(err) {
+          if (err) {
+            return done({ msg: err.message });
+          }
+          done();
+        });
+      });
+    }
+  ], function(err) {
+    if (err) {
+      req.flash('errors', err);
+    } else {
+      req.flash('success', { msg: 'Вы успешно отписались.' });
+    }
+    res.redirect('/');
   });
 };
 

@@ -12,10 +12,6 @@ var WindowsMailer = function() {
   };
 };
 
-var commonMailParams = {
-  appConfig: appConfig
-};
-
 var LinuxMailer = function() {
   var templatesDir = path.resolve(__dirname, '../..',  'config','email-templates');
   var emailTemplates = require('email-templates');
@@ -28,11 +24,18 @@ var LinuxMailer = function() {
    * @param {Object} mailParams
    * @param {Function} cb
    */
-  return function sendMailLinux(email, subject, templateName, mailParams, cb) {
+  return function sendMailLinux(user, subject, templateName, mailParams, cb) {
+    function commonMailParams() {
+      return {
+        appConfig: appConfig,
+        user: user
+      }
+    }
+
     emailTemplates(templatesDir, function (err, template) {
       if (err) return cb(err);
 
-      mailParams = _.extend({}, mailParams, commonMailParams);
+      mailParams = _.extend({}, mailParams, commonMailParams());
       template(templateName, mailParams, function (err, html, text) {
         if (err) {
           logger.error('Failed to send email.', err);
@@ -42,7 +45,7 @@ var LinuxMailer = function() {
         var messageObj = {
           message: {
             to: [
-              {email: email}
+              {email: user.email}
             ],
             from_email: appConfig.notification.MAIL_FROM,
             subject: subject,
@@ -81,7 +84,7 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 function notifyUser(user, subject, event, templateName, cb) {
   if (user.email && user.profile.receiveNotifications) {
     var params = { event: event };
-    sendMail(user.email, subject, templateName, params, cb || function() {});
+    sendMail(user, subject, templateName, params, cb || function() {});
   } else cb()
 }
 
@@ -120,11 +123,11 @@ function notifyComingSoonEvent(event) {
 }
 
 module.exports.notifyUserPasswordReset = function(user, cb) {
-  sendMail(user.email, 'Пароль изменён', 'user-password-reset', {user: user}, cb);
+  sendMail(user, 'Пароль изменён', 'user-password-reset', {user: user}, cb);
 };
 
 module.exports.notifyUserForgotPassword = function(user, token, cb) {
-  sendMail(user.email, 'Восстановление пароля', 'user-forgot-password', {user: user, token: token}, cb);
+  sendMail(user, 'Восстановление пароля', 'user-forgot-password', {user: user, token: token}, cb);
 };
 
 module.exports.notifyOnCancel = function (event, cb) {

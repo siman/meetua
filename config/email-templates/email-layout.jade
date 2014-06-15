@@ -38,9 +38,7 @@ center
                       tr
                         td#utility(colspan='2', valign='middle')
                           div(mc:edit='std_utility')
-                            // FIXME ASiman when notification widget is implemented
-                            // send to the page with notification widget ??
-                            a(href='*|UNSUB|*') unsubscribe from this list
+                            a(href='#{appConfig.hostname}/account/unsubscribe/#{user.email}/#{user.unsubscribeToken}') отписаться от рассылки
                             | |
-                            a(href='*|UPDATE_PROFILE|*') update subscription preferences
+                            a(href='*|UPDATE_PROFILE|*') изменить настройки рассылок
         br
