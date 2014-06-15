@@ -4,6 +4,7 @@ var async = require('async');
 var path = require('path');
 var config = require('../config/app-config');
 var logger = require('./util/logger.js')('util.js');
+var crypto = require('crypto');
 
 /**
  *
@@ -55,4 +56,11 @@ exports.savedImageNameToPath = function(name) {
 
 exports.uploadedImageNameToPath = function(name) {
   return path.join(config.UPLOAD_DIR, name);
+};
+
+exports.generateToken = function(done) {
+  crypto.randomBytes(16, function(err, buf) {
+    var token = buf.toString('hex');
+    done(err, token);
+  });
 };

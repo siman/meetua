@@ -3,6 +3,8 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
+var logger = require('../controllers/util/logger')('User.js');
+var utils = require('../controllers/utils');
 
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
@@ -26,6 +28,7 @@ var userSchema = new mongoose.Schema({
   },
 
   resetPasswordToken: String,
+  unsubscribeToken: String,
   resetPasswordExpires: Date
 });
 
@@ -34,19 +37,35 @@ var userSchema = new mongoose.Schema({
  * "Pre" is a Mongoose middleware that executes before each user.save() call.
  */
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', true, function hashPassword(next, done) {
+  next();
+  logger.debug('hash password');
   var user = this;
 
-  if (!user.isModified('password')) return next();
+  if (!user.isModified('password')) return done();
 
   bcrypt.genSalt(5, function(err, salt) {
-    if (err) return next(err);
+    if (err) return done(err);
 
     bcrypt.hash(user.password, salt, null, function(err, hash) {
-      if (err) return next(err);
+      if (err) return done(err);
       user.password = hash;
-      next();
+      done();
     });
+  });
+});
+
+userSchema.pre('save', true, function generateUnsubscribeToken(next, done) {
+  next();
+  logger.debug('generate unsubscribe token');
+  var user = this;
+
+  if (user.unsubscribeToken) return done();
+
+  utils.generateToken(function(err, token) {
+    if (err) return done(err);
+    user.unsubscribeToken = token;
+    done();
   });
 });
 

@@ -2,12 +2,11 @@
 
 var _ = require('underscore');
 var async = require('async');
-var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
 var secrets = require('../config/secrets');
-var util = require('./utils');
+var utils = require('./utils');
 var mockUsers = require('./user-mock-store');
 var appConfig = require('../config/app-config');
 var notificationService = require('./util/notification-service');
@@ -347,12 +346,7 @@ exports.postForgot = function(req, res, next) {
   }
 
   async.waterfall([
-    function(done) {
-      crypto.randomBytes(16, function(err, buf) {
-        var token = buf.toString('hex');
-        done(err, token);
-      });
-    },
+    utils.generateToken,
     function(token, done) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
@@ -380,7 +374,7 @@ exports.postForgot = function(req, res, next) {
   });
 };
 
-exports.dbPreload = util.dbPreload({
+exports.dbPreload = utils.dbPreload({
   count: User.count.bind(User),
   mockEntities: mockUsers,
   entityConstructor: User,
