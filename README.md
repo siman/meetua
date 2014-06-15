@@ -41,7 +41,7 @@ http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
 ### Backups
 
-Mongo backup script
+Mongo backup script should be put to dir `/etc/cron.daily/mongoalldump`
 
 ```sh
 #!/bin/sh
