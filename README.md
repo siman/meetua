@@ -19,6 +19,13 @@ or
 
 ## Install checklist
 
+### Other
+
+```sh
+sudo apt-get install mc
+sudo apt-get install htop
+```
+
 ### Git
 
 ```sh
