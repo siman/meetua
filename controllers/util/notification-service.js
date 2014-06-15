@@ -21,6 +21,13 @@ var LinuxMailer = function() {
   var emailTemplates = require('email-templates');
   var mandrill = require('node-mandrill')(appConfig.notification.MANDRILL_KEY);
 
+  /**
+   * @param {String} email
+   * @param {String} subject
+   * @param {String} templateName
+   * @param {Object} mailParams
+   * @param {Function} cb
+   */
   return function sendMailLinux(email, subject, templateName, mailParams, cb) {
     emailTemplates(templatesDir, function (err, template) {
       if (err) return cb(err);
@@ -49,13 +56,20 @@ var LinuxMailer = function() {
   };
 };
 
+/**
+ * @param {String} email
+ * @param {String} subject
+ * @param {String} templateName
+ * @param {Object} mailParams
+ * @param {Function} cb
+ */
 var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 
 /**
- * @param user
- * @param subject
- * @param event
- * @param templateName
+ * @param {Object} user
+ * @param {String} subject
+ * @param {Object} event
+ * @param {String} templateName
  * @param [cb]
  */
 function notifyUser(user, subject, event, templateName, cb) {
@@ -91,10 +105,11 @@ module.exports.notifyParticipantOnJoin = function(user, event, cb) {
 
 function notifyComingSoonEvent(event) {
   logger.debug('Notify all participants about upcoming event');
-  notifyUser(event.author, event, 'event-coming-soon');
+  var subject = 'Ближайшее событие';
+  notifyUser(event.author, subject, event, 'event-coming-soon');
   _.map(event.participants, function(user) {
     if (!user._id.equals(event.author._id))
-      notifyUser(user, event, 'event-coming-soon');
+      notifyUser(user, subject, event, 'event-coming-soon');
   });
 }
 
