@@ -58,7 +58,7 @@ Mongo backup script should be put to file `/etc/cron.daily/mongoalldump`. Set ex
 
 ```sh
 #!/bin/sh
-mongodump -o /home/meetua/meetua/dumps/mongodb/`date "+%Y-%m-%d"`
+mongodump -o /home/meetua/PERSISTENT_DATA_DIR/mongodb/`date "+%Y-%m-%d"
 ```
 
 ### Other
