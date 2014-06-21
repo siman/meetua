@@ -1,0 +1,5 @@
+mixin safeUserName(user, stringToAppend)
+  if user && user.profile && user.profile.name
+    =user.profile.name + stringToAppend
+  else
+    =''
