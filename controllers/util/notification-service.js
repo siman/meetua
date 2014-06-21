@@ -5,6 +5,7 @@ var path = require('path');
 var _ = require('underscore');
 var store = require('../event/EventStore');
 var logger = require('./logger')('notification-service.js');
+var async = require('async');
 
 var WindowsMailer = function() {
   return function() {
@@ -100,9 +101,9 @@ module.exports.notifyAuthorOnCreate = function (event, cb) {
 module.exports.notifyParticipantOnEdit = function (event, cb) {
   logger.debug('Notify on event changing', event.name);
   store.findById(event._id, ['participants'], function (err, eventFound) {
-      _.map(eventFound.participants, function (user) {
-        notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit', cb);
-      })
+      async.map(eventFound.participants, function (user, done) {
+        notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit', done);
+      }, cb);
     }
   )
 };
