@@ -97,20 +97,18 @@ module.exports.notifyAuthorOnCreate = function (event, cb) {
     if (!eventFound) return cb(new Error('Событие не найдено'));
    logger.debug('auth', eventFound.author);
    notifyUser(eventFound.author, 'Вы создали новое событие', eventFound, 'event-create', cb);
-
-  })
+  });
 };
 
 module.exports.notifyParticipantOnEdit = function (event, cb) {
   logger.debug('Notify on event changing', event.name);
   store.findById(event._id, ['participants'], function (err, eventFound) {
-      if (err) return cb(err);
-      if (!eventFound) return cb(new Error('Событие не найдено'));
-      async.map(eventFound.participants, function (user, done) {
-        notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit', done);
-      }, cb);
-    }
-  )
+    if (err) return cb(err);
+    if (!eventFound) return cb(new Error('Событие не найдено'));
+    async.map(eventFound.participants, function (user, done) {
+      notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit', done);
+    }, cb);
+  });
 };
 
 module.exports.notifyParticipantOnJoin = function(user, event, cb) {
