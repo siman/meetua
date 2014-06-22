@@ -136,14 +136,13 @@ module.exports.notifyUserForgotPassword = function(user, token, cb) {
 
 module.exports.notifyOnCancel = function (event, cb) {
   logger.debug('Notify on event cancel', event.name);
-    store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) {
-      logger.debug('eventFound:', eventFound);
-      notifyUser(eventFound.author, 'Ближайшее событие', eventFound, 'event-cancel');
-      async.map(eventFound.participants, function (user, done) {
-        notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel', done);
-      }, cb);
-    }
-  )
+  store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) {
+    logger.debug('eventFound:', eventFound);
+    notifyUser(eventFound.author, 'Ближайшее событие', eventFound, 'event-cancel');
+    async.map(eventFound.participants, function (user, done) {
+      notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel', done);
+    }, cb);
+  });
 };
 
 module.exports.startCronJobs = function() {
