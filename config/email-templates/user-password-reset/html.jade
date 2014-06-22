@@ -1,3 +1,8 @@
-h1
-  | Здравствуйте #{user.name ? ', ' + user.name : '.'}
-  |Уведомляем Вас, что пароль для Вашего аккаунта #{user.email} был изменён.
+extends ../email-layout
+include ../mixins
+
+block content
+  h1.h1
+    Здравствуйте
+    +safeUserName(', ', user, '.')
+  p Уведомляем Вас, что пароль для Вашего аккаунта #{user.email} был изменён.

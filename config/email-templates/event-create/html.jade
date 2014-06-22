@@ -1,3 +1,10 @@
-h1
-    | Вы создали новое событие:
-    = ' ' + eventName
+extends ../email-layout
+include ../mixins
+
+block content
+  h1.h1
+    +safeUserName('', user, ', ')
+    |Вы создали новое событие: #{event.name}
+  br
+  strong Просмотреть детали события: &nbsp;
+  a(href=event.url()) #{event.name}

@@ -205,6 +205,11 @@ if (!appConfig.IS_PRODUCTION) {
   });
   app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticatedRest, devApi.postNotifyParticipantOnJoin);
   app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticatedRest, devApi.postNotifyParticipantOnEdit);
+  app.post('/api/meetua/notify/user-forgot-password', passportConf.isAuthenticatedRest, devApi.postNotifyUserForgotPassword);
+  app.post('/api/meetua/notify/user-password-reset', passportConf.isAuthenticatedRest, devApi.postNotifyUserPasswordReset);
+  app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticatedRest, devApi.postNotifyAuthorOnCreate);
+  app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticatedRest, devApi.postNotifyComingSoonEvent);
+  app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticatedRest, devApi.postNotifyOnCancel);
 }
 
 /**

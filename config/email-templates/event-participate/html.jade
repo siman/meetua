@@ -3,8 +3,8 @@ include ../mixins
 
 block content
   h1.h1
-   +safeUserName(user, ', ')
-   |Вы идете на событие "#{event.name}"
+    +safeUserName('', user, ', ')
+    |Вы идете на событие "#{event.name}"
   br
   strong Просмотреть детали события: &nbsp;
   a(href=event.url()) #{event.name}

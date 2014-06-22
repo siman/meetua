@@ -1,5 +1,5 @@
-mixin safeUserName(user, stringToAppend)
+mixin safeUserName(stringToPrepend, user, stringToAppend)
   if user && user.profile && user.profile.name
-    =user.profile.name + stringToAppend
+    =stringToPrepend + user.profile.name + stringToAppend
   else
     =''

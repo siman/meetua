@@ -1,3 +1,13 @@
-h1
-    | Ближайшее событие:
-    = ' ' + eventName
+extends ../email-layout
+include ../mixins
+
+block content
+  h1.h1
+    +safeUserName('', user, ', ')
+    |Скоро состоится событие, на которое вы подписались: "#{event.name}"
+  br
+  strong Просмотреть детали события: &nbsp;
+  a(href=event.url()) #{event.name}
+  br
+  br
+  | Не забудьте пригласить своих друзей. Желаем Вам приятно провести время!

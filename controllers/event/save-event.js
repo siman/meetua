@@ -122,7 +122,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
 
             var respJson = {event: event};
             logger.debug('Sending response ', respJson);
-            req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано!': 'Ваше событие обновлено!' });
+            req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано! Детали отправлены Вам на почту.': 'Ваше событие обновлено!' });
             res.send(respJson);
           }
         }

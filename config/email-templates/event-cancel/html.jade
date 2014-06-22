@@ -1,3 +1,10 @@
-h1
-    | Событие было отменено:
-    = ' ' + eventName
+extends ../email-layout
+include ../mixins
+
+block content
+  h1.h1
+    +safeUserName('', user, ', ')
+    | событие было отменено: #{event.name}
+  br
+  strong Просмотреть детали события: &nbsp;
+  a(href=event.url()) #{event.name}

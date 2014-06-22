@@ -41,7 +41,9 @@ function findSingleEvent(id, population, cb, isCanceled) {
   });
 }
 
-// TODO: Deprecated.
+/**
+ * @deprecated
+ */
 function findEvents(findQuery, populationList, cb) {
   return Event.find(findQuery)
     .populate(populationList)
