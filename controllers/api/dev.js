@@ -5,22 +5,22 @@
 var EventStore = require('../event/EventStore');
 var notifyService = require('../util/notification-service');
 
-exports.postNotifyParticipantOnJoin = function(req, res, next) {
-  EventStore.findById(req.body.eventId, '', function(err, event) {
-    if (err) return next(err);
-    notifyService.notifyParticipantOnJoin(req.user, event, function(err) {
-      if (err) return next(err);
-      res.send(200, 'sent');
-    });
-  });
-};
+exports.postNotifyParticipantOnJoin = notify(function(user, event, cb) {
+  notifyService.notifyParticipantOnJoin(user, event, cb);
+});
 
-exports.postNotifyParticipantOnEdit = function(req, res, next) {
-  EventStore.findById(req.body.eventId, '', function(err, event) {
-    if (err) return next(err);
-    notifyService.notifyParticipantOnEdit(event, function(err) {
+exports.postNotifyParticipantOnEdit = notify(function(user, event, cb) {
+  notifyService.notifyParticipantOnEdit(event, cb)
+});
+
+function notify(notifyFn) {
+  return function(req, res, next) {
+    EventStore.findById(req.body.eventId, '', function(err, event) {
       if (err) return next(err);
-      res.send(200, 'sent');
+      notifyFn(req.user, event, function(err) {
+        if (err) return next(err);
+        res.send(200, 'sent');
+      });
     });
-  });
-};
+  };
+}
