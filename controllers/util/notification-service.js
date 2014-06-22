@@ -83,6 +83,7 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
  * @param [cb]
  */
 function notifyUser(user, subject, event, templateName, cb) {
+  logger.debug('notify user', user._id);
   cb = cb || function() {};
   if (user.email && user.profile.receiveNotifications) {
     var params = { event: event };
@@ -119,12 +120,23 @@ module.exports.notifyParticipantOnJoin = function(user, event, cb) {
 module.exports.notifyComingSoonEvent = notifyComingSoonEvent;
 
 function notifyComingSoonEvent(event) {
-  logger.debug('Notify all participants about upcoming event');
+  logger.debug('Notify all participants about upcoming event', event._id);
   var subject = 'Ближайшее событие';
-  notifyUser(event.author, subject, event, 'event-coming-soon');
-  _.map(event.participants, function(user) {
-    if (!user._id.equals(event.author._id))
-      notifyUser(user, subject, event, 'event-coming-soon');
+  store.findById(event._id, ['author', 'participants'], function (err, eventFound) {
+    if (err) {
+      logger.warn('Failed to notify about upcoming event.', err);
+      return;
+    }
+    if (!eventFound) {
+      logger.warn('Failed to notify about upcoming event. Event is not found.');
+      return;
+    }
+
+    notifyUser(eventFound.author, subject, eventFound, 'event-coming-soon');
+    _.map(eventFound.participants, function(user) {
+      if (!user._id.equals(eventFound.author._id))
+        notifyUser(user, subject, eventFound, 'event-coming-soon');
+    });
   });
 }
 
