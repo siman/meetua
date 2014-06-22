@@ -83,9 +83,10 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
  * @param [cb]
  */
 function notifyUser(user, subject, event, templateName, cb) {
+  cb = cb || function() {};
   if (user.email && user.profile.receiveNotifications) {
     var params = { event: event };
-    sendMail(user, subject, templateName, params, cb || function() {});
+    sendMail(user, subject, templateName, params, cb());
   } else cb()
 }
 
@@ -113,6 +114,8 @@ module.exports.notifyParticipantOnJoin = function(user, event, cb) {
   notifyUser(user, 'Вы идете на событие', event, 'event-participate', cb);
 };
 
+module.exports.notifyComingSoonEvent = notifyComingSoonEvent;
+
 function notifyComingSoonEvent(event) {
   logger.debug('Notify all participants about upcoming event');
   var subject = 'Ближайшее событие';
@@ -133,12 +136,12 @@ module.exports.notifyUserForgotPassword = function(user, token, cb) {
 
 module.exports.notifyOnCancel = function (event, cb) {
   logger.debug('Notify on event cancel', event.name);
-  store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) {
+    store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) {
       logger.debug('eventFound:', eventFound);
       notifyUser(eventFound.author, 'Ближайшее событие', eventFound, 'event-cancel');
-      _.map(eventFound.participants, function (user) {
-        notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel', cb);
-      })
+      async.map(eventFound.participants, function (user, done) {
+        notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel', done);
+      }, cb);
     }
   )
 };
