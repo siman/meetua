@@ -9,10 +9,7 @@ block content
     .form-group
       label.col-sm-2.control-label(for='email') Почтовый ящик
       .col-sm-4
-        if (typeof(user.email) == 'undefined')
-          input.form-control(type='email', name='email', id='email', value='')
-        else
-          input.form-control(type='email', name='email', id='email', value='#{user.email}')
+        input.form-control(type='email', name='email', id='email', value="#{user.email || ''}")
     .form-group
       label.col-sm-2.control-label(for='name') Имя
       .col-sm-4
