@@ -7,7 +7,7 @@ var logger = require('../controllers/util/logger')('User.js');
 var utils = require('../controllers/utils');
 
 var userSchema = new mongoose.Schema({
-  email: { type: String, unique: true, lowercase: true },
+  email: { type: String, unique: true, lowercase: true, sparse: true },
   password: String,
 
   facebook: String,
