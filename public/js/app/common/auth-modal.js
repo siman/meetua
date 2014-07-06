@@ -66,7 +66,9 @@ angular.module('myApp')
           deferred.reject();
         }
       });
-      // TODO unwatch
+      modal.$scope.$on('$destroy', function() {
+        unwatch();
+      });
       return deferred.promise;
     }
 
