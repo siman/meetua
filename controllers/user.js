@@ -54,27 +54,34 @@ exports.postLogin = function(req, res, next) {  // TODO delete this version when
   })(req, res, next);
 };
 
-exports.postLoginRest = function(req, res, next) {
-  req.assert('email', 'Неверный email').isEmail();
-  req.assert('password', 'Пароль не указан').notEmpty();
+var api = {
+  postLoginRest: function(req, res, next) {
+    req.assert('email', 'Неверный email').isEmail();
+    req.assert('password', 'Пароль не указан').notEmpty();
 
-  var errors = req.validationErrors(true);
+    var errors = req.validationErrors(true);
 
-  if (errors) {
-    return res.json(400, errors);
-  }
-
-  passport.authenticate('local', function(err, user, info) {
-    if (err) return next(err);
-    if (!user) {
-      return res.json(400, {'user': {param: 'user', msg: 'Неверный email или пароль'}});
+    if (errors) {
+      return res.json(400, errors);
     }
-    req.logIn(user, function(err) {
+
+    passport.authenticate('local', function(err, user, info) {
       if (err) return next(err);
-      res.json(200, { user: user });
-    });
-  })(req, res, next);
+      if (!user) {
+        return res.json(400, {'user': {param: 'user', msg: 'Неверный email или пароль'}});
+      }
+      req.logIn(user, function(err) {
+        if (err) return next(err);
+        res.json(200, { user: user });
+      });
+    })(req, res, next);
+  },
+  getCurrentUser: function(req, res, next) {
+    return res.json({user: req.user});
+  }
 };
+
+exports.api = api;
 
 /**
  * GET /logout

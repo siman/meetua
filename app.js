@@ -192,7 +192,8 @@ app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
 var meetuaEventsApi = require('./controllers/api/events');
-app.post('/api/meetua/user/login', userController.postLoginRest);
+app.post('/api/meetua/user/login', userController.api.postLoginRest);
+app.get('/api/meetua/user/getCurrent', userController.api.getCurrentUser);
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticatedRest, meetuaEventsApi.get_my);
@@ -217,8 +218,9 @@ if (!appConfig.IS_PRODUCTION) {
  */
 
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/auth/facebook/success', failureRedirect: '/login' }));
+app.get('/auth/facebook/success', function(req, res) {
+  res.render('after-auth');
 });
 app.get('/auth/vkontakte', passport.authenticate('vkontakte', { scope: ['email'] }));
 app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/login' }), function(req, res) {

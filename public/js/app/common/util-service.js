@@ -40,9 +40,21 @@ angular.module('myApp')
       };
     }
 
+    /**
+     * @param {Number} width desired width
+     * @param {Number} height desired height
+     * @returns {String} options for {{window.open()}} call
+     */
+    function windowOpenOptions(width, height) {
+      var left = (screen.width/2)-(width/2);
+      var top = (screen.height/2)-(height/2);
+      return 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+width+', height='+height+', top='+top+', left='+left;
+    }
+
     return {
       fetchTpl: fetchTpl,
       apiUrl: apiUrl,
-      calculateImgDimensions: calculateImgDimensions
+      calculateImgDimensions: calculateImgDimensions,
+      windowOpenOptions: windowOpenOptions
     }
   }]);
