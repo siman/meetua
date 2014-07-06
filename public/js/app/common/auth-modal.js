@@ -24,8 +24,8 @@ angular.module('myApp')
         handlePromise($http.post(util.apiUrl('/user/login'), auth));
       };
 
-      modal.$scope.authenticateFb = function authenticateFb() {
-        var child = $window.open('/auth/facebook', 'Войти', util.windowOpenOptions(800, 500));
+      function authenticate(authUrl) {
+        var child = $window.open(authUrl, 'Войти', util.windowOpenOptions(800, 500));
         var timer = setInterval(checkChild, 500);
 
         function checkChild() {
@@ -34,6 +34,12 @@ angular.module('myApp')
             handlePromise(UserService.getCurrentUser());
           }
         }
+      }
+      modal.$scope.authenticateFb = function authenticateFb() {
+        authenticate('/auth/facebook');
+      };
+      modal.$scope.authenticateVk = function authenticateFb() {
+        authenticate('/auth/vkontakte');
       };
 
       function handlePromise(promise) {
