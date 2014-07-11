@@ -135,3 +135,38 @@ module.exports.post_participation = function(req, res, next) {
     }
   });
 };
+
+// TODO: Move to /api/meetua/account/notifications
+module.exports.post_notifications = function(req, res, next) {
+  var newEmail = req.query.email;
+  var curUser = req.user;
+
+  if (curUser.email) {
+    res.json(304, 'User has already specified email'); // user's email was not modified.
+  } else {
+    User.findById(curUser._id, function(err, freshUser) {
+      if (err) return res.json(500, 'Could not find current user');
+      freshUser.email = newEmail;
+      freshUser.save(function(err) {
+        if (err) return res.json(500, 'Failed to update current user');
+        res.json('Email updated');
+      });
+    });
+  }
+};
+
+module.exports.post_notify = function(req, res, next) {
+  var act = req.query.act;
+  var eventId = req.query.eventId;
+  var curUser = req.user;
+
+  if (act === 'participate') {
+    EventStore.findById(eventId, [], function(err, event) {
+      if (err) return res.send(404);
+      Notifier.notifyParticipantOnJoin(curUser, event);
+      res.json('Notification was sent');
+    });
+  } else {
+    res.json(400, 'Unknown act was specified:', act);
+  }
+};

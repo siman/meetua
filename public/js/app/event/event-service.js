@@ -17,6 +17,7 @@ angular.module('myApp')
         }
       }).error(errorHandler);
     };
+
     /**
      * @param opts
      * @param opts.eventId

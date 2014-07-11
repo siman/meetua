@@ -44,7 +44,11 @@ angular.module('myApp').controller('ViewEventCtrl',
       $http({method: 'POST', url: util.apiUrl('/events/participation'), params: params}).
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');  // FIXME: to Siman: controller shouldn't modify DOM. It's directive's responsibility
-          changeParticipation(data.status === 'added');
+          var isAdded = data.status === 'added';
+          changeParticipation(isAdded);
+          if (isAdded && data.nextStep === 'showNotificationSettings') {
+            $('#notifs_modal').modal('show');
+          }
           $http({method: 'GET', url: util.apiUrl('/events/findById'), params: {id: $scope.event._id}}).
             success(function(res) {
               $scope.event = res.event;
@@ -54,7 +58,7 @@ angular.module('myApp').controller('ViewEventCtrl',
           $partBtn.removeAttr('disabled');
           changeParticipation(false);
           var err = (data.error ? data.error : data);
-          var msg = 'Не удалось принять участие.  ' + _.isObject(err) ? JSON.stringify(err) : err;
+          var msg = 'Не удалось принять участие. ' + _.isObject(err) ? JSON.stringify(err) : err;
           console.error(msg, data);
           ErrorService.alert(msg);
         });
