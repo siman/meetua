@@ -13,6 +13,7 @@ var connectAssets = require('connect-assets');
 var _ = require('underscore');
 var notifyService = require('./controllers/util/notification-service');
 var OpenShiftApp = require('./openshift');
+var errrorHandler = require('./controllers/util/error-handler');
 
 /**
  * Load controllers.
@@ -257,6 +258,14 @@ app.get('/auth/venmo', passport.authorize('venmo', { scope: 'make_payments acces
 app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '/api' }), function(req, res) {
   res.redirect('/api/venmo');
 });
+
+/**
+ * error trigger(development mode only)
+ */
+if (process.env.ERROR_ROUTE) {
+  app.get('/dev/error', errrorHandler.generateError);
+}
+
 
 /**
  * Start Express server.
