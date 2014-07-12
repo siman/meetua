@@ -13,7 +13,7 @@ var connectAssets = require('connect-assets');
 var _ = require('underscore');
 var notifyService = require('./controllers/util/notification-service');
 var OpenShiftApp = require('./openshift');
-var errrorHandler = require('./controllers/util/error-handler');
+var errorHandler = require('./controllers/util/error-handler');
 
 /**
  * Load controllers.
@@ -121,7 +121,7 @@ app.use(app.router);
 app.use(function(req, res) {
   res.renderNotFound();
 });
-app.use(express.errorHandler());
+app.use(appConfig.IS_PRODUCTION ? errorHandler.error : express.errorHandler());
 
 /** Use when you don't want browser to cache the request (e.g. on back button click) */
 function headersForNoCache(req, res, next) {
@@ -263,7 +263,7 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
  * error trigger(development mode only)
  */
 if (process.env.ERROR_ROUTE) {
-  app.get('/dev/error', errrorHandler.generateError);
+  app.get('/dev/error', errorHandler.errorGenerator);
 }
 
 

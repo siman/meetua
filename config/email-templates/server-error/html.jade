@@ -1,0 +1,9 @@
+extends ../email-layout
+
+block content
+  h1.h1
+    |Internal server error raised
+  br
+  strong error deteails:
+  br
+  | !{stack.replace(/\n/g, '<br/>')}

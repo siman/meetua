@@ -6,6 +6,7 @@ var _ = require('underscore');
 var store = require('../event/EventStore');
 var logger = require('./logger')('notification-service.js');
 var async = require('async');
+var moment = require('moment');
 
 var WindowsMailer = function() {
   return function() {
@@ -177,5 +178,12 @@ module.exports.startCronJobs = function() {
       _.map(events, notifyComingSoonEvent);
     });
   }, null, true, "Europe/Kiev");
+
+};
+
+module.exports.notifySupport = function (msg, cb) {
+  logger.debug('Notifying support ' + appConfig.notification.MAIL_SUPPORT);
+  var date = moment().format('LL');
+  sendMail({email: appConfig.notification.MAIL_SUPPORT}, 'server error ' + date, 'server-error', {stack: msg}, cb)
 
 };
