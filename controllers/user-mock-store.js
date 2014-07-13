@@ -3,8 +3,8 @@
 module.exports = [
   {
     "_id" : "5355443a9e965c7c19f33c43",
-    email: 'test@mail.com',
-    password: 'test',
+    email: 'meetua-test@i.ua',
+    password: 'meetua@123',
     profile: {
       name: 'Test user',
       gender: 'male'
@@ -12,8 +12,8 @@ module.exports = [
   },
   {
     "_id" : "5355443a9e965c7c19f33c44",
-    email: 'test2@mail.com',
-    password: 'test2',
+    email: 'meetua-test@yandex.ru',
+    password: 'meetua@123',
     profile: {
       name: 'Test user 2',
       gender: 'female'
