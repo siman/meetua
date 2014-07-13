@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp')
-  .controller('CreateEventCtrl', ['$scope', 'EventImageService', 'EventService', 'activities',
-  function($scope, EventImageService, EventService, activities) {
+  .controller('CreateEventCtrl', ['$rootScope', '$scope', 'EventImageService', 'EventService', 'activities', 'AuthModal',
+  function($rootScope, $scope, EventImageService, EventService, activities, AuthModal) {
     var imageService = $scope.imageService = EventImageService.create({
       scope: $scope,
       onAllUploaded: function submitAfterUpload(uploadedImages) {
@@ -16,9 +16,12 @@ angular.module('myApp')
       if (uploader.queue.length > 0) {
         uploader.uploadAll();
       } else {
-        EventService.postSave(buildReqData());
+        EventService.postSave(buildReqData(), true/*redirect*/);
       }
     };
+    $scope.authenticateFb = AuthModal.authenticateFb.bind(AuthModal);
+    $scope.authenticateVk = AuthModal.authenticateVk.bind(AuthModal);
+
     function buildReqData(uploadedImages) {
       var reqData = _.extend({
         images: uploadedImages

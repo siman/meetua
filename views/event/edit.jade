@@ -1,6 +1,7 @@
 extends ../layout
 
 include event-fields
+include form-btns
 
 block content
   .page-header
@@ -11,3 +12,4 @@ block content
     ng-submit='submit()', name='eventForm', novalidate
   )
     +eventFields(false)
+    +formBtns()

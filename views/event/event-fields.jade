@@ -74,11 +74,3 @@ mixin eventFields(isCreate)
           div(ng-thumb="{ file: item.file, width: 250}", ng-class="{ 'selected': item.isLogo}")
           h2.text_over_container(ng-if='item.isLogo')
             span.text_over Лого
-  .form-group
-    .col-sm-offset-2.col-sm-8
-      button.btn.btn-default(type='submit', ng-disabled='eventForm.$invalid')
-        i.fa.fa-mail-forward
-        if isCreate
-          | Создать событие
-        else
-          | Сохранить событие

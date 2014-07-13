@@ -180,12 +180,12 @@ app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized
 var feedback = require('./controllers/feedback');
 app.get('/tpl/*', renderTpl);
 app.get('/feedback', feedback.get_feedback);
-app.get('/event/create', passportConf.isAuthenticated, createEventPage);
+app.get('/event/create', createEventPage);
 app.post('/event/save', passportConf.isAuthenticated, saveEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
 app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
-app.post('/event/:id/rm-image/:imageId', passportConf.isAuthenticated, rmEventImage);
+app.post('/event/:id/rm-image/:imageId', rmEventImage);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 

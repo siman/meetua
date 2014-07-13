@@ -27,7 +27,7 @@
           li(class=title=='MeetUA API'?'active':undefined)
             a(href='/dev-api') API
 
-      ul.nav.navbar-nav.navbar-right(auth)
+      ul.nav.navbar-nav.navbar-right
           - var hideWhenUser = user ? 'ng-hide' : undefined
           - var showWhenUser = user ? undefined : 'ng-hide'
           li(class=title=='Login'?'active':undefined + ' ' + hideWhenUser, ng-hide='currentUser')

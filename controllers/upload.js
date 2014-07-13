@@ -16,6 +16,7 @@ fs.mkdirp(UPLOAD_DIR, function(err) {
 var formidable = require('formidable');
 var _ = require('underscore');
 
+// TODO DDOS protection
 exports.handleUpload = function(req, res, next) {
 
     var size = parseInt(req.headers['content-length'], 10);

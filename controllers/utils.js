@@ -64,3 +64,8 @@ exports.generateToken = function(done) {
     done(err, token);
   });
 };
+
+exports.getUserIdOpt = function(req) {
+  return req.user ? req.user._id : undefined;
+};
+
