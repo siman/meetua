@@ -142,8 +142,6 @@ function headersForLanguage(req, res, next) {
 
 app.get('/', homeController.index);
 app.get('/sitemap.xml', sitemap.getSitemap);
-app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
 app.post('/forgot', userController.postForgot);
@@ -193,25 +191,26 @@ app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
 var meetuaEventsApi = require('./controllers/api/events');
+app.get('/api/meetua/user/login', passportConf.isAuthenticated, userController.api.getLogin); // authenticates user through auth-modal
 app.post('/api/meetua/user/login', userController.api.postLoginRest);
 app.get('/api/meetua/user/getCurrent', userController.api.getCurrentUser);
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
-app.get('/api/meetua/events/my', passportConf.isAuthenticatedRest, meetuaEventsApi.get_my);
-app.get('/api/meetua/events/myOverview', passportConf.isAuthenticatedRest, meetuaEventsApi.get_myOverview);
-app.post('/api/meetua/events/participation', passportConf.isAuthenticatedRest, meetuaEventsApi.post_participation);
+app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
+app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
+app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
 if (!appConfig.IS_PRODUCTION) {
   var devApi = require('./controllers/api/dev');
   app.get('/dev-api', function(req, res, next) {
     res.render('dev-api', { title: 'MeetUA API' });
   });
-  app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticatedRest, devApi.postNotifyParticipantOnJoin);
-  app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticatedRest, devApi.postNotifyParticipantOnEdit);
-  app.post('/api/meetua/notify/user-forgot-password', passportConf.isAuthenticatedRest, devApi.postNotifyUserForgotPassword);
-  app.post('/api/meetua/notify/user-password-reset', passportConf.isAuthenticatedRest, devApi.postNotifyUserPasswordReset);
-  app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticatedRest, devApi.postNotifyAuthorOnCreate);
-  app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticatedRest, devApi.postNotifyComingSoonEvent);
-  app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticatedRest, devApi.postNotifyOnCancel);
+  app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticated, devApi.postNotifyParticipantOnJoin);
+  app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticated, devApi.postNotifyParticipantOnEdit);
+  app.post('/api/meetua/notify/user-forgot-password', passportConf.isAuthenticated, devApi.postNotifyUserForgotPassword);
+  app.post('/api/meetua/notify/user-password-reset', passportConf.isAuthenticated, devApi.postNotifyUserPasswordReset);
+  app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticated, devApi.postNotifyAuthorOnCreate);
+  app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticated, devApi.postNotifyComingSoonEvent);
+  app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticated, devApi.postNotifyOnCancel);
 }
 
 /**

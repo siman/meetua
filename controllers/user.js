@@ -10,50 +10,6 @@ var mockUsers = require('./user-mock-store');
 var notificationService = require('./util/notification-service');
 var logger = require('./util/logger')('user.js');
 
-/**
- * GET /login
- * Login page.
- */
-
-exports.getLogin = function(req, res) {
-  if (req.user) return res.redirect('/');
-  res.render('account/login', {
-    title: 'Войти'
-  });
-};
-
-/**
- * POST /login
- * Sign in using email and password.
- * @param email
- * @param password
- */
-
-exports.postLogin = function(req, res, next) {  // TODO delete this version when only angular login is used
-  req.assert('email', 'Неверный email').isEmail();
-  req.assert('password', 'Пароль не указан').notEmpty();
-
-  var errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/login');
-  }
-
-  passport.authenticate('local', function(err, user, info) {
-    if (err) return next(err);
-    if (!user) {
-      req.flash('errors', { msg: info.message });
-      return res.redirect('/login');
-    }
-    req.logIn(user, function(err) {
-      if (err) return next(err);
-      req.flash('success', { msg: 'Вы вошли на сайт!' });
-      res.redirect(req.session.returnTo || '/');
-    });
-  })(req, res, next);
-};
-
 var api = {
   postLoginRest: function(req, res, next) {
     req.assert('email', 'Неверный email').isEmail();
@@ -75,6 +31,9 @@ var api = {
         res.json(200, { user: user });
       });
     })(req, res, next);
+  },
+  getLogin: function(req, res, next) {
+    res.send(200); // successfully logged in with auth-modal, you can return here any data you need for logged in user
   },
   getCurrentUser: function(req, res, next) {
     return res.json({user: req.user});
