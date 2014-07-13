@@ -18,7 +18,7 @@ describe('user controller', function() {
   app.use(expressValidator());
   app.use(passport.initialize());
   app.use(passport.session());
-  app.post('/login', user.postLoginRest);
+  app.post('/login', user.api.postLoginRest);
 
   it('should preload mock users in db when it\'s empty', function(done) {
     removeAllUsers(function(err) {
