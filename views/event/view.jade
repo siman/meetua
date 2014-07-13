@@ -46,20 +46,20 @@ block content
                 #partBox.ng-cloak
                   div(ng-show="event.isPassed")
                     div Событие уже прошло
-                  div(ng-show="!event.isPassed")
+                  div(ng-hide="event.isPassed")
                     div(ng-show="isPart")
                       #partStatus Я участник события
 
                     div(ng-show="event.participantCount")
                       span.event_label Всего участников:
                       span {{event.participantCount}}
-                    div(ng-show="!event.participantCount")
+                    div(ng-hide="event.participantCount")
                       span.event_label Еще нет участников
 
                     button#partBtn.btn(ng-click="participate()",
                       ng-class="{'btn-default': isPart, 'btn-success': !isPart}"
                     )
-                      span(ng-show="!isPart")
+                      span(ng-hide="isPart")
                         i.fa.fa-check
                         | Принять участие
                       span(ng-show="isPart")
