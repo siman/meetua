@@ -75,10 +75,18 @@ block content
             if event.author
               +eventField("Организатор", event.author.profile.name)
             div.event_desc #{event.description}
+      .col-md-10
+        google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts",
+          ng-if='event.place.latitude && event.place.longitude')
+          marker(coords="event.place")
+      .col-md-2
+        .event-participants
+          ul.media-list
+            li.media(ng-repeat="participant in event.participants")
+              img(class="media-object pull-left square-75" ng-src="{{participant.profile.picture}}")
+              .media-body
+                a(href="/users/{{participant._id}}") {{participant.profile.name}}
 
-      google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts",
-        ng-if='event.place.latitude && event.place.longitude')
-        marker(coords="event.place")
 
       #cancel_modal.modal.fade(tabindex='-1', role='dialog')
         .modal-dialog

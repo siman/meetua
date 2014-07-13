@@ -7,7 +7,7 @@ var logger = require('../util/logger')('view.js');
 
 module.exports = function(req, res) {
   var id = req.params.id;
-  store.findById(id, ["author", "profile.name profile.picture"], function(err, event) {
+  store.findById(id, ["author", "profile.name profile.picture", "participants"], function(err, event) {
     if (err) logger.debug('Error while looking for event by ID', err);
     logger.debug("id", id);
     logger.debug("found event", event);

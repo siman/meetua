@@ -25,7 +25,7 @@ angular.module('myApp').controller('ViewEventCtrl',
       if ($scope.currentUser) {
         var curUserId = $scope.currentUser._id;
         return _.find(event.participants, function(partId) {
-          return partId === curUserId;
+          return partId._id === curUserId;
         });
       } else {
         return false;

@@ -72,7 +72,7 @@ module.exports.get_findById = function(req, res, next) {
   var id = req.query.id;
   logger.debug("id", id);
   if (id) {
-    EventStore.findById(id, [], function(err, event) {
+    EventStore.findById(id, ["participants"], function(err, event) {
       if (err) return next(err);
       res.json({event: event});
     });
