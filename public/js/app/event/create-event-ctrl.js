@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp')
-  .controller('CreateEventCtrl', ['$rootScope', '$scope', 'EventImageService', 'EventService', 'activities', 'AuthModal',
-  function($rootScope, $scope, EventImageService, EventService, activities, AuthModal) {
+  .controller('CreateEventCtrl', ['$rootScope', '$scope', 'EventImageService', 'EventService', 'activities',
+  function($rootScope, $scope, EventImageService, EventService, activities) {
     var imageService = $scope.imageService = EventImageService.create({
       scope: $scope,
       onAllUploaded: function submitAfterUpload(uploadedImages) {
@@ -19,8 +19,6 @@ angular.module('myApp')
         EventService.postSave(buildReqData(), true/*redirect*/);
       }
     };
-    $scope.authenticateFb = AuthModal.authenticateFb.bind(AuthModal);
-    $scope.authenticateVk = AuthModal.authenticateVk.bind(AuthModal);
 
     function buildReqData(uploadedImages) {
       var reqData = _.extend({

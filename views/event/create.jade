@@ -9,13 +9,4 @@ block content
 
     form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl', ng-submit='submit()', name='eventForm', novalidate)
       +eventFields(true)
-      .form-group(ng-hide='currentUser')
-        label(class='col-sm-2 control-label', for='login') Войдите/Создайте аккаунт
-        .col-sm-8
-          if secrets.vkAuth
-            a.btn.btn-social-icon.btn-lg.btn-vk(ng-click='authenticateVk()')
-              i.fa.fa-vk
-          if secrets.facebookAuth
-            a.btn.btn-social-icon.btn-lg.btn-facebook(ng-click='authenticateFb()')
-              i.fa.fa-facebook
       +formBtns()
