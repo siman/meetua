@@ -27,6 +27,7 @@ mongoose.model = function(name, schema) {
 module.exports = {
 
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
+  IS_DEVELOPMENT: process.env.NODE_ENV !== 'production',
   // http://nodejs.org/api/process.html#process_process_platform
   IS_WINDOWS: process.platform === 'win32',
   IS_LINUX: process.platform === 'linux',

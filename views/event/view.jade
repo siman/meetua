@@ -82,7 +82,7 @@ block content
             span.event_label Еще нет участников
           ul.media-list
             li.media(ng-repeat="participant in event.participants")
-              img(class="media-object pull-left square-75" ng-src="{{participant.profile.picture}}")
+              img(class="media-object pull-left avatar-medium" ng-src="{{participant.profile.picture}}")
               .media-body
                 a(href="/users/{{participant._id}}") {{participant.profile.name}}
 
