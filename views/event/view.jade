@@ -50,12 +50,6 @@ block content
                     div(ng-show="isPart")
                       #partStatus Я участник события
 
-                    div(ng-show="event.participantCount")
-                      span.event_label Всего участников:
-                      span {{event.participantCount}}
-                    div(ng-hide="event.participantCount")
-                      span.event_label Еще нет участников
-
                     button#partBtn.btn(ng-click="participate()",
                       ng-class="{'btn-default': isPart, 'btn-success': !isPart}"
                     )
@@ -80,7 +74,12 @@ block content
           ng-if='event.place.latitude && event.place.longitude')
           marker(coords="event.place")
       .col-md-2
-        .event-participants
+        #partBox.ng-cloak
+          div(ng-show="event.participantCount")
+            span.event_label Всего участников:
+            span {{event.participantCount}}
+          div(ng-hide="event.participantCount")
+            span.event_label Еще нет участников
           ul.media-list
             li.media(ng-repeat="participant in event.participants")
               img(class="media-object pull-left square-75" ng-src="{{participant.profile.picture}}")
