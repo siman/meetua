@@ -27,3 +27,6 @@ public/upload
 builtAssets
 
 wiki/
+
+.c9revisions/
+.settings
