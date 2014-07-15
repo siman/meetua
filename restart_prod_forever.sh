@@ -1,3 +1,3 @@
 export NODE_ENV=production
-forever restart app.js
+sudo forever restart app.js
 
