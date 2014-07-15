@@ -7,12 +7,12 @@ var os = require('os');
 tmp.setGracefulCleanup();
 var request = require('supertest');
 var express = require('express');
-var Event = require('../../../app/models/Event');
+var Event = require('../../../../app/models/Event');
 var testUtil = require('../../test-util');
 var _ = require('underscore');
-var config = require('../../../config/app-config'); // patches mongoose
+var config = require('../../../../config/app-config'); // patches mongoose
 var async = require('async');
-var notificationService = require('../../../app/controllers/util/notification-service');
+var notificationService = require('../../../../app/controllers/util/notification-service');
 notificationService.notifyAuthorOnCreate = function(arg, cb) {cb();}; // mock
 notificationService.notifyParticipantOnEdit = function(arg, cb) {cb();}; // mock
 var moment = require('moment');
@@ -20,7 +20,7 @@ config.UPLOAD_DIR = os.tmpDir();
 config.EVENT_IMG_DIR = path.join(os.tmpDir(), 'event-imgs');
 config.PERSISTENT_DATA_DIR = path.join(os.tmpDir(), 'PERSISTENT_DATA_DIR');
 
-var saveEvent = require('../../../app/controllers/event/save-event');
+var saveEvent = require('../../../../app/controllers/event/save-event');
 
 describe('save-event', function() {
   var user = { _id: mongoose.Types.ObjectId() };

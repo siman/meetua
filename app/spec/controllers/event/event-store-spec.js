@@ -1,7 +1,7 @@
 var testUtil = require('../../test-util');
-var dbPreload = require('../../../app/controllers/event/EventStore').dbPreload;
-var mockEvents = require('../../../app/controllers/event/MockEvents');
-var Event = require('../../../app/models/Event');
+var dbPreload = require('../../../../app/controllers/event/EventStore').dbPreload;
+var mockEvents = require('../../../../app/controllers/event/MockEvents');
+var Event = require('../../../../app/models/Event');
 var _ = require('underscore');
 
 describe('event store', function() {

@@ -1,10 +1,10 @@
-var appConfig = require('../config/app-config'); // patches mongoose for every test
+var appConfig = require('../../config/app-config'); // patches mongoose for every test
 var mongoose = require('mongoose');
 var _ = require('underscore');
 var tmp = require('tmp');
 var fs = require('fs-extra');
 var path = require('path');
-var util = require('../app/controllers/utils');
+var util = require('../../app/controllers/utils');
 
 _.extend(module.exports, util);
 
