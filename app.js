@@ -67,7 +67,7 @@ var hour = 3600000;
 var day = (hour * 24);
 var month = (day * 30);
 
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'jade');
 app.use(connectAssets({
   paths: ['public/css', 'public/js'],
