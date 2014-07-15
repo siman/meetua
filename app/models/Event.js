@@ -6,7 +6,7 @@ var Image = require('./Image');
 var moment = require('moment');
 var _ = require('underscore');
 var path = require('path');
-var activities = require('../../public/js/app/shared/constants').activities;
+var activities = require('../../public/js/app/shared/services/constants').activities;
 var logger = require('../controllers/util/logger')('Event.js');
 var appConfig = require('../../config/app-config');
 
