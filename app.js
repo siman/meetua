@@ -11,32 +11,32 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 var _ = require('underscore');
-var notifyService = require('./controllers/util/notification-service');
+var notifyService = require('./app/controllers/util/notification-service');
 var OpenShiftApp = require('./openshift');
-var errorHandler = require('./controllers/util/error-handler');
+var errorHandler = require('./app/controllers/util/error-handler');
 
 /**
  * Load controllers.
  */
 
 var appConfig = require('./config/app-config');
-var sitemap = require('./controllers/sitemap');
+var sitemap = require('./app/controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
-var homeController = require('./controllers/home');
-var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
-var createEventPage = require('./controllers/event/create-page');
-var saveEvent = require('./controllers/event/save-event');
-var viewEvent = require('./controllers/event/view');
-var editEvent = require('./controllers/event/edit');
-var cancelEvent = require('./controllers/event/cancel');
-var upload = require('./controllers/upload').handleUpload;
-var myEvents = require('./controllers/profile/my-events');
-var rmEventImage = require('./controllers/event/rm-image');
+var homeController = require('./app/controllers/home');
+var userController = require('./app/controllers/user');
+var apiController = require('./app/controllers/api');
+var createEventPage = require('./app/controllers/event/create-page');
+var saveEvent = require('./app/controllers/event/save-event');
+var viewEvent = require('./app/controllers/event/view');
+var editEvent = require('./app/controllers/event/edit');
+var cancelEvent = require('./app/controllers/event/cancel');
+var upload = require('./app/controllers/upload').handleUpload;
+var myEvents = require('./app/controllers/profile/my-events');
+var rmEventImage = require('./app/controllers/event/rm-image');
 
-var eventStore = require('./controllers/event/EventStore');
+var eventStore = require('./app/controllers/event/EventStore');
 
-var renderTpl = require('./controllers/render-tpl').renderTpl;
+var renderTpl = require('./app/controllers/render-tpl').renderTpl;
 
 /**
  * API keys + Passport configuration.
@@ -177,7 +177,7 @@ app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, a
 app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
 app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 
-var feedback = require('./controllers/feedback');
+var feedback = require('./app/controllers/feedback');
 app.get('/tpl/*', renderTpl);
 app.get('/feedback', feedback.get_feedback);
 app.get('/event/create', createEventPage);
@@ -190,7 +190,7 @@ app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
-var meetuaEventsApi = require('./controllers/api/events');
+var meetuaEventsApi = require('./app/controllers/api/events');
 app.get('/api/meetua/user/login', passportConf.isAuthenticated, userController.api.getLogin); // authenticates user through auth-modal
 app.post('/api/meetua/user/login', userController.api.postLoginRest);
 app.get('/api/meetua/user/getCurrent', userController.api.getCurrentUser);
@@ -200,7 +200,7 @@ app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.g
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
 if (appConfig.IS_DEVELOPMENT) {
-  var devApi = require('./controllers/api/dev');
+  var devApi = require('./app/controllers/api/dev');
   app.get('/dev-api', function(req, res, next) {
     res.render('dev-api', { title: 'MeetUA API' });
   });

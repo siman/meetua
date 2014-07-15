@@ -2,7 +2,7 @@
 
 var _ = require('underscore');
 var async = require('async');
-var conf = require('../../config/app-config');
+var conf = require('../../../config/app-config');
 var Event = require('../../models/Event');
 var EventStore = require('../event/EventStore');
 var Notifier = require('../util/notification-service');

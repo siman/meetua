@@ -2,7 +2,7 @@
 
 var store = require("./EventStore");
 var _ = require("underscore");
-var config = require('../../config/app-config');
+var config = require('../../../config/app-config');
 var logger = require('../util/logger')('view.js');
 
 module.exports = function(req, res) {

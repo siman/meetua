@@ -1,6 +1,6 @@
 'use strict';
 
-var appConfig = require('../../config/app-config.js');
+var appConfig = require('../../../config/app-config.js');
 var path = require('path');
 var _ = require('underscore');
 var store = require('../event/EventStore');

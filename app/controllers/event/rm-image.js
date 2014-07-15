@@ -2,7 +2,7 @@ var Event = require('../../models/Event');
 var _ = require('underscore');
 var fs = require('fs-extra');
 var utils = require('../utils');
-var SharedEventService = require('../../public/js/app/shared/event-service');
+var SharedEventService = require('../../../public/js/app/shared/event-service');
 
 function rmImage(req, res, next) {
   req.checkParams('id', 'event id is invalid').isAlphanumeric();

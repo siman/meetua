@@ -4,7 +4,7 @@ var _ = require('underscore');
 var tmp = require('tmp');
 var fs = require('fs-extra');
 var path = require('path');
-var util = require('../controllers/utils');
+var util = require('../app/controllers/utils');
 
 _.extend(module.exports, util);
 

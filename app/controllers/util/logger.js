@@ -1,7 +1,7 @@
 var winston = require('winston');
 var path = require('path');
 var fs = require('fs-extra');
-var config = require('../../config/app-config');
+var config = require('../../../config/app-config');
 var logDir = path.join(config.PERSISTENT_DATA_DIR, config.LOG_DIR_NAME);
 
 fs.ensureDir(logDir, function(err) {

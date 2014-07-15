@@ -1,4 +1,4 @@
-var renderTpl = require('../../controllers/render-tpl')._renderTpl;
+var renderTpl = require('../../app/controllers/render-tpl')._renderTpl;
 
 describe('render-tpl', function() {
   it('should render tpl', function(done) {

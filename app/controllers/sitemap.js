@@ -1,7 +1,7 @@
-var Event = require('../models/Event');
+var Event = require('../../app/models/Event');
 var _ = require('underscore');
 var sm = require('sitemap');
-var appConfig = require('../config/app-config');
+var appConfig = require('../../config/app-config');
 
 var _sitemap = {};
 

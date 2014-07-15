@@ -1,7 +1,7 @@
 "use strict";
 
 var baseUrl = 'http://127.0.0.1:3000';
-var mockUsers = require('../controllers/user-mock-store');
+var mockUsers = require('../app/controllers/user-mock-store');
 
 // An example configuration file.
 exports.config = {
