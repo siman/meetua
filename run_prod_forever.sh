@@ -1,3 +1,3 @@
 export NODE_ENV=production
-sudo forever --uid=meetua start app.js
+sudo forever --uid=meetua -a start app.js
 
