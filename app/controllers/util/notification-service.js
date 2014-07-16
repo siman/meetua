@@ -15,7 +15,8 @@ var WindowsMailer = function() {
 };
 
 var LinuxMailer = function() {
-  var templatesDir = path.resolve(__dirname, '../..',  'config','email-templates');
+  var templatesDir = path.resolve(__dirname, '../../..',  'config','email-templates');
+  logger.debug('email templates dir ', templatesDir);
   var emailTemplates = require('email-templates');
   var mandrill = require('node-mandrill')(appConfig.notification.MANDRILL_KEY);
 
