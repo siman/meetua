@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "nodemon app.js",
-    "test": "jasmine-node spec --captureExceptions",
+    "test": "jasmine-node app/spec --captureExceptions",
     "selenium-server": "./node_modules/protractor/bin/webdriver-manager start",
     "e2e-test": "./node_modules/protractor/bin/protractor spec-e2e/protractor_conf.js"
   },
