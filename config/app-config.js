@@ -49,6 +49,8 @@ module.exports = {
   domain: DOMAIN,
   hostname: 'http://' + DOMAIN,
 
-  socialTweetLinkLength: 22
+  socialTweetLinkLength: 22,
+
+  enableCsrf: process.env.NODE_ENV != 'test'
 
 };

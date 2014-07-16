@@ -3,6 +3,7 @@ var _ = require('underscore');
 var fs = require('fs-extra');
 var utils = require('../utils');
 var SharedEventService = require('../../../public/js/app/shared/services/event-service');
+var logger = require('../util/logger')('rm-image.js');
 
 function rmImage(req, res, next) {
   req.checkParams('id', 'event id is invalid').isAlphanumeric();
@@ -11,11 +12,12 @@ function rmImage(req, res, next) {
   var id = req.params.id;
   var imageId = req.params.imageId;
   var userId = utils.getUserIdOpt(req);
+  logger.debug('userId', userId);
 
   Event.findById(id, function(err, event) {
     if (err) return next(err);
     if (!event) res.send(404);
-    if (userId && !event.author.equals(userId)) res.send(403);
+    if (userId && !event.author.equals(userId)) res .send(403);
     // TODO user can rm only images for his own events, test
 
     var image = _.find(event.images, byId(imageId));

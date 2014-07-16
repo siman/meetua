@@ -88,7 +88,15 @@ app.use(express.session({
     auto_reconnect: true
   })
 }));
-app.use(express.csrf());
+console.log('appConfig.enableCsrf', appConfig.enableCsrf);
+if (appConfig.enableCsrf) {
+  app.use(express.csrf());
+} else {
+  app.use(function(req, res, next) {
+    req.csrfToken = function() {return '';};
+    next();
+  });
+}
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next) {
