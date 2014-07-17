@@ -13,6 +13,7 @@
 //= require lib/moment-2.6.0.min
 //= require lib/moment-langs.min
 //= require lib/daterangepicker-1.3.5
+//= require lib/summernote-0.5.1
 //= require lib/bootstrap.min
 //= require lib/underscore-1.6.0.min
 //= require lib/md5.min
