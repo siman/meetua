@@ -8,7 +8,7 @@ var EventStore = require('../event/EventStore');
 var Notifier = require('../util/notification-service');
 var logger = require('../util/logger')('event.js');
 
-// TODO: Limit to last 5 events if this is an overview of events in user's profile.
+// TODO: Limit to last 5 events if this is an overview of events in user's profile. issue #169
 
 /** Build Mongo filters for different event types: my , going, visited. */
 var buildMyFilters = function(req) {
@@ -26,7 +26,7 @@ var buildMyFilters = function(req) {
 module.exports.get_my = function(req, res, next) {
   var eventType = req.query.type || 'my';
   var filter = buildMyFilters(req)[eventType];
-  // TODO: Add pagination
+  // TODO: Add pagination. issue #170
   Event.find(filter).sort({'start.dateTime': 1}).exec(function(err, events) {
     if (err) return next(err);
     res.json(events);
@@ -46,7 +46,7 @@ module.exports.get_myOverview = function(req, res, next) {
         findMyEvents(filters.going, cb);
       },
       visited: function(cb) {
-        // TODO: Check also end date that it is <= now.
+        // TODO: Check also end date that it is <= now. issue #171
         findMyEvents(filters.visited, cb);
       },
       myCanceled: function(cb) {
@@ -102,23 +102,36 @@ module.exports.post_participation = function(req, res, next) {
   var eventId = req.query.eventId;
   var act = req.query.act || 'add'; // valid values: add, remove.
   var curUser = req.user;
+  logger.debug('post_participation eventId: ' + eventId + ' act ' + act + ' curUser ' + curUser);
 
   EventStore.findById(eventId, [], function(err, event) {
-    if (err) next(err);
+    logger.debug('event found result: err ' + err + ' event ' + event);
+    if (err) {
+        return next(err);
+    }
 
     function updateEvent(status) {
       event.save(function(err) {
+        logger.debug('event save result: err ' + err);
         if (err) return next(err);
 
 
-        if (status == 'added') Notifier.notifyParticipantOnJoin(curUser, event, function sendResponse(err) {
-          if (err) return res.json(500, err);
-        });
-        res.json({status: status})
+        if (status == 'added') {
+            Notifier.notifyParticipantOnJoin(curUser, event, function sendResponse(err) {
+              if (err) {
+                  logger.debug('notify result: err', err);
+                  return res.json(500, 'Не удалось отправить уведомление Вам на почту.');
+              }
+              
+              return res.json({status: status})
+            });
+        } else {
+            res.json({status: status});
+        }
       });
     }
 
-    // TODO: Disallow to change participation if event is int the past?
+    // TODO: Disallow to change participation if event is int the past? issue #168
 
     var alreadyPartInx = event.participants.indexOf(curUser._id);
     if (act === 'remove' && alreadyPartInx >= 0) {
