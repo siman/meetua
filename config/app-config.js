@@ -43,7 +43,7 @@ module.exports = {
 
   notification: {
     MANDRILL_KEY: 'iiiPHm_fhC7JrK4vgExm0A',
-    MAIL_FROM: 'no-reply@' + DOMAIN,
+    MAIL_FROM: 'noreply@' + DOMAIN,
     MAIL_SUPPORT: 'meetua.supp@gmail.com'
   },
   domain: DOMAIN,
