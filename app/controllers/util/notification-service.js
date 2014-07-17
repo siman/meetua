@@ -51,6 +51,7 @@ var LinuxMailer = function() {
               {email: user.email}
             ],
             from_email: appConfig.notification.MAIL_FROM,
+            from_name: appConfig.notification.MAIL_FROM_NAME,
             subject: subject,
             html: html
           }
