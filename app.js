@@ -88,7 +88,7 @@ app.use(express.session({
     auto_reconnect: true
   })
 }));
-console.log('appConfig.enableCsrf', appConfig.enableCsrf);
+//console.log('appConfig.enableCsrf', appConfig.enableCsrf);
 if (appConfig.enableCsrf) {
   app.use(express.csrf());
 } else {

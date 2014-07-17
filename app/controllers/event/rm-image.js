@@ -19,6 +19,7 @@ function rmImage(req, res, next) {
     if (!event) res.send(404);
     if (userId && !event.author.equals(userId)) res .send(403);
     // TODO user can rm only images for his own events, test
+    console.log('imageId', imageId);
 
     var image = _.find(event.images, byId(imageId));
     if (!image) res.send(404);
