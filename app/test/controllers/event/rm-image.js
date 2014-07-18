@@ -19,7 +19,7 @@ describe('rm-image tests', function() {
     var request = require('superagent');
     user1 = request.agent();
     user1
-      .post('http://localhost:3000/api/meetua/user/login')
+      .post('/api/meetua/user/login')
       .send({email: mockUsers[0].email, password: mockUsers[0].password})
       .end(function(err, res) {
         // user1 will manage its own cookies
