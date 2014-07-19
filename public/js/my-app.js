@@ -44,7 +44,10 @@ angular.module('myApp', [
     toolbar: [
       ['style', ['style', 'bold', 'italic', 'clear']],
       ['para', ['ul', 'ol']],
-      ['insert', ['picture', 'link', 'video', 'table']],
+      // temp. disable insert buttons, since they don't get update to the model correctly
+      // @see the issue https://github.com/outsideris/angular-summernote/issues/15
+      // enable when the issue is resolved
+      /*['insert', ['picture', 'link', 'video', 'table']],*/
       ['misc', ['help']]
     ]
   });
