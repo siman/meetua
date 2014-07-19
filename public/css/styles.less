@@ -40,6 +40,7 @@ body {
 
 #flash {
   padding-top: @line-height-computed;
+  margin-bottom: -@line-height-computed;
 }
 
 // Navbar
@@ -71,7 +72,7 @@ body {
 
 #shareEventBox {
   padding: 20px;
-  text-align: center;
+//  text-align: center;
 }
 
 .btn-social {
@@ -157,9 +158,9 @@ body {
   }
 }
 #view_event_page .event_logo_box {
-  padding-top: 40px;
+  padding-top: 30px;
   margin-left: 0;
-  margin-right: 0;
+  margin-right: 20px;
   margin-bottom: 10px;
 }
 
@@ -298,6 +299,8 @@ body {
 }
 
 .view_event {
+  display: inline-block;
+
   .event_desc {
     font-size: 18px; // TODO: Calculate as main font + 4px?
     margin-top: 10px;
@@ -359,9 +362,25 @@ label[disabled] {
 
   #partStatus {
     color: @color_secondary;
+    padding-bottom: 10px;
   }
+
   #partBtn {
-    margin-top: 10px;
+  }
+
+  #participants {
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    padding-top: 15px;
+
+    .media-list {
+      margin-top: 10px;
+      margin-bottom: 0;
+
+      li {
+        text-align: left;
+      }
+    }
   }
 }
 
