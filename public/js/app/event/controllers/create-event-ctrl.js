@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp')
-  .controller('CreateEventCtrl', ['$rootScope', '$scope', 'EventImageService', 'EventService', 'activities',
-  function($rootScope, $scope, EventImageService, EventService, activities) {
+  .controller('CreateEventCtrl', ['$rootScope', '$scope', 'EventImageService', 'EventService', 'activities', 'WYSIWYG_OPTIONS',
+  function($rootScope, $scope, EventImageService, EventService, activities, WYSIWYG_OPTIONS) {
     var imageService = $scope.imageService = EventImageService.create({
       scope: $scope,
       onAllUploaded: function submitAfterUpload(uploadedImages) {
@@ -10,6 +10,7 @@ angular.module('myApp')
       }
     });
     var uploader = $scope.uploader = imageService.uploader;
+    $scope.WYSIWYG_OPTIONS = WYSIWYG_OPTIONS;
     $scope.activities = activities;
     $scope.event = {};
     $scope.submit = function() {

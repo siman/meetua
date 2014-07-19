@@ -35,7 +35,7 @@ block content
             div(ng-show="event.logoUrl")
               dimensioned-img(src='event.logoUrl', width='120')
 
-          div(style="float: right")
+          div.pull-right
             include ../partials/share-event
 
           div: h1 #{event.name}
@@ -44,7 +44,8 @@ block content
             +eventField("Где", event.place.name)
             if event.author
               +eventField("Организатор", event.author.profile.name)
-            div.event_desc #{event.description}
+            div.event_desc
+              !=event.description
 
         .row(style="margin-bottom: 20px")
           google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts",

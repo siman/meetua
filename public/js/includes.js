@@ -12,7 +12,6 @@
 //= require lib/jquery-2.1.0.min
 //= require lib/moment-2.6.0.min
 //= require lib/moment-langs.min
-//= require lib/summernote-0.5.1
 //= require lib/bootstrap.min
 //= require lib/underscore-1.6.0.min
 //= require lib/md5.min
@@ -25,6 +24,8 @@
 //= require lib/angular-google-maps-1.0.18
 //= require lib/angular-strap-2.0.1
 //= require lib/angular-strap-tpl-2.0.1
+//= require lib/summernote-0.5.1
+//= require lib/angular-summernote-0.2.2
 //= require my-app
 //= require_tree app
 //= require lib/ng-directives

@@ -4,12 +4,13 @@
 angular.module('myApp', [
     'ngRoute',
     'myApp.shared',
-    'ngAutocomplete',
+    'ngAutocomplete', /*google places autocomplete*/
     'angularFileUpload',
     'google-maps',
     'ngCookies',
-    'mgcrea.ngStrap',
-    'http-auth-interceptor'
+    'mgcrea.ngStrap', /*angularstrap*/
+    'http-auth-interceptor',
+    'summernote' /*wysiwyg*/
   ]).run(function () {
     moment.lang('ru');
     console.log('momentjs lang ', moment.lang());
@@ -38,6 +39,14 @@ angular.module('myApp', [
       longitude: 30.521018
     },
     zoom: 11
+  })
+  .constant('WYSIWYG_OPTIONS', {
+    toolbar: [
+      ['style', ['style', 'bold', 'italic', 'clear']],
+      ['para', ['ul', 'ol']],
+      ['insert', ['picture', 'link', 'video', 'table']],
+      ['misc', ['help']]
+    ]
   });
 
 angular.module('myApp.shared', []);
