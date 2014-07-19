@@ -9,8 +9,13 @@ var async = require('async');
 var moment = require('moment');
 
 var WindowsMailer = function() {
-  return function() {
+
+  /**
+   * @param {Function} cb
+   */
+  return function(user, subject, templateName, mailParams, cb) {
     logger.debug("Mock for sending email on Windows platform");
+    cb();
   };
 };
 
@@ -130,6 +135,7 @@ function notifyComingSoonEvent(event) {
       logger.warn('Failed to notify about upcoming event.', err);
       return;
     }
+
     if (!eventFound) {
       logger.warn('Failed to notify about upcoming event. Event is not found.');
       return;
@@ -186,6 +192,5 @@ module.exports.startCronJobs = function() {
 module.exports.notifySupport = function (msg, cb) {
   logger.debug('Notifying support ' + appConfig.notification.MAIL_SUPPORT);
   var date = moment().format('LL');
-  sendMail({email: appConfig.notification.MAIL_SUPPORT}, 'server error ' + date, 'server-error', {stack: msg}, cb)
-
+  sendMail({email: appConfig.notification.MAIL_SUPPORT}, 'server error ' + date, 'server-error', {stack: msg}, cb);
 };
