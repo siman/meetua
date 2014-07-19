@@ -19,21 +19,13 @@ describe('rm-image tests', function() {
     var request = require('superagent');
     user1 = request.agent();
     user1
-      .post('http://localhost:3000/api/meetua/user/login')
+      .post('/api/meetua/user/login')
       .send({email: mockUsers[0].email, password: mockUsers[0].password})
       .end(function(err, res) {
         // user1 will manage its own cookies
         // res.redirects contains an Array of redirects
         done();
       });
-/*    request(app)
-      .post('/api/meetua/user/login')
-      .send({email: mockUsers[0].email, password: mockUsers[0].password})
-      .end(function(err, res) {
-        res.should.have.status(200);
-        cookie = res.headers['set-cookie'];
-        done();
-      });*/
   });
   it('allow rm images for only user\'s own events', function(done) {
     user1

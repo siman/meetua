@@ -219,10 +219,6 @@ if (appConfig.IS_DEVELOPMENT) {
   app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticated, devApi.postNotifyAuthorOnCreate);
   app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticated, devApi.postNotifyComingSoonEvent);
   app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticated, devApi.postNotifyOnCancel);
-  
-  // git hooks
-  var gitApi = require('./app/controllers/git');
-  app.post('/api/meetua/git/push', passportConf.isAuthenticated, gitApi.gitPush);
 }
 
 /**
