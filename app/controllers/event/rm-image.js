@@ -9,22 +9,31 @@ function rmImage(req, res, next) {
   req.checkParams('id', 'event id is invalid').isAlphanumeric();
   req.checkParams('imageId', 'image id is invalid').isAlphanumeric();
 
+  var errors = req.validationErrors(true);
+
+  if (errors) {
+    logger.debug('errors ' + JSON.stringify(errors));
+    return res.json(400, errors);
+  }
+
   var id = req.params.id;
   var imageId = req.params.imageId;
   var userId = utils.getUserIdOpt(req);
+
+  logger.debug('id: ' + id);
+  logger.debug('imageId: ' + imageId);
   logger.debug('userId', userId);
 
   Event.findById(id, function(err, event) {
     if (err) return next(err);
-    if (!event) res.send(404);
-    if (userId && !event.author.equals(userId)) res .send(403);
-    // TODO user can rm only images for his own events, test
-    console.log('imageId', imageId);
+    if (!event) res.send(404, 'Неверные параметры запроса');
+    if (userId && !event.author.equals(userId)) res.send(403);
 
     var image = _.find(event.images, byId(imageId));
-    if (!image) res.send(404);
+    if (!image) res.send(404, 'Неверные параметры запроса');
 
     var imagePath = utils.savedImageNameToPath(image.name);
+    logger.debug('removing image ' + imagePath);
     fs.remove(imagePath, function(err) {
       if (err) return res.json(500, {error: err});
       onRemoved();
@@ -33,6 +42,7 @@ function rmImage(req, res, next) {
       event.images = _.reject(event.images, byId(imageId));
       SharedEventService.maybeChangeLogo(image, event.images);
 
+      logger.debug('updating event ', JSON.stringify(event));
       event.save(function(err) {
         if (err) return res.json(500, {error: err});
         res.send(200);

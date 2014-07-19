@@ -4,7 +4,7 @@ var _ = require('underscore');
 var async = require('async');
 var passport = require('passport');
 var User = require('../models/User');
-var secrets = require('../../config/secrets');
+var secrets = require('../../config/app-config').secrets;
 var utils = require('./utils');
 var mockUsers = require('./user-mock-store');
 var notificationService = require('./util/notification-service');
@@ -12,19 +12,24 @@ var logger = require('./util/logger')('user.js');
 
 var api = {
   postLoginRest: function(req, res, next) {
+    logger.debug('postLoginRest');
     req.assert('email', 'Неверный email').isEmail();
     req.assert('password', 'Пароль не указан').notEmpty();
 
     var errors = req.validationErrors(true);
 
     if (errors) {
+      logger.debug('errors ' + JSON.stringify(errors));
       return res.json(400, errors);
     }
 
     passport.authenticate('local', function(err, user, info) {
+      logger.debug('[authenticate res] err: ' + JSON.stringify(err) + ' user: ' + user);
       if (err) return next(err);
       if (!user) {
-        return res.json(400, {'user': {param: 'user', msg: 'Неверный email или пароль'}});
+        var err = {'user': {param: 'user', msg: 'Неверный email или пароль'}};
+        logger.warn('err ' + JSON.stringify(err));
+        return res.json(400, err);
       }
       req.logIn(user, function(err) {
         if (err) return next(err);

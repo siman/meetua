@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "nodemon app.js",
-    "test": "jasmine-node app/spec --captureExceptions",
+    "test": "export NODE_ENV=test;jasmine-node app/spec --captureExceptions",
     "mocha-test": "export NODE_ENV=test;mocha --recursive app/test",
     "selenium-server": "./node_modules/protractor/bin/webdriver-manager start",
     "e2e-test": "./node_modules/protractor/bin/protractor spec-e2e/protractor_conf.js"
@@ -52,6 +52,7 @@
     "twilio": "~1.6.0",
     "twit": "~1.1.12",
     "underscore": "~1.6.0",
+    "lodash": "2.4.1",
     "uglify-js": "~2.4.12",
     "validator": "~3.8.0",
     "moment": "~2.6.0",
@@ -66,6 +67,7 @@
   },
   "devDependencies": {
     "mocha": "~1.18.2",
+    "mocha-mongoose": "1.0.1",
     "chai": "~1.9.1",
     "supertest": "~0.10.0",
     "superagent": "0.18.2",

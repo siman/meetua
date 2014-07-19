@@ -16,9 +16,6 @@ var notificationService = require('../../../../app/controllers/util/notification
 notificationService.notifyAuthorOnCreate = function(arg, cb) {cb();}; // mock
 notificationService.notifyParticipantOnEdit = function(arg, cb) {cb();}; // mock
 var moment = require('moment');
-config.UPLOAD_DIR = os.tmpDir();
-config.EVENT_IMG_DIR = path.join(os.tmpDir(), 'event-imgs');
-config.PERSISTENT_DATA_DIR = path.join(os.tmpDir(), 'PERSISTENT_DATA_DIR');
 
 var saveEvent = require('../../../../app/controllers/event/save-event');
 
@@ -46,7 +43,7 @@ describe('save-event', function() {
 
   describe('create-event', function() {
     it('should save event to the database', function(done) {
-      callSaveEvent(buildReqData())
+      callSaveEvent(testUtil.buildTestEvent())
         .expect(200)
         .end(function(err, res) {
           if (err) return done(err);
@@ -57,7 +54,7 @@ describe('save-event', function() {
         });
     });
     it('should save event when latitude and longitude not selected', function(done) {
-      callSaveEvent(buildReqData({ place:{ name: 'Malibu', latitude: undefined, longitude: undefined }}))
+      callSaveEvent(testUtil.buildTestEvent({ place:{ name: 'Malibu', latitude: undefined, longitude: undefined }}))
         .expect(200)
         .end(function(err, res) {
           if (err) return done(err);
@@ -71,7 +68,7 @@ describe('save-event', function() {
       testUtil.createTestImage({isLogo: true}, function(reqImage) {
         fs.removeSync(config.EVENT_IMG_DIR);
 
-        callSaveEvent(buildReqData({images: [reqImage]}))
+        callSaveEvent(testUtil.buildTestEvent({images: [reqImage]}))
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
@@ -85,8 +82,8 @@ describe('save-event', function() {
       });
     });
     it('should forbid multiple logos', function(done) {
-      async.parallel([createLogoImage, createLogoImage], function(err, images) {
-        callSaveEvent(buildReqData({images: images}))
+      async.parallel([testUtil.createLogoImage, testUtil.createLogoImage], function(err, images) {
+        callSaveEvent(testUtil.buildTestEvent({images: images}))
           .expect(400)
           .end(done);
       });
@@ -99,7 +96,7 @@ describe('save-event', function() {
         };
         fs.writeFileSync(existingImage.path, existingImage.content);
 
-        callSaveEvent(buildReqData({images: [reqImage]}))
+        callSaveEvent(testUtil.buildTestEvent({images: [reqImage]}))
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
@@ -111,9 +108,9 @@ describe('save-event', function() {
       });
     });
     it('should prevent directory traversal attack', function(done) {
-      createLogoImage(function(err, image) {
+      testUtil.createLogoImage(function(err, image) {
         image.name = '../../passwd';
-        callSaveEvent(buildReqData({images: [image]}))
+        callSaveEvent(testUtil.buildTestEvent({images: [image]}))
           .expect(400)
           .end(done);
       });
@@ -121,10 +118,10 @@ describe('save-event', function() {
   });
   describe('update-event', function() {
     it('should save image on update', function(done) {
-      async.series([createLogoImage, createImage], function(err, images) {
+      async.series([testUtil.createLogoImage, testUtil.createImage], function(err, images) {
         if (err) return done(err);
 
-        createEvent(buildReqData(), function(err, event) {
+        createEvent(testUtil.buildTestEvent(), function(err, event) {
           if (err) return done(err);
           updateEvent(event, images[0]);
         });
@@ -141,10 +138,10 @@ describe('save-event', function() {
       }
     });
     it('should update logo', function(done) {
-      async.series([createLogoImage, createImage], function(err, images) {
+      async.series([testUtil.createLogoImage, testUtil.createImage], function(err, images) {
         if (err) return done(err);
 
-        createEvent(buildReqData({images: images}), function(err, event) {
+        createEvent(testUtil.buildTestEvent({images: images}), function(err, event) {
           if (err) return done(err);
           updateEvent(event);
         });
@@ -167,7 +164,7 @@ describe('save-event', function() {
       }
     });
     it('should validate activity by enum', function(done) {
-      createEvent(buildReqData(), function(err, event) {
+      createEvent(testUtil.buildTestEvent(), function(err, event) {
         if (err) return done(err);
         updateEvent(event);
       });
@@ -189,35 +186,4 @@ describe('save-event', function() {
       });
   }
 
-  function createImage(next) {
-    testUtil.createTestImage({isLogo: false}, function(image) {
-      next(null, image);
-    });
-  }
-  function createLogoImage(next) {
-    testUtil.createTestImage({isLogo: true}, function(image) {
-      next(null, image);
-    });
-  }
-
-  function buildReqData(opts) {
-    var reqData = {
-      name: 'pokatushka',
-      place: {
-        name: 'Kiev- stalica!',
-        latitude: 49,
-        longitude: 50
-      },
-      start: {
-        dateTime: new Date()
-      },
-      end: {
-        dateTime: new Date()
-      },
-      description: 'event description',
-      activity: 'bike',
-      images: []
-    };
-    return _.extend(reqData, opts);
-  }
 });

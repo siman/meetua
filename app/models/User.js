@@ -39,7 +39,7 @@ var userSchema = new mongoose.Schema({
 
 userSchema.pre('save', true, function hashPassword(next, done) {
   next();
-  logger.debug('hash password');
+  logger.debug('hash password for user ' + this.email);
   var user = this;
 
   if (!user.isModified('password')) return done();
@@ -57,7 +57,7 @@ userSchema.pre('save', true, function hashPassword(next, done) {
 
 userSchema.pre('save', true, function generateUnsubscribeToken(next, done) {
   next();
-  logger.debug('generate unsubscribe token');
+  logger.debug('generate unsubscribe token for user ' + this.email);
   var user = this;
 
   if (user.unsubscribeToken) return done();

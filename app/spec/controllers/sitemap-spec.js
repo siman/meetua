@@ -1,4 +1,5 @@
 var testUtil = require('../test-util');
+var appConfig = require('../../../config/app-config');
 var request = require('supertest');
 var express = require('express');
 var sitemap = require('../../../app/controllers/sitemap');
@@ -28,7 +29,7 @@ describe('sitemap', function () {
         });
 
         expect(sitemap.urls).toEqual(expectedUrls);
-        expect(sitemap.hostname).toEqual('http://meetua.com');
+        expect(sitemap.hostname).toEqual(appConfig.hostname);
         done();
       });
     });

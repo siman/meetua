@@ -10,7 +10,7 @@ var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 var OAuthStrategy = require('passport-oauth').OAuthStrategy; // Tumblr
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy; // Venmo, Foursquare
 var User = require('../app/models/User');
-var secrets = require('./secrets');
+var secrets = require('./app-config').secrets;
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);

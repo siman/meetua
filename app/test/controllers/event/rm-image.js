@@ -2,37 +2,45 @@
 var chai = require('chai');
 var should = chai.should();
 var testUtil = require('../../../spec/test-util');
-var rmImage = require('../../controllers/event/rm-image');
-var request = require('supertest');
-var appConfig = require('../../../../config/app-config');
+testUtil.initDb();
 var app = require('../../app.js');
-var mockEvents = require('../../../../app/controllers/event/MockEvents');
+var appConfig = require('../../../../config/app-config');
 var mockUsers = require('../../../../app/controllers/user-mock-store');
 
 /**
  * Created by oleksandr at 7/15/14 10:22 PM
  */
-describe('rm-image tests', function() {
-  var cookie;
-  var user1;
+describe('[rm-image] ', function() {
+  var user1Req;
+  var user2Req;
   beforeEach(function(done) {
-    var request = require('superagent');
-    user1 = request.agent();
-    user1
-      .post('/api/meetua/user/login')
-      .send({email: mockUsers[0].email, password: mockUsers[0].password})
-      .end(function(err, res) {
-        // user1 will manage its own cookies
-        // res.redirects contains an Array of redirects
+    testUtil.loginUser(mockUsers[0], function(req) {
+      user1Req = req;
+      testUtil.loginUser(mockUsers[1], function(req) {
+        user2Req = req;
         done();
       });
+    });
   });
   it('allow rm images for only user\'s own events', function(done) {
-    user1
-      .get('/event/' + mockEvents[0]._id + '/rm-image/TODO:imageId')
-      .end(function(err, res) {
-        res.status.should.equal(200);
-        done(err);
-      });
+    testUtil.createLogoImage(function(err, image) {
+      if (err) return done(err);
+      var event = testUtil.buildTestEvent({images: [image]});
+      user1Req
+        .post(appConfig.hostname + '/event/save')
+        .send(event)
+        .end(function(err, res) {
+          res.status.should.equal(200);
+          rmImage(res.body.event._id, res.body.event.images[0]._id);
+        });
+    });
+    function rmImage(eventId, imageId) {
+      user2Req
+        .post(appConfig.hostname + '/event/' + eventId + '/rm-image/' + imageId)
+        .end(function(err, res) {
+          res.status.should.equal(403);
+          done(err);
+        });
+    }
   })
 });

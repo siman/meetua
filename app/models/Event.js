@@ -41,7 +41,6 @@ eventSchema.virtual('prettyStartDate').get(function() {
 
 eventSchema.virtual('logoUrl').get(function() {
   var logo = _.find(this.images, function(img) { return img.isLogo; });
-  logger.debug("Found logo", logo);
   if (logo) {
     return logo.url;
   } else {

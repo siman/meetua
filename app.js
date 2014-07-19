@@ -42,12 +42,12 @@ var renderTpl = require('./app/controllers/render-tpl').renderTpl;
  * API keys + Passport configuration.
  */
 
-var secrets = require('./config/secrets');
+var secrets = appConfig.secrets;
 var passportConf = require('./config/passport');
 
 var app = express();
 
-app.set('port', appConfig.IS_PRODUCTION ? 80 : 3000); // TODO refactor to use appConfig instead of plain strings
+app.set('port', appConfig.port); // TODO refactor to use appConfig instead of plain strings
 app.set('mongodb-url', secrets.db);
 
 var openShiftApp = new OpenShiftApp();
@@ -286,6 +286,7 @@ app.listen(app.get('port'), function() {
  * Mongoose configuration.
  */
 
+console.log('mongo connect to ' + app.get('mongodb-url'));
 mongoose.connect(app.get('mongodb-url'));
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');

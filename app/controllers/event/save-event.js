@@ -19,9 +19,9 @@ maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG
 
 module.exports = function(req, res, next) {
     if (isCreate(req)) {
-      logger.debug('Create event request', req.body);
+      logger.debug('Create event request', JSON.stringify(req.body));
     } else {
-      logger.debug('Update event request', req.body);
+      logger.debug('Update event request', JSON.stringify(req.body));
     }
 
     var event;
@@ -49,6 +49,7 @@ module.exports = function(req, res, next) {
     }
 
     function verifyLogoCount(images, cb) {
+      logger.debug('verifyLogoCount');
       async.reduce(images, 0, countLogoImages, function(err, logoCount) {
         if (err) return res.json(500, err);
         if (images.length > 0 && logoCount != 1) {
@@ -61,6 +62,7 @@ module.exports = function(req, res, next) {
     }
     function doSave(newImages, imagesWithId) {
       return function() {
+        logger.debug('doSave');
         async.map(newImages, copyImage, buildAndSaveEvent(event, imagesWithId, req, res, next));
       };
     }
@@ -71,6 +73,7 @@ function isCreate(req) {
 }
 
 function countLogoImages(acc, image, next) {
+  image = image || {};
   var add = image.isLogo ? 1 : 0;
   next(null, acc + add);
 }
@@ -121,7 +124,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
             }
 
             var respJson = {event: event};
-            logger.debug('Sending response ', respJson);
+            logger.debug('Sending response ', JSON.stringify(respJson));
             req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано! Детали отправлены Вам на почту.': 'Ваше событие обновлено!' });
             res.send(respJson);
           }
@@ -130,7 +133,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
 }
 
 function copyImage(image, next) {
-    logger.debug('Verify image ', image);
+    logger.debug('copy image ', JSON.stringify(image));
 
   // Siman: Image uploading works for me if comment next line. Does it work on Linux as well?
 //    var imagePath = path.join('/', image.name); // removes any '..'
