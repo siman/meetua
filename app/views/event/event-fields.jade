@@ -57,7 +57,7 @@ mixin eventFields(isCreate)
     label(class='col-sm-2 control-label', for='description') Лого/изображения
     .col-sm-8
       div(ng-class="{ 'drop-zone': uploader.isHTML5 }", ng-file-over='ng-file-over', ng-file-drop)
-        | Перетяните изображения сюда
+        | Перетяните сюда изображения
         //TODO refactor: uploader can take already uploaded images
         // @see https://github.com/nervgh/angular-file-upload#faq
       input(ng-file-select='ng-file-select', type='file')
