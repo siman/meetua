@@ -12,7 +12,6 @@ var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 var _ = require('underscore');
 var notifyService = require('./app/controllers/util/notification-service');
-var OpenShiftApp = require('./openshift');
 var errorHandler = require('./app/controllers/util/error-handler');
 
 /**
@@ -47,14 +46,6 @@ var passportConf = require('./config/passport');
 
 var app = express();
 
-app.set('port', appConfig.port); // TODO refactor to use appConfig instead of plain strings
-app.set('mongodb-url', secrets.db);
-
-var openShiftApp = new OpenShiftApp();
-openShiftApp.initialize(app);
-
-secrets.db = app.get('mongodb-url');
-
 app.response.renderNotFound = function() {
   this.render('404', { status: 404 });
 };
@@ -72,7 +63,7 @@ app.set('view engine', 'jade');
 app.use(connectAssets({
   paths: ['public/css', 'public/js'],
   helperContext: app.locals,
-  build: appConfig.IS_PRODUCTION || openShiftApp.isOpenShiftEnv()
+  build: appConfig.buildAssets
 }));
 app.use(express.compress());
 app.use(express.logger('dev'));
@@ -88,7 +79,6 @@ app.use(express.session({
     auto_reconnect: true
   })
 }));
-console.log('appConfig.enableCsrf', appConfig.enableCsrf);
 if (appConfig.enableCsrf) {
   app.use(express.csrf());
 } else {
@@ -278,25 +268,23 @@ if (appConfig.IS_DEVELOPMENT) {
  * Start Express server.
  */
 
-app.listen(app.get('port'), function() {
-  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
+app.listen(appConfig.port, function() {
+  console.log("✔ Express server listening on port %d in %s mode", appConfig.port, app.get('env'));
 });
 
 /**
  * Mongoose configuration.
  */
 
-console.log('mongo connect to ' + app.get('mongodb-url'));
-mongoose.connect(app.get('mongodb-url'));
+console.log('mongo connect to ' + secrets.db);
+mongoose.connect(secrets.db);
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
 
-if (!openShiftApp.isOpenShiftEnv()) {
-  // DB preloading
-  eventStore.dbPreload();
-  userController.dbPreload();
-}
+// DB preloading
+eventStore.dbPreload();
+userController.dbPreload();
 
 notifyService.startCronJobs();
 

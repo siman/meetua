@@ -55,7 +55,9 @@ var config = {
   hostname: 'http://' + DOMAIN + ':' + PORT,
   socialTweetLinkLength: 22,
 
-  enableCsrf: process.env.NODE_ENV != 'test',
+  enableCsrf: true,
+
+  buildAssets: false,
 
   secrets: secrets()
 };

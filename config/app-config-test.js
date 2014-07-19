@@ -7,5 +7,6 @@ module.exports = {
   },
   UPLOAD_DIR: os.tmpDir(),
   EVENT_IMG_DIR: path.join(os.tmpDir(), 'event-imgs'),
-  PERSISTENT_DATA_DIR: path.join(os.tmpDir(), 'PERSISTENT_DATA_DIR')
+  PERSISTENT_DATA_DIR: path.join(os.tmpDir(), 'PERSISTENT_DATA_DIR'),
+  enableCsrf: false
 };

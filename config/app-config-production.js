@@ -6,5 +6,6 @@ module.exports = {
   },
   port: 80,
   domain: DOMAIN,
-  hostname: 'http://' + DOMAIN
+  hostname: 'http://' + DOMAIN,
+  buildAssets: true
 };
