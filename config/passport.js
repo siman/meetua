@@ -60,10 +60,10 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
 
 passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, refreshToken, profile, done) {
   if (req.user) {
-    User.findOne({ $or: [{ facebook: profile.id }, { email: profile.email }] }, function(err, existingUser) {
+    var query = profile.email ? { $or: [{ facebook: profile.id }, { email: profile.email }] } : { facebook: profile.id };
+    User.findOne(query, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        done(err);
+        done('У вас уже есть Facebook аккаунт. Войдите через Facebook и удалите его, затем повторите попытку привязать аккаунт.');
       } else {
         User.findById(req.user.id, function(err, user) {
           user.facebook = profile.id;
@@ -72,7 +72,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.picture = user.profile.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.save(function(err) {
-            req.flash('info', { msg: 'Facebook account has been linked.' });
+            req.flash('info', { msg: 'Facebook аккаунт успешно привязан.' });
             done(err, user);
           });
         });
@@ -113,7 +113,7 @@ passport.use(new VKontakteStrategy(secrets.vk,
     if (req.user) {
       User.findOne({ vkontakte: profile.id }, function(err, existingUser) {
         if (existingUser) {
-          req.flash('errors', { msg: 'There is already a Vk account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+          req.flash('errors', { msg: 'У вас уже есть VKontakte аккаунт. Войдите через VKontakte и удалите его, затем повторите попытку привязать аккаунт.' });
           done(err);
         } else {
           User.findById(req.user.id, function(err, user) {
@@ -123,7 +123,7 @@ passport.use(new VKontakteStrategy(secrets.vk,
             user.profile.gender = user.profile.gender || profile.gender;
             user.profile.picture = user.profile.picture || profile._json.photo;
             user.save(function(err) {
-              req.flash('info', { msg: 'Vkontakte account has been linked.' });
+              req.flash('info', { msg: 'Vkontakte аккаунт успешно отвязан.' });
               done(err, user);
             });
           });
@@ -155,7 +155,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
   if (req.user) {
     User.findOne({ $or: [{ github: profile.id }, { email: profile.email }] }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a GitHub account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'У вас уже есть Github аккаунт. Войдите через Github и удалите его, затем повторите попытку привязать аккаунт.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -205,7 +205,7 @@ passport.use(new TwitterStrategy(secrets.twitter, function(req, accessToken, tok
   if (req.user) {
     User.findOne({ twitter: profile.id }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Twitter account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'У вас уже есть Twitter аккаунт. Войдите через Twitter и удалите его, затем повторите попытку привязать аккаунт.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -250,7 +250,7 @@ passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refre
   if (req.user) {
     User.findOne({ $or: [{ google: profile.id }, { email: profile.email }] }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'У вас уже есть Google аккаунт. Войдите через Google и удалите его, затем повторите попытку привязать аккаунт.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {
@@ -301,7 +301,7 @@ passport.use(new LinkedInStrategy(secrets.linkedin, function(req, accessToken, r
       { email: profile._json.emailAddress }
     ] }, function(err, existingUser) {
       if (existingUser) {
-        req.flash('errors', { msg: 'There is already a LinkedIn account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
+        req.flash('errors', { msg: 'У вас уже есть LinkedIn аккаунт. Войдите через LinkedIn и удалите его, затем повторите попытку привязать аккаунт.' });
         done(err);
       } else {
         User.findById(req.user.id, function(err, user) {

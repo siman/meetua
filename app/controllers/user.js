@@ -178,11 +178,15 @@ exports.postUpdatePassword = function(req, res, next) {
  */
 
 exports.postDeleteAccount = function(req, res, next) {
-  User.remove({ _id: req.user.id }, function(err) {
+  User.findById(req.user.id, function(err, user) {
     if (err) return next(err);
-    req.logout();
-    res.redirect('/');
-  });
+    if (!user) return next('Пользователь не найден');
+    user.remove(function(err) {
+      if (err) return next(err);
+      req.logout();
+      res.redirect('/');
+    });
+  })
 };
 
 /**

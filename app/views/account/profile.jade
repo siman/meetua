@@ -72,7 +72,7 @@ block content
 
   p Вы можете удалить свой профиль, но имейте ввиду, что это действие не может быть отменено.
   form(action='/account/delete', method='POST')
-    input(type='hidden', name='_csrf', value=token)
+      input(type='hidden', name='_csrf', value=_csrf)
     button.btn.btn-danger(type='submit')
       i.fa.fa-trash-o
       | Удалить мой профиль
