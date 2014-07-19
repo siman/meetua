@@ -24,7 +24,7 @@
 //= require lib/angular-google-maps-1.0.18
 //= require lib/angular-strap-2.0.1
 //= require lib/angular-strap-tpl-2.0.1
-//= require lib/summernote-0.5.1
+//= require lib/summernote-0.5.2
 //= require lib/angular-summernote-0.2.2
 //= require my-app
 //= require_tree app
