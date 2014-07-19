@@ -9,6 +9,7 @@ var path = require('path');
 var activities = require('../../public/js/app/shared/services/constants').activities;
 var logger = require('../controllers/util/logger')('Event.js');
 var appConfig = require('../../config/app-config');
+var sanitizeHtml = require('sanitize-html');
 
 var activityNames = _.map(activities, function(activity) {
   return activity.name;
@@ -61,5 +62,13 @@ eventSchema.set('toJSON', {virtuals: true });
 eventSchema.methods.url = function() {
   return appConfig.hostname + '/event/' + this._id;
 };
+
+eventSchema.pre('save', true, function sanitizeDescription(next, done) {
+  next();
+  this.description = sanitizeHtml(this.description, {
+    allowedTags: [ 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'b', 'i', 'ul', 'ol', 'li', 'img' ]
+  });
+  done();
+});
 
 module.exports = mongoose.model('Event', eventSchema);

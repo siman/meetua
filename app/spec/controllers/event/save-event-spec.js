@@ -53,6 +53,18 @@ describe('save-event', function() {
           })
         });
     });
+    it('should sanitize description', function(done) {
+      callSaveEvent(testUtil.buildTestEvent({description: '<p><script>alert("XSS");</script><b>Text</b></p>'}))
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          Event.findOne({_id: res.body.event._id }, function(err, doc) {
+            expect(doc).toBeDefined();
+            expect(doc.description).toEqual('<p><b>Text</b></p>');
+            done();
+          })
+        });
+    });
     it('should save event when latitude and longitude not selected', function(done) {
       callSaveEvent(testUtil.buildTestEvent({ place:{ name: 'Malibu', latitude: undefined, longitude: undefined }}))
         .expect(200)
