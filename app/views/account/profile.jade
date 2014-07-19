@@ -72,7 +72,7 @@ block content
 
   p Вы можете удалить свой профиль, но имейте ввиду, что это действие не может быть отменено.
   form(action='/account/delete', method='POST')
-      input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='_csrf', value=_csrf)
     button.btn.btn-danger(type='submit')
       i.fa.fa-trash-o
       | Удалить мой профиль
@@ -91,21 +91,3 @@ block content
       p: a.text-danger(href='/account/unlink/facebook') Отвязать мой Facebook аккаунт
     else
       p: a(href='/auth/facebook') Привязать Facebook аккаунт
-
-  if secrets.twitterAuth
-    if user.twitter
-      p: a.text-danger(href='/account/unlink/twitter') Отвязать мой Twitter аккаунт
-    else
-      p: a(href='/auth/twitter') Привязать Twitter аккаунт
-
-  if secrets.githubAuth
-    if user.github
-      p: a.text-danger(href='/account/unlink/github') Отвязать мой GitHub аккаунт
-    else
-      p: a(href='/auth/github') Привязать GitHub аккаунт
-
-  if secrets.linkedinAuth
-    if user.linkedin
-      p: a.text-danger(href='/account/unlink/linkedin') Отвязать мой LinkedIn аккаунт
-    else
-      p: a(href='/auth/linkedin') Привязать LinkedIn аккаунт
