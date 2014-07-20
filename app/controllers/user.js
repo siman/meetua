@@ -47,6 +47,22 @@ var api = {
 
 exports.api = api;
 
+exports.getUserProfile = function(req, res, next) {
+  res.render('profile/profile', {
+    title: 'Пользователь ' + (req.userById.profile ? req.userById.profile.name : ''),
+    userProfile: req.userById
+  });
+};
+
+exports.userById = function(req, res, next, id) {
+  User.findOne({_id: id}).exec(function(err, user) {
+      if (err) return next(err);
+      if (!user) return next(new Error('Пользователь не найден'));
+      req.userById = user;
+      next();
+    });
+};
+
 /**
  * GET /logout
  * Log out.

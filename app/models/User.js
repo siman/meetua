@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
 var logger = require('../controllers/util/logger')('User.js');
 var utils = require('../controllers/utils');
+var appConfig = require('../../config/app-config');
 
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true, sparse: true },
@@ -77,4 +78,25 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 };
 
+userSchema.virtual('url').get(function() {
+  return appConfig.hostname + '/user/' + this._id;
+});
+
+userSchema.virtual('profile.ru.gender').get(function() {
+  var gender = this.profile.gender;
+  if (gender) {
+    if (gender === 'male') {
+      return 'мужской';
+    }
+    if (gender === 'female') {
+      return 'женский';
+    }
+  }
+  return gender;
+});
+
+userSchema.set('toJSON', {virtuals: true });
+
 module.exports = mongoose.model('User', userSchema);
+
+

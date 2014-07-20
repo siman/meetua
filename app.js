@@ -138,6 +138,7 @@ function headersForLanguage(req, res, next) {
  * Application routes.
  */
 
+app.param('userId', userController.userById);
 app.get('/', homeController.index);
 app.get('/sitemap.xml', sitemap.getSitemap);
 app.get('/logout', userController.logout);
@@ -165,6 +166,7 @@ app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
 app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
 app.post('/event/:id/rm-image/:imageId', rmEventImage);
+app.get('/user/:userId', userController.getUserProfile)
 app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
@@ -177,6 +179,7 @@ app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename eve
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
+app.get('/api/meetua/events/user/:userId/overview', meetuaEventsApi.getUserEventsOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
 if (appConfig.IS_DEVELOPMENT) {
   var devApi = require('./app/controllers/api/dev');

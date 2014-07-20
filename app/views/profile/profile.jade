@@ -1,0 +1,49 @@
+extend ../layout
+include mixins
+
+block content
+  div(ng-controller='UserProfileCtrl')
+    +jsVar("userProfile", userProfile)
+    .row.top
+      .col-md-2
+      .col-md-3
+        img(src=userProfile.profile.picture)
+
+      .col-md-6
+        .row
+          h2 Данные профиля
+        .row(ng-if='userProfile.profile.location')
+          span.user_label Город
+          span #{userProfile.profile.location}
+        .row(ng-if='userProfile.profile.ru.gender')
+          span.user_label Пол
+          span #{userProfile.profile.ru.gender}
+        .row(ng-if='userProfile.profile.website')
+          span.user_label Сайт
+          span #{userProfile.profile.website}
+    .row
+      .col-md-2
+      // make profile col longer to fit long names
+      .col-md-5
+        h1 #{userProfile.profile.name}
+    .row.top
+      .col-md-2
+      .col-md-9
+        .center-block
+          h2 События пользователя
+        h3
+          i.fa.fa-edit
+          span Созданные пользователем
+        +listMyEvents('my')
+        h3
+          i.fa.fa-chevron-right
+          span Собирается пойти
+        +listMyEvents('going')
+        h3
+          i.fa.fa-chevron-left
+          span Посещенные
+        +listMyEvents('visited')
+        h3
+          i.fa.fa-times-circle
+          span Отмененные
+        +listMyEvents('myCanceled')

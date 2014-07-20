@@ -1,9 +1,12 @@
 extends ../layout
 
-mixin eventField(label, data)
+mixin eventField(label, data, href)
   div
     span.event_label #{label}:
-    span #{data}
+    if href
+      a(href=href) #{data}
+    else
+      span #{data}
 
 block top_panel
   if (event.isPassed)
@@ -43,7 +46,7 @@ block content
             +eventField("Когда", event.prettyStartDate)
             +eventField("Где", event.place.name)
             if event.author
-              +eventField("Организатор", event.author.profile.name)
+              +eventField("Организатор", event.author.profile.name, event.author.url)
             div.event_desc
               !=event.description
 

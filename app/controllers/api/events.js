@@ -72,6 +72,13 @@ module.exports.get_myOverview = function(req, res, next) {
   });
 };
 
+module.exports.getUserEventsOverview = function(req, res, next) {
+  getUserEventsOverview(req.userById._id, function(err, events) {
+    if (err) return res.json(500, new Error('Не удалось получить данные с сервера'));
+    return res.json(events);
+  });
+}
+
 module.exports.get_findById = function(req, res, next) {
   var id = req.query.id;
   logger.debug("id", id);
