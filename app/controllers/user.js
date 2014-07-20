@@ -56,11 +56,11 @@ exports.getUserProfile = function(req, res, next) {
 
 exports.userById = function(req, res, next, id) {
   User.findOne({_id: id}).exec(function(err, user) {
-      if (err) return next(err);
-      if (!user) return next(new Error('Пользователь не найден'));
-      req.userById = user;
-      next();
-    });
+    if (err) return next(err);
+    if (!user) return next(new Error('Пользователь не найден'));
+    req.userById = user;
+    next();
+  });
 };
 
 /**
