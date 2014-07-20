@@ -64,7 +64,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
           user.tokens.push({ kind: 'facebook', accessToken: accessToken });
           user.profile.name = user.profile.name || profile.displayName;
           user.profile.gender = user.profile.gender || profile._json.gender;
-          user.profile.facebookLink = user.profile.facebookLink || profile._json.link;
+          user.profile.links.facebook = user.profile.links.facebook || profile._json.link;
           user.profile.picture = user.profile.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.save(function(err) {
             req.flash('info', { msg: 'Facebook аккаунт успешно привязан.' });
@@ -87,7 +87,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
           user.tokens.push({ kind: 'facebook', accessToken: accessToken });
           user.profile.name = profile.displayName;
           user.profile.gender = profile._json.gender;
-          user.profile.facebookLink = profile._json.link;
+          user.profile.links.facebook = profile._json.link;
           user.profile.picture = 'https://graph.facebook.com/' + profile._json.id + '/picture?type=large';
           user.profile.location = (profile._json.location) ? profile._json.location.name : '';
           user.save(function(err) {
@@ -117,7 +117,7 @@ passport.use(new VKontakteStrategy(secrets.vk,
             user.tokens.push({ kind: 'vkontakte', accessToken: accessToken });
             user.profile.name = user.profile.name || profile.displayName;
             user.profile.gender = user.profile.gender || profile.gender;
-            user.profile.vkontakteLink = user.profile.vkontakteLink || profile.profileUrl;
+            user.profile.links.vkontakte = user.profile.links.vkontakte || profile.profileUrl;
             user.profile.picture = user.profile.picture || profile._json.photo;
             user.save(function(err) {
               req.flash('info', { msg: 'Vkontakte аккаунт успешно отвязан.' });
@@ -134,7 +134,7 @@ passport.use(new VKontakteStrategy(secrets.vk,
         user.tokens.push({ kind: 'vkontakte', accessToken: accessToken});
         user.profile.name = user.profile.name || profile.displayName;
         user.profile.gender = user.profile.gender || profile.gender;
-        user.profile.vkontakteLink = profile.profileUrl;
+        user.profile.links.vkontakte = profile.profileUrl;
         user.profile.picture = user.profile.picture || profile._json.photo;
         user.save(function(err) {
           done(err, user);

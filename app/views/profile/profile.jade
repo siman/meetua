@@ -26,10 +26,10 @@ block content
             span #{userProfile.profile.website}
         .row.top
           .col-md-5
-            a.btn.btn-block.btn-social.btn-sm.btn-vk(ng-if='userProfile.profile.vkontakteLink', ng-href='{{userProfile.profile.vkontakteLink}}', target='_blank')
+            a.btn.btn-block.btn-social.btn-sm.btn-vk(ng-if='userProfile.profile.links.vkontakte', ng-href='{{userProfile.profile.links.vkontakte}}', target='_blank')
               i.fa.fa-vk
               | Профиль VK
-            a.btn.btn-block.btn-social.btn-sm.btn-facebook(ng-if='userProfile.profile.facebookLink', ng-href='{{userProfile.profile.facebookLink}}', target='_blank')
+            a.btn.btn-block.btn-social.btn-sm.btn-facebook(ng-if='userProfile.profile.links.facebook', ng-href='{{userProfile.profile.links.facebook}}', target='_blank')
               i.fa.fa-facebook
               | Профиль Facebook
 

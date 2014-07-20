@@ -21,9 +21,11 @@ var userSchema = new mongoose.Schema({
     location: { type: String, default: '' },
     website: { type: String, default: '' },
     picture: { type: String, default: '' },
-    facebookLink: { type: String, default: '' },
-    vkontakteLink: { type: String, default: '' },
-    receiveNotifications: { type: Boolean, default: true }
+    receiveNotifications: { type: Boolean, default: true },
+    links: {
+      facebook: { type: String, default: '' },
+      vkontakte: { type: String, default: '' }
+    }
   },
 
   resetPasswordToken: String,
