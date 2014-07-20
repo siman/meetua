@@ -93,10 +93,15 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 function notifyUser(user, subject, event, templateName, cb) {
   logger.debug('notify user', user._id);
   cb = cb || function() {};
+  logger.debug('user.email', user.email);
+  logger.debug('user.profile.receiveNotifications', user.profile.receiveNotifications);
   if (user.email && user.profile.receiveNotifications) {
     var params = { event: event };
     sendMail(user, subject, templateName, params, cb);
-  } else cb()
+  } else {
+    logger.debug('Skipping sendMail to the user');
+    cb()
+  }
 }
 
 module.exports.notifyAuthorOnCreate = function (event, cb) {
