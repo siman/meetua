@@ -10,22 +10,23 @@ var logger = require('../util/logger')('event.js');
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile. issue #169
 
-/** Build Mongo filters for different event types: my , going, visited. */
-var buildMyFilters = function(req) {
-  var curUserId = req.user._id;
+/**
+ * Build Mongo filters for different event types: my , going, visited, canceled.
+ */
+var buildUserEventsFilters = function(userId) {
   var now = Date.now();
   return {
-    my: {author: curUserId, canceledOn: {$exists: false}},
-    myCanceled: {author: curUserId, canceledOn: {$exists: true}},
-    going: {participants: curUserId, 'start.dateTime': {$gt: now}, canceledOn: {$exists: false}},
-    visited: {participants: curUserId, 'start.dateTime': {$lte: now}, canceledOn: {$exists: false}}
+    my: {author: userId, canceledOn: {$exists: false}},
+    myCanceled: {author: userId, canceledOn: {$exists: true}},
+    going: {participants: userId, 'start.dateTime': {$gt: now}, canceledOn: {$exists: false}},
+    visited: {participants: userId, 'start.dateTime': {$lte: now}, canceledOn: {$exists: false}}
   };
 };
 
 /** Returns all my events of certain type: my, going, visited. */
 module.exports.get_my = function(req, res, next) {
   var eventType = req.query.type || 'my';
-  var filter = buildMyFilters(req)[eventType];
+  var filter = buildUserEventsFilters(req.user._id)[eventType];
   // TODO: Add pagination. issue #170
   Event.find(filter).sort({'start.dateTime': 1}).exec(function(err, events) {
     if (err) return next(err);
@@ -34,8 +35,8 @@ module.exports.get_my = function(req, res, next) {
 };
 
 /** Returns short overview of all user's events: my + going + visited. */
-module.exports.get_myOverview = function(req, res, next) {
-  var filters = buildMyFilters(req);
+function getUserEventsOverview(userId, cb) {
+  var filters = buildUserEventsFilters(userId);
   async.parallel(
     {
       my: function(cb) {
@@ -53,11 +54,7 @@ module.exports.get_myOverview = function(req, res, next) {
         // Created by me
         findMyEvents(filters.myCanceled, cb);
       }
-    },
-    function(err, events) {
-      if (err) return next(err);
-      res.json(events);
-    });
+    }, cb);
 
   function findMyEvents(filterQuery, cb) {
     var fullQuery = Event.find(filterQuery).sort({'start.dateTime': 1});
@@ -66,6 +63,13 @@ module.exports.get_myOverview = function(req, res, next) {
     }
     fullQuery.exec(cb);
   }
+}
+
+module.exports.get_myOverview = function(req, res, next) {
+  getUserEventsOverview(req.user._id, function(err, events) {
+    if (err) return res.json(500, new Error('Не удалось получить данные с сервера'));
+    return res.json(events);
+  });
 };
 
 module.exports.get_findById = function(req, res, next) {
