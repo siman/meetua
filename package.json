@@ -6,6 +6,7 @@
     "url": "git@bitbucket.org:meetua/meetua.git"
   },
   "scripts": {
+    "start-win": "nodemon app.js",
     "start": "export NODE_ENV=development;nodemon app.js",
     "test": "export NODE_ENV=test;jasmine-node app/spec --captureExceptions",
     "mocha-test": "export NODE_ENV=test;mocha --recursive app/test",
