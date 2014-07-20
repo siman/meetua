@@ -8,19 +8,32 @@ block content
       .col-md-2
       .col-md-3
         img(src=userProfile.profile.picture)
-
+        // TODO: picture from VK is too small
       .col-md-6
         .row
           h2 Данные профиля
         .row(ng-if='userProfile.profile.location')
-          span.user_label Город
-          span #{userProfile.profile.location}
+          .col-md-5
+            span.user_label Город
+            span #{userProfile.profile.location}
         .row(ng-if='userProfile.profile.ru.gender')
-          span.user_label Пол
-          span #{userProfile.profile.ru.gender}
+          .col-md-5
+            span.user_label Пол
+            span #{userProfile.profile.ru.gender}
         .row(ng-if='userProfile.profile.website')
-          span.user_label Сайт
-          span #{userProfile.profile.website}
+          .col-md-5
+            span.user_label Сайт
+            span #{userProfile.profile.website}
+        .row.top
+          .col-md-5
+            a.btn.btn-block.btn-social.btn-sm.btn-vk(ng-if='userProfile.profile.vkontakteLink', ng-href='{{userProfile.profile.vkontakteLink}}', target='_blank')
+              i.fa.fa-vk
+              | Профиль VK
+            a.btn.btn-block.btn-social.btn-sm.btn-facebook(ng-if='userProfile.profile.facebookLink', ng-href='{{userProfile.profile.facebookLink}}', target='_blank')
+              i.fa.fa-facebook
+              | Профиль Facebook
+
+
     .row
       .col-md-2
       // make profile col longer to fit long names
