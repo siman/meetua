@@ -89,7 +89,7 @@ block content
                 li.media(ng-repeat="participant in event.participants")
                   img(class="media-object pull-left avatar-medium" ng-src="{{participant.profile.picture}}")
                   .media-body
-                    a(href="/users/{{participant._id}}") {{participant.profile.name}}
+                    a(href="{{participant.url}}") {{participant.profile.name}}
 
       #cancel_modal.modal.fade(tabindex='-1', role='dialog')
         .modal-dialog
