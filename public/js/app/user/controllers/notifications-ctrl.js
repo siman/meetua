@@ -53,10 +53,6 @@ angular.module('myApp').controller('NotificationsCtrl',
       showModalIfNoUx();
     });
 
-    $scope.$on('event:user-created-event',  function(angEvent, data) {
-      showModalIfNoUx();
-    });
-
     function showModalIfNoUx() {
       if (noUx()) {
         console.log('showModalIfNoUx!!');
