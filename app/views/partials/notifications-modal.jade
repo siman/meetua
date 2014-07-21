@@ -6,9 +6,7 @@
       .modal-body
         | Вы хотите получать уведомления о событиях, в которых Вы принимаете участие?
         p
-        form(name='notifsForm', method='POST')
-          input(type='hidden', name='_csrf', value=_csrf)
-
+        form(name='notifsForm')
           label
             input(type="radio", role="button", ng-model="notifs.enabled", value="true")
             span &nbsp;Да
