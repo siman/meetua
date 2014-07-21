@@ -48,31 +48,19 @@ var api = {
 
   postSetupUserNotifications: function(req, res, next) {
     logger.debug('Setup user notifications');
-    var curUserId = req.user._id;
-    User.findById(curUserId, function(err, foundUser) {
-      if (err) {
-        logger.error('postSetupUserNotifications:', err);
-      }
-      if (!foundUser) {
-        logger.warn('postSetupUserNotifications: User was not found by ID:', curUserId);
-      }
-      if (err || !foundUser) {
-        return res.json(500, new Error('Не удалось найти Ваш профиль'));
-      }
-
-      var enabled = req.query.enabled === 'true';
-      foundUser.emailNotifications.enabled = enabled;
-      if (enabled) {
-        foundUser.emailNotifications.email = req.query.email;
-      }
-      foundUser.ux.setupNotifications = true;
-      foundUser.save(function(err) {
-        if (err) {
-          return res.json(500, 'Не удалось обновить Ваш профиль');
-        }
-        logger.debug('User updated', foundUser);
-        return res.json({user: foundUser});
-      });
+    var user = req.user;
+    var enabled = req.query.enabled === 'true';
+    user.emailNotifications.enabled = enabled;
+    if (enabled) {
+      user.emailNotifications.email = req.query.email;
+    }
+    user.ux.setupNotifications = true;
+    user.save(function(err) {
+    if (err) {
+      return res.json(500, 'Не удалось обновить Ваш профиль');
+    }
+    logger.debug('User updated', user);
+      return res.send(200);
     });
   }
 };
