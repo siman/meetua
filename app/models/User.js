@@ -21,11 +21,30 @@ var userSchema = new mongoose.Schema({
     location: { type: String, default: '' },
     website: { type: String, default: '' },
     picture: { type: String, default: '' },
+
+    // TODO: Search/replace/delete.
     receiveNotifications: { type: Boolean, default: true },
+
     links: {
       facebook: { type: String, default: '' },
       vkontakte: { type: String, default: '' }
     }
+  },
+
+  // User could have other preferred ways of notifications: phone, twitter, fb, etc.
+  emailNotifications: {
+    enabled: { type: Boolean, default: true },
+    email: { type: String, lowercase: true, default: '' }
+  },
+
+  /**
+   * Settings to define whether user had some particular experience with UI or not.
+   * For example: when user has not specified his preferences about email notifications
+   * 'setupNotifications' is false (by default). But once the application asked user
+   * about his preferences about notifications 'setupNotifications' should become true.
+   */
+  ux: {
+    setupNotifications: { type: Boolean, default: false }
   },
 
   resetPasswordToken: String,
@@ -88,15 +107,17 @@ userSchema.virtual('url').get(function() {
 
 userSchema.virtual('profile.ru.gender').get(function() {
   var gender = this.profile.gender;
-  if (gender) {
-    if (gender === 'male') {
-      return 'мужской';
-    }
-    if (gender === 'female') {
-      return 'женский';
-    }
+  if (gender === 'male') {
+    return 'мужской';
+  } else if (gender === 'female') {
+    return 'женский';
+  } else {
+    return gender;
   }
-  return gender;
+});
+
+userSchema.virtual('canReceiveEmail').get(function() {
+  return this.emailNotifications.enabled && this.emailNotifications.email;
 });
 
 userSchema.set('toJSON', {virtuals: true });

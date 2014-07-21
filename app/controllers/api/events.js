@@ -130,7 +130,7 @@ module.exports.post_participation = function(req, res, next) {
             Notifier.notifyParticipantOnJoin(curUser, event, function sendResponse(err) {
               if (err) {
                   logger.debug('notify result: err', err);
-                  return res.json(500, 'Не удалось отправить уведомление Вам на почту.');
+                  return res.json(500, new Error('Не удалось отправить уведомление Вам на почту.'));
               }
               return res.json({status: status})
             });

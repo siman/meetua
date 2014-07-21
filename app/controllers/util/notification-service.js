@@ -52,9 +52,7 @@ var LinuxMailer = function() {
 
         var messageObj = {
           message: {
-            to: [
-              {email: user.email}
-            ],
+            to: [{email: user.emailNotifications.email}],
             from_email: appConfig.notification.MAIL_FROM,
             from_name: appConfig.notification.MAIL_FROM_NAME,
             subject: subject,
@@ -93,14 +91,14 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 function notifyUser(user, subject, event, templateName, cb) {
   logger.debug('notify user', user._id);
   cb = cb || function() {};
-  logger.debug('user.email', user.email);
-  logger.debug('user.profile.receiveNotifications', user.profile.receiveNotifications);
-  if (user.email && user.profile.receiveNotifications) {
+  logger.debug('user.canReceiveEmail', user.canReceiveEmail);
+  logger.debug('user.emailNotifications.email', user.emailNotifications.email);
+  if (user.canReceiveEmail) {
     var params = { event: event };
     sendMail(user, subject, templateName, params, cb);
   } else {
     logger.debug('Skipping sendMail to the user');
-    cb()
+    cb();
   }
 }
 

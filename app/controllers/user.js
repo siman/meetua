@@ -37,11 +37,43 @@ var api = {
       });
     })(req, res, next);
   },
+
   getLogin: function(req, res, next) {
     res.send(200); // successfully logged in with auth-modal, you can return here any data you need for logged in user
   },
+
   getCurrentUser: function(req, res, next) {
     return res.json({user: req.user});
+  },
+
+  postSetupUserNotifications: function(req, res, next) {
+    logger.debug('Setup user notifications');
+    var curUserId = req.user._id;
+    User.findById(curUserId, function(err, foundUser) {
+      if (err) {
+        logger.error('postSetupUserNotifications:', err);
+      }
+      if (!foundUser) {
+        logger.warn('postSetupUserNotifications: User was not found by ID:', curUserId);
+      }
+      if (err || !foundUser) {
+        return res.json(500, new Error('Не удалось найти Ваш профиль'));
+      }
+
+      var enabled = req.query.enabled === 'true';
+      foundUser.emailNotifications.enabled = enabled;
+      if (enabled) {
+        foundUser.emailNotifications.email = req.query.email;
+      }
+      foundUser.ux.setupNotifications = true;
+      foundUser.save(function(err) {
+        if (err) {
+          return res.json(500, 'Не удалось обновить Ваш профиль');
+        }
+        logger.debug('User updated', foundUser);
+        return res.json({user: foundUser});
+      });
+    });
   }
 };
 
@@ -147,7 +179,9 @@ exports.postUpdateProfile = function(req, res, next) {
     user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
     user.profile.website = req.body.website || '';
-		user.profile.receiveNotifications = req.body.notification === 'on';
+
+    // TODO: Replace with new notifications widget
+//		user.profile.receiveNotifications = req.body.notification === 'on';
 
     user.save(function(err) {
       if (err) return next(err);

@@ -48,6 +48,12 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
  *       - Else create a new account.
  */
 
+function suggestEmailForNotifications(user, email1, email2) {
+  if (!user.ux.setupNotifications && !user.emailNotifications.email) {
+    user.emailNotifications.email = email1 || email2;
+  }
+}
+
 /**
  * Sign in with Facebook.
  */
@@ -66,6 +72,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
           user.profile.gender = user.profile.gender || profile._json.gender;
           user.profile.links.facebook = user.profile.links.facebook || profile._json.link;
           user.profile.picture = user.profile.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+          suggestEmailForNotifications(user, user.email, profile.email);
           user.save(function(err) {
             req.flash('info', { msg: 'Facebook аккаунт успешно привязан.' });
             done(err, user);
@@ -78,7 +85,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
       if (existingUser) return done(null, existingUser);
       User.findOne({ email: profile._json.email }, function(err, existingEmailUser) {
         if (existingEmailUser) {
-          req.flash('errors', { msg: 'Аккаунт с таким email уже существует. Зайдите через этот аккаунт и нажмите привязать аккаунт на странице аккаунта.' });
+          req.flash('errors', { msg: 'Аккаунт с таким email уже существует. Зайдите через этот аккаунт и нажмите "Привязать аккаунт" на странице аккаунта.' });
           done(err);
         } else {
           var user = new User();
@@ -90,6 +97,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
           user.profile.links.facebook = profile._json.link;
           user.profile.picture = 'https://graph.facebook.com/' + profile._json.id + '/picture?type=large';
           user.profile.location = (profile._json.location) ? profile._json.location.name : '';
+          suggestEmailForNotifications(user, profile._json.email, '');
           user.save(function(err) {
             done(err, user);
           });

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$scope', '$http', 'BASE_MAP', 'util', 'ErrorService',
-  function ($scope, $http, BASE_MAP, util, ErrorService) {
+  ['$rootScope', '$scope', '$http', 'BASE_MAP', 'util', 'ErrorService',
+  function ($rootScope, $scope, $http, BASE_MAP, util, ErrorService) {
     var event = _myInit.event;
     console.log("Event", event);
 
@@ -44,10 +44,14 @@ angular.module('myApp').controller('ViewEventCtrl',
       $http({method: 'POST', url: util.apiUrl('/events/participation'), params: params}).
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');  // FIXME: to Siman: controller shouldn't modify DOM. It's directive's responsibility
-          changeParticipation(data.status === 'added');
+          var joinedEvent = data.status === 'added';
+          changeParticipation(joinedEvent);
           $http({method: 'GET', url: util.apiUrl('/events/findById'), params: {id: $scope.event._id}}).
             success(function(res) {
               $scope.event = res.event;
+              if (joinedEvent) {
+                $rootScope.$broadcast('event:user-joined-event', {event: $scope.event});
+              }
             });
         }).
         error(function(data, status, headers, config) {

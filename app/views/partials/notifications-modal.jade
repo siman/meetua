@@ -1,0 +1,32 @@
+#notifs_modal.modal.fade(tabindex='-1', role='dialog', ng-controller="NotificationsCtrl")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4.modal-title Настройки уведомлений
+      .modal-body
+        | Вы хотите получать уведомления о событиях, в которых Вы принимаете участие?
+        p
+        form(name='notifsForm', method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+
+          label
+            input(type="radio", role="button", ng-model="notifs.enabled", value="true")
+            span &nbsp;Да
+          label(style="margin-left: 20px;")
+            input(type="radio", role="button", ng-model="notifs.enabled", value="false")
+            span &nbsp;Нет
+
+          div.form-group(
+            ng-if="notifs.enabled == 'true'",
+            ng-class="{'has-error': notifsForm.email.$invalid}"
+          )
+            div Получать уведомления на эл. почту:
+            input.form-control(
+              type='email', id='email', name='email', ng-model='notifs.email',
+              required, style="width: 30em;"
+            )
+            p(ng-show="notifsForm.email.$invalid", class="help-block") Введите правильную эл. почту.
+            .clearfix
+
+      .modal-footer
+        button.btn.btn-primary(type='button', ng-click='saveNotifications()') Сохранить настройки

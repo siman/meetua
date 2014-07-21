@@ -172,15 +172,21 @@ app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
 var meetuaEventsApi = require('./app/controllers/api/events');
+
+// User
 app.get('/api/meetua/user/login', passportConf.isAuthenticated, userController.api.getLogin); // authenticates user through auth-modal
 app.post('/api/meetua/user/login', userController.api.postLoginRest);
 app.get('/api/meetua/user/getCurrent', userController.api.getCurrentUser);
+app.post('/api/meetua/user/notifications', passportConf.isAuthenticated, userController.api.postSetupUserNotifications);
+
+// Event
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
 app.get('/api/meetua/events/user/:userId/overview', meetuaEventsApi.getUserEventsOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
+
 if (appConfig.IS_DEVELOPMENT) {
   var devApi = require('./app/controllers/api/dev');
   app.get('/dev-api', function(req, res, next) {
@@ -209,7 +215,7 @@ var authSuccessHandler = function(req, res) {
   } else {
     res.redirect('/auth/success');
   }
-}
+};
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), authSuccessHandler);
 app.get('/auth/vkontakte', passport.authenticate('vkontakte', { scope: ['email'] }));
