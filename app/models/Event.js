@@ -66,7 +66,12 @@ eventSchema.methods.url = function() {
 eventSchema.pre('save', true, function sanitizeDescription(next, done) {
   next();
   this.description = sanitizeHtml(this.description, {
-    allowedTags: [ 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'b', 'i', 'ul', 'ol', 'li', 'img' ]
+    allowedTags: [ 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'b', 'i', 'strong', 'ul', 'ol', 'li', 'img', 'br', 'span', 'a' ],
+    allowedAttributes: {
+      a: [ 'href', 'name', 'target' ],
+      p: [ 'style' ],
+      span: [ 'style' ]
+    }
   });
   done();
 });
