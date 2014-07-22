@@ -49,7 +49,8 @@ angular.module('myApp', [
       // enable when the issue is resolved
       /*['insert', ['picture', 'link', 'video', 'table']],*/
       ['misc', ['help']]
-    ]
+    ],
+    disableDragAndDrop: true
   });
 
 angular.module('myApp.shared', []);
