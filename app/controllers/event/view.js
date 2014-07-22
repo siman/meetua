@@ -1,14 +1,17 @@
 'use strict';
 
-var store = require("./EventStore");
+var Event = require('../../models/Event');
 var _ = require("underscore");
 var config = require('../../../config/app-config');
 var logger = require('../util/logger')('view.js');
 
 module.exports = function(req, res) {
   var id = req.params.id;
-  store.findById(id, ["author", "profile.name profile.picture", "participants"], function(err, event) {
-    if (err) logger.debug('Error while looking for event by ID', err);
+  Event.findOne({_id: id}, function(err, event) {
+    if (err) {
+      logger.error('Error while looking for event by ID', err);
+      return next(err);
+    }
     logger.debug("id", id);
     logger.debug("found event", event);
     if (!event) {
@@ -28,5 +31,5 @@ module.exports = function(req, res) {
         isCurrentUserAnAuthor: event.author && req.user && event.author._id.equals(req.user._id)
       });
     }
-  });
+  }).populate(["author", "profile.name profile.picture", "participants"]);
 };

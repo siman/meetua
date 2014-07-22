@@ -8,6 +8,8 @@ angular.module('myApp').controller('ViewEventCtrl',
 
     $scope.event = event;
 
+    $scope.isEventCanceled = 'true';
+
     $scope.map = _.extend(BASE_MAP, {
       center: {
         latitude: event.place.latitude,

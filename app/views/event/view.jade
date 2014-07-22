@@ -20,9 +20,16 @@ block top_panel
         a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
           i.fa.fa-edit
           | Редактировать
-        a.btn.btn-default.btn-sm(data-toggle="modal", data-target="#cancel_modal", role="button")
-          i.fa.fa-times
-          | Отменить событие
+        if (!event.canceledOn)
+          a.btn.btn-default.btn-sm(data-toggle="modal", data-target="#cancel_modal", role="button")
+            i.fa.fa-times
+            | Отменить событие
+
+  if (event.canceledOn && !event.isPassed)
+    #on_my_event_panel.alert-warning
+      div.event_edit_panellll
+        | Автор отменил это событие
+
 
 block content
   if (!event)
@@ -64,12 +71,15 @@ block content
           if (!isCurrentUserAnAuthor)
             div(ng-show="event.isPassed")
               div Событие уже прошло
+            div(ng-show="event.canceledOn")
+              div Событие отменено
             div(ng-hide="event.isPassed")
               div(ng-show="isPart")
                 #partStatus Вы &mdash; участник события
 
               button#partBtn.btn(ng-click="participate()",
-                ng-class="{'btn-default': isPart, 'btn-success': !isPart}"
+                ng-class="{'btn-default': isPart, 'btn-success': !isPart}",
+                ng-disabled="event.canceledOn"
               )
                 span(ng-hide="isPart")
                   i.fa.fa-check
