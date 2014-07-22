@@ -31,6 +31,7 @@ var config = {
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
   IS_TEST: process.env.NODE_ENV === 'test',
+  IS_STAGING: process.env.NODE_ENV === 'staging',
   // http://nodejs.org/api/process.html#process_process_platform
   IS_WINDOWS: process.platform === 'win32',
   IS_LINUX: process.platform === 'linux',
