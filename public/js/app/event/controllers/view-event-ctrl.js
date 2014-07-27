@@ -25,7 +25,7 @@ angular.module('myApp').controller('ViewEventCtrl',
       if ($scope.currentUser) {
         var curUserId = $scope.currentUser._id;
         return _.find(event.participants, function(participant) {
-          return participant._id === curUserId;
+          return participant.user._id === curUserId;
         });
       } else {
         return false;
@@ -36,11 +36,11 @@ angular.module('myApp').controller('ViewEventCtrl',
       $scope.isPart = isPart;
     }
 
-    $scope.participate = function() {
+    $scope.participate = function(guestNumber) {
       var $partBtn = $('#partBtn');
       $partBtn.attr('disabled', 'disabled');
 
-      var params = {eventId: event._id, act: $scope.isPart ? 'remove' : 'add'};
+      var params = {eventId: event._id, act: $scope.isPart ? 'remove' : 'add', guests: guestNumber};
       $http({method: 'POST', url: util.apiUrl('/events/participation'), params: params}).
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');  // FIXME: to Siman: controller shouldn't modify DOM. It's directive's responsibility

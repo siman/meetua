@@ -31,5 +31,5 @@ module.exports = function(req, res) {
         isCurrentUserAnAuthor: event.author && req.user && event.author._id.equals(req.user._id)
       });
     }
-  }).populate(["author", "profile.name profile.picture", "participants"]);
+  }).populate('author participants.user');
 };

@@ -114,11 +114,11 @@ module.exports.notifyAuthorOnCreate = function (event, cb) {
 
 module.exports.notifyParticipantOnEdit = function (event, cb) {
   logger.debug('Notify on event changing', event.name);
-  store.findById(event._id, ['participants'], function (err, eventFound) {
+  store.findById(event._id, ['participants.user'], function (err, eventFound) {
     if (err) return cb(err);
     if (!eventFound) return cb(new Error('Событие не найдено'));
-    async.map(eventFound.participants, function (user, done) {
-      notifyUser(user, 'Изменилось описание события', eventFound, 'event-edit', done);
+    async.map(eventFound.participants, function (participant, done) {
+      notifyUser(participant.user, 'Изменилось описание события', eventFound, 'event-edit', done);
     }, cb);
   });
 };
@@ -145,8 +145,8 @@ function notifyComingSoonEvent(event) {
     }
 
     notifyUser(eventFound.author, subject, eventFound, 'event-coming-soon');
-    _.map(eventFound.participants, function(user) {
-      if (!user._id.equals(eventFound.author._id))
+    _.map(eventFound.participants, function(participant) {
+      if (!participant.user._id.equals(eventFound.author._id))
         notifyUser(user, subject, eventFound, 'event-coming-soon');
     });
   });
@@ -162,15 +162,15 @@ module.exports.notifyUserForgotPassword = function(user, token, cb) {
 
 module.exports.notifyOnCancel = function (event, cb) {
   logger.debug('Notify on event cancel', event.name);
-  store.findCanceledById(event._id, ['participants', 'author'], function (err, eventFound) { // TODO err handling
+  store.findCanceledById(event._id, ['participants.user', 'author'], function (err, eventFound) { // TODO err handling
     logger.debug('eventFound:', eventFound);
     notifyUser(eventFound.author, 'Событие отменено', eventFound, 'event-cancel', function(err, result) {
       if (err) {
         logger.warn('Failed to send notification to user', eventFound.author._id, ' cause: ', err)
       }
     });
-    async.map(eventFound.participants, function (user, done) {
-      notifyUser(user, 'Ближайшее событие', eventFound, 'event-cancel', done);
+    async.map(eventFound.participants, function (participant, done) {
+      notifyUser(participant.user, 'Ближайшее событие', eventFound, 'event-cancel', done);
     }, cb);
   });
 };

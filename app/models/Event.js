@@ -18,7 +18,10 @@ var activityNames = _.map(activities, function(activity) {
 var eventSchema = new mongoose.Schema({
     name: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    participants: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    participants: [{
+        user: { type: Schema.Types.ObjectId, ref: "User"},
+        guests: {type: Number, default: 0}
+      }],
     description: { type: String, required: true, trim: true },
     activity: { type: String, required: true, default: 'other', enum: activityNames },
     place: {
@@ -50,7 +53,9 @@ eventSchema.virtual('logoUrl').get(function() {
 });
 
 eventSchema.virtual('participantCount').get(function() {
-  return this.participants.length;
+  var guests = _.map(this.participants, function(part) {return part.guests});
+  var guestsCount = _.reduce(guests, function(a, b) {return a + b}, 0);
+  return guestsCount + this.participants.length;
 });
 
 eventSchema.virtual('isPassed').get(function() {

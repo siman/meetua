@@ -18,8 +18,8 @@ var buildUserEventsFilters = function(userId) {
   return {
     my: {author: userId, canceledOn: {$exists: false}},
     myCanceled: {author: userId, canceledOn: {$exists: true}},
-    going: {participants: userId, 'start.dateTime': {$gt: now}, canceledOn: {$exists: false}},
-    visited: {participants: userId, 'start.dateTime': {$lte: now}, canceledOn: {$exists: false}}
+    going: {'participants.user': userId, 'start.dateTime': {$gt: now}, canceledOn: {$exists: false}},
+    visited: {'participants.user': userId, 'start.dateTime': {$lte: now}, canceledOn: {$exists: false}}
   };
 };
 
@@ -83,7 +83,7 @@ module.exports.get_findById = function(req, res, next) {
   var id = req.query.id;
   logger.debug("id", id);
   if (id) {
-    EventStore.findById(id, ["participants"], function(err, event) {
+    EventStore.findById(id, ["participants.user"], function(err, event) {
       if (err) return next(err);
       res.json({event: event});
     });
@@ -142,18 +142,19 @@ module.exports.post_participation = function(req, res, next) {
 
     // TODO: Disallow to change participation if event is int the past? issue #168
 
-    var alreadyPartInx = event.participants.indexOf(curUser._id);
-    if (act === 'remove' && alreadyPartInx >= 0) {
-//      logger.debug("remove");
-      event.participants.splice(alreadyPartInx, 1);
+    var alreadyParticipated = _.find(event.participants, function(part) {
+      return part.user.equals(curUser._id)});
+
+    if (act === 'remove' && alreadyParticipated) {
+      event.participants = _.reject(event.participants, function(part) {
+        return part.user.equals(curUser._id)});
       updateEvent('removed');
-    } else if (act === 'add' && alreadyPartInx < 0) {
-//      logger.debug("add");
-      event.participants.push(curUser._id);
+    } else if (act === 'add' && !alreadyParticipated) {
+      event.participants.push({user: curUser._id, guests: req.query.guests});
       updateEvent('added');
     } else {
-//      logger.debug("else");
       res.json({status: 'added'});
     }
   });
+
 };
