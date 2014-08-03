@@ -11,7 +11,7 @@ angular.module('myApp')
           doRedirect = true;
         }
         if (doRedirect === true) {
-          var redirectUrl = '/event/' + res.event._id;
+          var redirectUrl = '/event/' + res.event._id + '?just_created=true';
           console.log('Redirecting to ', redirectUrl);
           $window.location = redirectUrl;
         }
