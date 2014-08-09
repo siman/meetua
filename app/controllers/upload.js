@@ -7,7 +7,7 @@ var os = require('os');
 var config = require('../../config/app-config');
 var UPLOAD_DIR = config.UPLOAD_DIR;
 var fs = require('fs-extra');
-var logger = require('./util/logger')('upload.js');
+var logger = require('./util/logger')(__filename);
 
 fs.mkdirp(UPLOAD_DIR, function(err) {
     if (err) throw err;

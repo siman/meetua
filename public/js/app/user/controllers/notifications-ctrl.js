@@ -9,7 +9,11 @@ angular.module('myApp').controller('NotificationsCtrl',
       email: undefined
     };
 
-    suggestDefaults();
+    function init() {
+      if ($scope.currentUser) {
+        suggestDefaults();
+      }
+    }
 
     function curUser() {
       return $scope.currentUser;
@@ -82,5 +86,7 @@ angular.module('myApp').controller('NotificationsCtrl',
               ' Попробуйте настроить уведомления со страницы Вашего аккаунта.');
           });
       }
-    }
+    };
+
+    init();
   }]);

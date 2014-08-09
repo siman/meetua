@@ -11,7 +11,7 @@ var Event = require('../../../app/models/Event');
 var Image = require('../../../app/models/Image');
 var tmp = require('tmp');
 var notificationService = require('../util/notification-service');
-var logger = require('../util/logger')('save-event.js');
+var logger = require('../util/logger')(__filename);
 
 maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
   if (err) throw err;

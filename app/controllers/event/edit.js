@@ -1,6 +1,7 @@
 'use strict';
 
 var Event = require('../../models/Event');
+var logger = require('../util/logger')(__filename);
 
 module.exports = function (req, res, next) {
     if (!req.user) return res.send(403);

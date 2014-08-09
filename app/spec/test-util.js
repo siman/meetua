@@ -1,3 +1,5 @@
+'use strict';
+
 var appConfig = require('../../config/app-config'); // patches mongoose for every test
 var mongoose = require('mongoose');
 var _ = require('underscore');
@@ -7,7 +9,7 @@ var path = require('path');
 var util = require('../../app/controllers/utils');
 var eventStore = require('../../app/controllers/event/EventStore');
 var userController = require('../../app/controllers/user');
-var logger = require('../../app/controllers/util/logger')('test-util');
+var logger = require('../../app/controllers/util/logger')(__filename);
 
 _.extend(module.exports, util);
 

@@ -1,4 +1,6 @@
-var logger = require('./logger')('error-handler.js');
+'use strict';
+
+var logger = require('./logger')(__filename);
 var notificationService = require('./notification-service');
 
 exports.errorGenerator = function(req, res, next){
@@ -25,7 +27,4 @@ exports.error = function(err, req, res, next) {
       }
     });
   });
-
-
-
 };

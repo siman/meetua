@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
-var logger = require('../controllers/util/logger')('User.js');
+var logger = require('../controllers/util/logger')(__filename);
 var utils = require('../controllers/utils');
 var appConfig = require('../../config/app-config');
 

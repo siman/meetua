@@ -1,9 +1,11 @@
+'use strict';
+
 var Event = require('../../models/Event');
 var _ = require('underscore');
 var fs = require('fs-extra');
 var utils = require('../utils');
 var SharedEventService = require('../../../public/js/app/shared/services/event-service');
-var logger = require('../util/logger')('rm-image.js');
+var logger = require('../util/logger')(__filename);
 
 function rmImage(req, res, next) {
   req.checkParams('id', 'event id is invalid').isAlphanumeric();

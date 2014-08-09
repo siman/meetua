@@ -4,7 +4,7 @@ var appConfig = require('../../../config/app-config.js');
 var path = require('path');
 var _ = require('underscore');
 var store = require('../event/EventStore');
-var logger = require('./logger')('notification-service.js');
+var logger = require('./logger')(__filename);
 var async = require('async');
 var moment = require('moment');
 

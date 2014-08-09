@@ -8,7 +8,7 @@ var secrets = require('../../config/app-config').secrets;
 var utils = require('./utils');
 var mockUsers = require('./user-mock-store');
 var notificationService = require('./util/notification-service');
-var logger = require('./util/logger')('user.js');
+var logger = require('./util/logger')(__filename);
 
 var api = {
   postLoginRest: function(req, res, next) {

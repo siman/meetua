@@ -3,9 +3,9 @@
 var Event = require('../../models/Event');
 var _ = require("underscore");
 var config = require('../../../config/app-config');
-var logger = require('../util/logger')('view.js');
+var logger = require('../util/logger')(__filename);
 
-module.exports = function(req, res) {
+module.exports = function(req, res, next) {
   var id = req.params.id;
   Event.findOne({_id: id}, function(err, event) {
     if (err) {

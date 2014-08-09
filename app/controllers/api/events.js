@@ -6,7 +6,7 @@ var conf = require('../../../config/app-config');
 var Event = require('../../models/Event');
 var EventStore = require('../event/EventStore');
 var Notifier = require('../util/notification-service');
-var logger = require('../util/logger')('event.js');
+var logger = require('../util/logger')(__filename);
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile. issue #169
 
@@ -77,7 +77,7 @@ module.exports.getUserEventsOverview = function(req, res, next) {
     if (err) return res.json(500, new Error('Не удалось получить данные с сервера'));
     return res.json(events);
   });
-}
+};
 
 module.exports.get_findById = function(req, res, next) {
   var id = req.query.id;
