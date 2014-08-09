@@ -7,7 +7,7 @@ var moment = require('moment');
 var _ = require('underscore');
 var path = require('path');
 var activities = require('../../public/js/app/shared/services/constants').activities;
-var logger = require('../controllers/util/logger')('Event.js');
+var logger = require('../controllers/util/logger')(__filename);
 var appConfig = require('../../config/app-config');
 var sanitizeHtml = require('sanitize-html');
 
@@ -53,20 +53,19 @@ eventSchema.virtual('logoUrl').get(function() {
 });
 
 eventSchema.virtual('participantCount').get(function() {
-  var guests = _.map(this.participants, function(part) {return part.guests});
-  var guestsCount = _.reduce(guests, function(a, b) {return a + b}, 0);
-  return guestsCount + this.participants.length;
+  var guestCount = _.reduce(this.participants, function(acc, part) { return acc + part.guests; }, 0);
+  return guestCount + this.participants.length;
 });
 
 eventSchema.virtual('isPassed').get(function() {
   return moment(this.start.dateTime).isBefore(moment());
 });
 
-eventSchema.set('toJSON', {virtuals: true });
-
-eventSchema.methods.url = function() {
+eventSchema.virtual('url').get(function() {
   return appConfig.hostname + '/event/' + this._id;
-};
+});
+
+eventSchema.set('toJSON', {virtuals: true });
 
 eventSchema.pre('save', true, function sanitizeDescription(next, done) {
   next();
