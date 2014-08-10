@@ -127,17 +127,18 @@ block content
               button.btn.btn-default(type='button', data-dismiss='modal') Не отменять
 
       if(justCreated && isCurrentUserAnAuthor)
-        .modal.share-created-event(open-modal modal-name='share-created-event' tabindex='-1', role='dialog', aria-hidden='true')
-          .modal-dialog.modal-sm
-            .modal-content
-              .modal-header
-                button.close(type='button', data-dismiss='modal')
-                  span(aria-hidden='true') ×
-                h4.modal-title Поделиться ссылкой в:
-              .modal-body
-                include ../partials/share-event
-              .modal-footer
-                button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
+        div(ng-controller='FirstTimeViewCtrl')
+          .modal.share-created-event(open-modal modal-name='share-created-event' tabindex='-1', role='dialog', aria-hidden='true')
+            .modal-dialog.modal-sm
+              .modal-content
+                .modal-header
+                  button.close(type='button', data-dismiss='modal')
+                    span(aria-hidden='true') ×
+                  h4.modal-title Поделиться ссылкой в:
+                .modal-body
+                  include ../partials/share-event
+                .modal-footer
+                  button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
 
       include ../partials/notifications-modal
 

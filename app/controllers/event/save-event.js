@@ -95,7 +95,10 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
             images: _.map(images, function(image){
               return new Image(image);
             }),
-            author: req.user._id
+            author: req.user._id,
+            ux: {
+              isJustCreated: true
+            }
           });
           logger.debug('Creating event ', eventObj);
           event = new Event(eventObj);
@@ -103,6 +106,10 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
         }
 
         function updateEvent() {
+          //fuck this shit! if author is populated, mongoose could not get author id and save event
+          if (req.body.author instanceof Object) {
+            req.body.author = req.body.author._id;
+          }
           _.extend(event, req.body, {images: images.concat(imagesWithId)});
 
           logger.debug('Updating event by id', event._id, event);
@@ -112,7 +119,10 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
 
         function afterSave(event) {
           return function(err) {
-            if (err) return res.json(400, {error: err});
+            if (err) {
+              logger.error("error while saving event", err);
+              return res.json(400, {error: err});
+            }
 
             var onNotifyComplete = function(err, resp) {
               logger.debug('Notification response: %s, error: %s', resp, err);

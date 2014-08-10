@@ -36,6 +36,9 @@ var eventSchema = new mongoose.Schema({
         dateTime: Date
     },
     canceledOn: { type: Date },
+    ux : {
+      isJustCreated: {type: Boolean}
+    },
     images: [Image.schema] // default order, logo first TODO
 });
 

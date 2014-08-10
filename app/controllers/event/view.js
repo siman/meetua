@@ -12,13 +12,12 @@ module.exports = function(req, res, next) {
       logger.error('Error while looking for event by ID', err);
       return next(err);
     }
-    var isJustCreated = req.query.just_created && req.headers.referer && (req.headers.referer.indexOf(config.hostname+'/event/create') > -1);
     logger.debug("id", id);
     logger.debug("found event", event);
     if (!event) {
       res.renderNotFound();
     } else {
-      var fullUrl = config.hostname + req.originalUrl.substring(0, req.originalUrl.indexOf('?'));
+      var fullUrl = config.hostname + req.originalUrl;
       var tweet = (event.name + config.socialTweetLinkLength > 139 ? event.name.substring(0, (139 - config.socialTweetLinkLength)) : event.name);
       var social = {
         path: fullUrl,
@@ -30,7 +29,7 @@ module.exports = function(req, res, next) {
         social: social,
         // If current user is an author of event
         isCurrentUserAnAuthor: event.author && req.user && event.author._id.equals(req.user._id),
-        justCreated: isJustCreated
+        justCreated: event.ux.isJustCreated
       });
     }
   }).populate('author participants.user');
