@@ -6,35 +6,25 @@ var _ = require('lodash');
 var moment = require('moment');
 moment.lang('ru');
 
+require('./patch-mongoose');
+
 var DOMAIN = 'localhost';
 var PORT = 3000;
 
-// patch mongoose bulk methods
-var mongoose = require('mongoose');
-var realModel = mongoose.model.bind(mongoose);
-mongoose.model = function(name, schema) {
-  var model = realModel(name, schema);
-  var unsupported = function() { throw new Error("Sorry Dave, I can't do that"); };
-  model.remove = unsupported;
-  model.findAndRemove = unsupported;
-  model.update = unsupported;
-  model.findByIdAndUpdate = unsupported;
-  model.findOneAndUpdate = unsupported;
-  model.findOneAndRemove = unsupported;
-  model.findByIdAndRemove = unsupported;
-  return model;
-};
-
+var NODE_ENV = process.env.NODE_ENV || 'development';
 
 var config = {
 
-  IS_PRODUCTION: process.env.NODE_ENV === 'production',
-  IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
-  IS_TEST: process.env.NODE_ENV === 'test',
-  IS_STAGING: process.env.NODE_ENV === 'staging',
+  ENV: NODE_ENV,
+
   // http://nodejs.org/api/process.html#process_process_platform
   IS_WINDOWS: process.platform === 'win32',
   IS_LINUX: process.platform === 'linux',
+
+  IS_PRODUCTION: NODE_ENV === 'production',
+  IS_DEVELOPMENT: NODE_ENV === 'development',
+  IS_TEST: NODE_ENV === 'test',
+  IS_STAGING: NODE_ENV === 'staging',
 
   // Uncomment to limit number of shown events on My events overview page.
 //  MAX_EVENTS_IN_OVERVIEW: 5,
@@ -51,9 +41,11 @@ var config = {
     MAIL_FROM_NAME: 'MeetUA',
     MAIL_SUPPORT: 'meetua.supp@gmail.com'
   },
+
   domain: DOMAIN,
   port: PORT,
   hostname: 'http://' + DOMAIN + ':' + PORT,
+
   socialTweetLinkLength: 22,
 
   enableCsrf: true,
@@ -62,7 +54,6 @@ var config = {
 
   secrets: secrets()
 };
-
 
 function secrets() {
   return {
@@ -93,8 +84,8 @@ function secrets() {
 }
 
 // env-specific config overrides
-var envConfigName = './app-config-' + (process.env.NODE_ENV || 'development');
-console.log('loading env-specific config: ' + envConfigName); // cannot use logger because of cycle dependency
+var envConfigName = './app-config-' + config.ENV;
+console.log('Loading env-specific config: ' + envConfigName); // cannot use logger because of cycle dependency
 var envSpecificConfigOverrides = require(envConfigName);
 var finalConfig = _.merge({}, config, envSpecificConfigOverrides);
 module.exports = finalConfig;
