@@ -28,7 +28,8 @@ var userSchema = new mongoose.Schema({
     links: {
       facebook: { type: String, default: '' },
       vkontakte: { type: String, default: '' }
-    }
+    },
+    preferredActivities: [String] // activity names
   },
 
   // User could have other preferred ways of notifications: phone, twitter, fb, etc.

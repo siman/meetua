@@ -149,7 +149,6 @@ app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
@@ -178,6 +177,7 @@ app.get('/api/meetua/user/login', passportConf.isAuthenticated, userController.a
 app.post('/api/meetua/user/login', userController.api.postLoginRest);
 app.get('/api/meetua/user/getCurrent', userController.api.getCurrentUser);
 app.post('/api/meetua/user/notifications', passportConf.isAuthenticated, userController.api.postSetupUserNotifications);
+app.post('/api/meetua/user/updateProfile', passportConf.isAuthenticated, userController.api.postUpdateProfile);
 
 // Event
 app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency

@@ -62,6 +62,37 @@ var api = {
     logger.debug('User updated', user);
       return res.send(200);
     });
+  },
+  postUpdateProfile: function(req, res, next) {
+    var errMsg = 'Не удалось обновить Ваш профиль';
+    req.assert('email', 'Неверный email').isEmail();
+    req.assert('name', 'Не указано имя').notEmpty();
+    req.body.website && req.assert('website', 'Ссылка должна быть формата http://<адрес_сайта>').isURL();
+
+    var errors = req.validationErrors();
+    if (errors) {
+      logger.debug('errors ' + JSON.stringify(errors));
+      return res.json(400, errors);
+    }
+
+    User.findById(req.user.id, function(err, user) {
+      if (err) return res.json(500, errMsg);
+      logger.debug('req.body', req.body);
+      user.email = req.body.email;
+      user.profile.name = req.body.name || '';
+      user.profile.gender = req.body.gender || '';
+      user.profile.location = req.body.location || '';
+      user.profile.website = req.body.website || '';
+      user.profile.preferredActivities = req.body.preferredActivities || [];
+
+      // TODO: Replace with new notifications widget
+		user.profile.receiveNotifications = req.body.notification === 'on';
+
+      user.save(function(err) {
+        if (err) return res.json(500, errMsg);
+        res.json(200);
+      });
+    });
   }
 };
 
@@ -151,31 +182,6 @@ exports.postSignup = function(req, res, next) {
 exports.getAccount = function(req, res) {
   res.render('account/profile', {
     title: 'Личные данные'
-  });
-};
-
-/**
- * POST /account/profile
- * Update profile information.
- */
-
-exports.postUpdateProfile = function(req, res, next) {
-  User.findById(req.user.id, function(err, user) {
-    if (err) return next(err);
-    user.email = req.body.email;
-    user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
-    user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
-
-    // TODO: Replace with new notifications widget
-//		user.profile.receiveNotifications = req.body.notification === 'on';
-
-    user.save(function(err) {
-      if (err) return next(err);
-      req.flash('success', { msg: 'Изменения сохранены.' });
-      res.redirect('/account');
-    });
   });
 };
 

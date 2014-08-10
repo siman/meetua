@@ -1,7 +1,8 @@
 div.border.row-fluid(
-  ng-class="{selected: ngModel == activity.name}",
+  ng-class="{selected: isSelected()}",
   ng-click="onActClick()", style='position:relative;'
 )
   .act_img(style="background-image: url('/img/activities/{{activity.img}}')")
+    i.fa.fa-check(ng-if='isSelected() && multiple')
     h2.text_over_container(ng-if='activity.textOver')
       span.text_over {{activity.textOver}}
