@@ -11,9 +11,8 @@ angular.module('myApp')
           $scope.currentUser = user; // save as application-wide object
           AuthInterceptorService.loginConfirmed();
         }, function() {
-            AuthInterceptorService.loginCancelled(null/*data for event broadcast*/, rejection);
-          }
-        );
+          AuthInterceptorService.loginCancelled(null/*data for event broadcast*/, rejection);
+        });
       });
     }
     return {

@@ -4,43 +4,42 @@ angular.module('myApp').controller('NotificationsCtrl',
   ['$rootScope', '$scope', '$http', 'util', 'ErrorService',
   function ($rootScope, $scope, $http, util, ErrorService) {
 
+    var defaultsSuggested = false;
+
     $scope.notifs = {
       enabled: undefined,
       email: undefined
     };
 
     function init() {
-      if ($scope.currentUser) {
-        suggestDefaults();
-      }
-    }
-
-    function curUser() {
-      return $scope.currentUser;
+      suggestDefaults();
     }
 
     function isEmptyStr(str) {
       return !str || 0 === str.length || !str.trim();
     }
 
-    // If no user experience with this feature
-    function noUx() {
-      return !curUser().ux.setupNotifications;
+    // If user has no experience with this feature.
+    function hasNoUx() {
+      return !$scope.currentUser.ux.setupNotifications;
     }
 
     function suggestDefaults() {
-      if (noUx) {
-        $scope.notifs.enabled = 'true';
-        $scope.notifs.email = suggestEmail();
-      } else {
-        $scope.notifs.enabled = curUser().emailNotifications.enabled.toString();
-        $scope.notifs.email = curUser().emailNotifications.email;
+      if ($scope.currentUser && !defaultsSuggested) {
+        if (hasNoUx()) {
+          $scope.notifs.enabled = 'true';
+          $scope.notifs.email = suggestEmail();
+        } else {
+          $scope.notifs.enabled = $scope.currentUser.emailNotifications.enabled.toString();
+          $scope.notifs.email = $scope.currentUser.emailNotifications.email;
+        }
+        defaultsSuggested = true;
       }
     }
 
     function suggestEmail() {
-      var accEmail = curUser().email;
-      var notifEmail = curUser().emailNotifications.email;
+      var accEmail = $scope.currentUser.email;
+      var notifEmail = $scope.currentUser.emailNotifications.email;
       var resEmail = '';
       if (!isEmptyStr(notifEmail)) {
         resEmail = notifEmail;
@@ -50,16 +49,16 @@ angular.module('myApp').controller('NotificationsCtrl',
       return resEmail;
     }
 
-    // TODO: Use $modal as in [auth-modal.js]?
-    var $notifsModal = $('#notifs_modal');
-
-    $scope.$on('event:user-joined-event',  function(angEvent, data) {
+    $scope.$on('event:user-joined-event', function(angEvent, data) {
       showModalIfNoUx();
     });
 
+    // TODO: Use $modal as in [auth-modal.js]?
+    var $notifsModal = $('#notifs_modal');
+
     function showModalIfNoUx() {
-      if (noUx()) {
-        console.log('showModalIfNoUx!!');
+      suggestDefaults();
+      if ($scope.currentUser && hasNoUx()) {
         $notifsModal.modal('show');
       }
     }
