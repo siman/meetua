@@ -9,6 +9,14 @@ angular.module('myApp').controller('FirstTimeViewCtrl',
         event.ux.isJustCreated = false;
         return event
       }
-      EventService.postSave(setEventAsViewed($scope.event), false)
+
+      function clearAuthorData(event) {
+        event.author = event.author._id;
+        return event
+      }
+
+      var ev = clearAuthorData(setEventAsViewed($scope.event));
+
+      EventService.postSave(ev, false)
 
     }]);

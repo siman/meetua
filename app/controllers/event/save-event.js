@@ -106,10 +106,6 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
         }
 
         function updateEvent() {
-          //fuck this shit! if author is populated, mongoose could not get author id and save event
-          if (req.body.author instanceof Object) {
-            req.body.author = req.body.author._id;
-          }
           _.extend(event, req.body, {images: images.concat(imagesWithId)});
 
           logger.debug('Updating event by id', event._id, event);
