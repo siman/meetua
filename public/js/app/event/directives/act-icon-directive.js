@@ -4,10 +4,10 @@ angular.module('myApp')
   .directive('actIcon', function() {
     function link(scope, element, attrs, ngModel) {
       scope.onActClick = function() {
-        if (scope.activity === ngModel.$modelValue) {
+        if (scope.activity.name === ngModel.$modelValue) {
           ngModel.$setViewValue(undefined);
         } else {
-          ngModel.$setViewValue(scope.activity);
+          ngModel.$setViewValue(scope.activity.name);
         }
       };
     }
@@ -17,8 +17,7 @@ angular.module('myApp')
       replace: true,
       require: 'ngModel',
       scope: {
-        activity: '@',
-        textOver: '@',
+        activity: '=',
         ngModel: '='
       },
       link: link,

@@ -6,7 +6,6 @@ include form-btns
 block content
     .page-header
         h3 Создать событие
-
     form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl', ng-submit='submit()', name='eventForm', novalidate)
       +eventFields(true)
       +formBtns()

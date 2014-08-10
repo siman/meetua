@@ -175,8 +175,7 @@ body {
   margin-right: 0;
 }
 
-.act_img(@img_url) {
-  background-image: url("../img/@{img_url}");
+.act_img {
   background-repeat: no-repeat;
   .square_image;
 }
@@ -213,8 +212,6 @@ body {
     bottom: -16px;
     right: 2px;
   }
-
-  .act_imgs;
 }
 
 .text_over { // text over image
@@ -229,34 +226,6 @@ body {
 .text_over_container { // container for image with text_over
   position:absolute;
   width: 100%;
-}
-
-.act {
-  .act_imgs;
-}
-
-.act_imgs {
-  .running {
-    .act_img("running-man-icon-128.png")
-  }
-  .bike {
-    .act_img("bike-icon-128.png")
-  }
-  .workout {
-    .act_img("street-workout.png")
-  }
-  .hiking {
-    .act_img("mountain.jpg")
-  }
-  .photo {
-    .act_img("camera_icon.png")
-  }
-  .en {
-    .act_img("english-icon.png")
-  }
-  .code {
-    .act_img("code_icon.png")
-  }
 }
 
 .angular-google-map-container {

@@ -4,13 +4,13 @@
 
   // TODO: Rename activities
   var activities = [
-    {name: 'bike', textOver: 'Велосипед'}, // cycling
-    {name: 'running', textOver: 'Бег'},
-    {name: 'workout', textOver: 'Workout'},
-    {name: 'hiking', textOver: 'Туризм'},  // tourism
-    {name: 'photo', textOver: 'Фото'},     // ?? remove ??
-    {name: 'en', textOver: 'Языки'},       // langs
-    {name: 'code', textOver: 'IT'},        // it
+    {name: 'bike', textOver: 'Велосипед', img: 'bike-icon-128.png'}, // cycling
+    {name: 'running', textOver: 'Бег', img: 'running-man-icon-128.png'},
+    {name: 'workout', textOver: 'Workout', img: 'street-workout.png'},
+    {name: 'hiking', textOver: 'Туризм', img: 'mountain.jpg'},  // tourism
+    {name: 'photo', textOver: 'Фото', img: 'camera_icon.png'},     // ?? remove ??
+    {name: 'en', textOver: 'Языки', img: 'english-icon.png'},       // langs
+    {name: 'code', textOver: 'IT', img: 'code_icon.png'},        // it
     {name: 'other', textOver: 'Другое', hide: true /*temp*/} // TODO find image for 'other'
   ];
 
