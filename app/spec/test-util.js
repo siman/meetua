@@ -129,7 +129,7 @@ exports.buildTestEvent = function(opts) {
       dateTime: new Date()
     },
     description: 'event description',
-    activity: 'bike',
+    activity: 'cycling',
     images: []
   };
   return _.extend(reqData, opts);

@@ -2,15 +2,14 @@
 
 (function(isNode, isAngular) {
 
-  // TODO: Rename activities
   var activities = [
-    {name: 'bike', textOver: 'Велосипед', img: 'bike-icon-128.png'}, // cycling
+    {name: 'cycling', textOver: 'Велосипед', img: 'bike-icon-128.png'},
     {name: 'running', textOver: 'Бег', img: 'running-man-icon-128.png'},
     {name: 'workout', textOver: 'Workout', img: 'street-workout.png'},
-    {name: 'hiking', textOver: 'Туризм', img: 'mountain.jpg'},  // tourism
+    {name: 'tourism', textOver: 'Туризм', img: 'mountain.jpg'},
     {name: 'photo', textOver: 'Фото', img: 'camera_icon.png'},     // ?? remove ??
-    {name: 'en', textOver: 'Языки', img: 'english-icon.png'},       // langs
-    {name: 'code', textOver: 'IT', img: 'code_icon.png'},        // it
+    {name: 'langs', textOver: 'Языки', img: 'english-icon.png'},
+    {name: 'it', textOver: 'IT', img: 'code_icon.png'},
     {name: 'other', textOver: 'Другое', hide: true /*temp*/} // TODO find image for 'other'
   ];
 

@@ -5,7 +5,7 @@ module.exports = [
     "_id" : "5355443a9e965c7c19f33c43",
     "name" : "test1",
     "description" : "test desc",
-    "activity" : "bike",
+    "activity" : "cycling",
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
@@ -23,7 +23,7 @@ module.exports = [
     "_id" : "5355518ec5db1e5c17ba7887",
     "name" : "pokatushka v buche",
     "description" : "pokatuuuuuuuuuuuuuuuushka",
-    "activity" : "bike",
+    "activity" : "cycling",
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
@@ -43,7 +43,7 @@ module.exports = [
     "_id" : "535551d2c5db1e5c17ba788a",
     "name" : "pokatushka na truhane",
     "description" : "Truhan",
-    "activity" : "bike",
+    "activity" : "cycling",
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
@@ -103,7 +103,7 @@ module.exports = [
     "_id" : "53555221c5db1e5c17ba788d",
     "name" : "Chimera house",
     "description" : "Chimera house tour",
-    "activity" : "hiking",
+    "activity" : "tourism",
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
