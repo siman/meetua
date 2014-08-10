@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /event/
+Disallow: /api/
+Disallow: /dev-api/
