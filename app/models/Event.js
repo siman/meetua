@@ -70,7 +70,7 @@ eventSchema.set('toJSON', {virtuals: true });
 eventSchema.pre('save', true, function sanitizeDescription(next, done) {
   next();
   this.description = sanitizeHtml(this.description, {
-    allowedTags: [ 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'b', 'i', 'strong', 'ul', 'ol', 'li', 'img', 'br', 'span', 'a' ],
+    allowedTags: [ 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'b', 'i', 'strong', 'ul', 'ol', 'li', 'img', 'br', 'span', 'div'/*enter*/, 'a' ],
     allowedAttributes: {
       a: [ 'href', 'name', 'target' ],
       p: [ 'style' ],
