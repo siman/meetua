@@ -28,8 +28,7 @@ module.exports = function(req, res, next) {
         event: event,
         social: social,
         // If current user is an author of event
-        isCurrentUserAnAuthor: event.author && req.user && event.author._id.equals(req.user._id),
-        justCreated: event.ux.isJustCreated
+        isCurrentUserAnAuthor: event.author && req.user && event.author._id.equals(req.user._id)
       });
     }
   }).populate('author participants.user');

@@ -95,10 +95,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
             images: _.map(images, function(image){
               return new Image(image);
             }),
-            author: req.user._id,
-            ux: {
-              isJustCreated: true
-            }
+            author: req.user._id
           });
           logger.debug('Creating event ', eventObj);
           event = new Event(eventObj);
@@ -132,6 +129,9 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
             var respJson = {event: event};
             logger.debug('Sending response ', JSON.stringify(respJson));
             req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано! Детали отправлены Вам на почту.': 'Ваше событие обновлено!' });
+            if (isCreate(req)) {
+              req.flash('showFirstTime', 'true')
+            }
             res.send(respJson);
           }
         }
