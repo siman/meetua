@@ -37,17 +37,13 @@ block content
   else
     +jsVar("event", event)
     div#view_event_page(ng-controller='ViewEventCtrl')
-      .col-md-10
+      .col-md-9
         .row(style="margin-bottom: 20px")
           div.event_logo_box
             if (!event.logoUrl)
               div.no_image
             else
               dimensioned-img(src='event.logoUrl', width='120')
-
-          div.pull-right
-            h4 Поделиться ссылкой
-            include ../partials/share-event
 
           div: h1 #{event.name}
           div.view_event
@@ -62,7 +58,12 @@ block content
             div.event_desc
               !=event.description
 
-      .col-md-2(style="padding-top: 30px; padding-bottom: 20px")
+      .col-md-3(style="padding-top: 30px; padding-bottom: 20px")
+        #share_event_box
+          span Поделиться
+          #share_event_buttons
+            include ../partials/share-event
+
         #partBox.ng-cloak
           if (isCurrentUserAnAuthor)
             .event_label Вы &mdash; автор события
@@ -133,7 +134,8 @@ block content
                   span(aria-hidden='true') ×
                 h4.modal-title Поделиться ссылкой в:
               .modal-body
-                include ../partials/share-event
+                #modal_share_event_box
+                  include ../partials/share-event
               .modal-footer
                 button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
 
