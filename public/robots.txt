@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /event/
+Allow: /sitemap.xml
 Disallow: /api/
 Disallow: /dev-api/
