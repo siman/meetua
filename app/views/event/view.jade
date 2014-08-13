@@ -52,17 +52,15 @@ block content
           div: h1 #{event.name}
           div.view_event
             +eventField("Когда", event.prettyStartDate)
-            +eventField("Где", event.place.name)
+
+            div
+              span.event_label Где:
+              a(href=event.googleMapsUrl, target="_blank") #{event.place.name}
+
             if event.author
               +eventField("Организатор", event.author.profile.name, event.author.url)
             div.event_desc
               !=event.description
-
-        .row(style="margin-bottom: 20px")
-          google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts",
-            ng-if='event.place.latitude && event.place.longitude'
-          )
-            marker(coords="event.place")
 
       .col-md-2(style="padding-top: 30px; padding-bottom: 20px")
         #partBox.ng-cloak
