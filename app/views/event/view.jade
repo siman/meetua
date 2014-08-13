@@ -77,7 +77,7 @@ block content
               div(ng-show="isPart")
                 #partStatus Вы &mdash; участник события
 
-              button#partBtn.btn(ng-class="{'btn-default': isPart, 'btn-success': !isPart}",
+              button#partBtn.btn.btn-lg(ng-class="{'btn-default': isPart, 'btn-success': !isPart}",
                   ng-disabled="event.canceledOn",
                   data-toggle="modal", data-target=".guest-number-modal"
                   ng-click="isPart && participate(0)"
