@@ -37,26 +37,26 @@ block content
   else
     +jsVar("event", event)
     div#view_event_page(ng-controller='ViewEventCtrl')
-      .col-md-9
-        .row(style="margin-bottom: 20px")
-          div.event_logo_box
-            if (!event.logoUrl)
-              div.no_image
-            else
-              dimensioned-img(src='"#{event.logoUrl}"', width='120')
-
-          div: h1 #{event.name}
-          div.view_event
-            +eventField("Когда", event.prettyStartDate)
-
-            div
-              span.event_label Где:
-              a(href=event.googleMapsUrl, target="_blank") #{event.place.name}
-
-            if event.author
-              +eventField("Организатор", event.author.profile.name, event.author.url)
-            div.event_desc
-              !=event.description
+      .col-md-2
+        div#view_event_logo_box.pull-right(style="text-align: right")
+          if (!event.logoUrl)
+            div.no_image
+          else
+            dimensioned-img(src='"#{event.logoUrl}"', width='240')
+      
+      .col-md-7
+        div: h1 #{event.name}
+        div.view_event
+          +eventField("Когда", event.prettyStartDate)
+  
+          div
+            span.event_label Где:
+            a(href=event.googleMapsUrl, target="_blank") #{event.place.name}
+  
+          if event.author
+            +eventField("Организатор", event.author.profile.name, event.author.url)
+          div.event_desc
+            !=event.description
 
       .col-md-3(style="padding-top: 30px; padding-bottom: 20px")
         #share_event_box

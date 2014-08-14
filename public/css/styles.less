@@ -164,23 +164,30 @@ body {
   min-height: @size;
 }
 
-.event_logo_box {
-  .square_image;
+.image_box(@size: 120px) {
+  .square_image(@size);
   float: left;
   margin-left: 15px;
   margin-right: 10px;
 
   .no_image {
-    .square_image;
+    .square_image(@size);
     border: 3px dashed #eee;
     background-color: #fafafa;
   }
 }
-#view_event_page .event_logo_box {
+
+.event_logo_box {
+  .image_box(120px)
+}
+
+#view_event_logo_box {
   padding-top: 30px;
   margin-left: 0;
   margin-right: 20px;
   margin-bottom: 10px;
+  
+  .image_box(240px)
 }
 
 .no_margin_left {
