@@ -60,8 +60,8 @@ block content
 
       .col-md-3(style="padding-top: 30px; padding-bottom: 20px")
         #share_event_box
-            .btn-group.share_label Поделиться
-            include ../partials/share-event
+          .btn-group.share_label Поделиться
+          include ../partials/share-event
 
         #partBox.ng-cloak
 
@@ -89,7 +89,7 @@ block content
                   i.fa.fa-times
                   | Отказаться от участия
 
-          div(ng-if="currentUser")
+          div(ng-if="currentUser && isPart")
             #part_notif_settings
               a(href="javascript:void(0)", ng-click="showNotificationSettings()")
                 i.fa.fa-envelope-o
