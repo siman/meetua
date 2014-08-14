@@ -12,28 +12,28 @@ angular.module('myApp').controller('NotificationsCtrl',
     };
 
     function init() {
-      suggestDefaults();
+      $scope.$on('event:show-notification-settings', function(angEvent, data) {
+        showModal();
+      });
     }
 
-    function isEmptyStr(str) {
-      return !str || 0 === str.length || !str.trim();
-    }
+    // TODO: Use $modal as in [auth-modal.js]?
+    var $notifsModal = $('#notifs_modal');
 
-    // If user has no experience with this feature.
-    function hasNoUx() {
-      return !$scope.currentUser.ux.setupNotifications;
+    function showModal() {
+      console.log('NotificationsCtrl: showModal');
+      if ($scope.currentUser) {
+        suggestDefaults();
+        $notifsModal.modal('show');
+      }
     }
 
     function suggestDefaults() {
-      if ($scope.currentUser && !defaultsSuggested) {
-        if (hasNoUx()) {
-          $scope.notifs.enabled = 'true';
-          $scope.notifs.email = suggestEmail();
-        } else {
-          $scope.notifs.enabled = $scope.currentUser.emailNotifications.enabled.toString();
-          $scope.notifs.email = $scope.currentUser.emailNotifications.email;
-        }
+      if (!defaultsSuggested) {
+        $scope.notifs.enabled = $scope.currentUser.emailNotifications.enabled.toString();
+        $scope.notifs.email = suggestEmail();
         defaultsSuggested = true;
+        console.log('NotificationsCtrl: defaults suggested');
       }
     }
 
@@ -49,23 +49,16 @@ angular.module('myApp').controller('NotificationsCtrl',
       return resEmail;
     }
 
-    $scope.$on('event:user-joined-event', function(angEvent, data) {
-      showModalIfNoUx();
-    });
-
-    // TODO: Use $modal as in [auth-modal.js]?
-    var $notifsModal = $('#notifs_modal');
-
-    function showModalIfNoUx() {
-      suggestDefaults();
-      if ($scope.currentUser && hasNoUx()) {
-        $notifsModal.modal('show');
-      }
+    function isEmptyStr(str) {
+      return !str || 0 === str.length || !str.trim();
     }
 
-    $scope.saveNotifications = function() {
-      console.log('email', $scope.notifs.email);
+    $scope.closeNotifications = function() {
+      $notifsModal.modal('hide');
+    };
 
+    $scope.saveNotifications = function() {
+      console.log('Chosen notification email:', $scope.notifs.email);
       if ($scope.notifsForm.$valid) {
         $notifsModal.modal('hide');
         var enabled = $scope.notifs.enabled === 'true';
@@ -78,11 +71,13 @@ angular.module('myApp').controller('NotificationsCtrl',
         $http({ method: 'POST', url: util.apiUrl('/user/notifications'), params: params }).
           success(function(data, status, headers, config) {
             console.log('OK: Notification settings saved');
+            // We want to re-read current user because it's notification preferences were updated.
+            $rootScope.$broadcast('event:reload-current-user', {});
           }).
           error(function(data, status, headers, config) {
-            console.error("Failed to save notification settings", data);
+            console.error('Failed to save notification settings', data);
             ErrorService.alert('Не удалось сохранить настройки уведомлений.' +
-              ' Попробуйте настроить уведомления со страницы Вашего аккаунта.');
+              ' Попробуйте перезагрузить страницу и повторить действие.');
           });
       }
     };

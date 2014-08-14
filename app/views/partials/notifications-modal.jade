@@ -3,8 +3,10 @@
     .modal-content
       .modal-header
         h4.modal-title Настройки уведомлений
+
       .modal-body
-        | Вы хотите получать уведомления о событиях, в которых Вы принимаете участие?
+        | Вы хотите получать уведомления о событиях, в которых Вы принимаете участие
+        | или являетесь организатором?
         p
         form(name='notifsForm')
           label
@@ -23,8 +25,9 @@
               type='email', id='email', name='email', ng-model='notifs.email',
               required, style="width: 30em;"
             )
-            p(ng-show="notifsForm.email.$invalid", class="help-block") Введите правильную эл. почту.
+            p(ng-show="notifsForm.email.$invalid", class="help-block") Введите правильную эл. почту
             .clearfix
 
       .modal-footer
         button.btn.btn-primary(type='button', ng-click='saveNotifications()') Сохранить настройки
+        button.btn.btn-default(type='button', ng-click='closeNotifications()') Отмена

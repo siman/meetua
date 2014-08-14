@@ -54,7 +54,6 @@ var api = {
     if (enabled) {
       user.emailNotifications.email = req.query.email;
     }
-    user.ux.setupNotifications = true;
     user.save(function(err) {
     if (err) {
       return res.json(500, 'Не удалось обновить Ваш профиль');

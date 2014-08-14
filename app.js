@@ -180,7 +180,8 @@ app.post('/api/meetua/user/notifications', passportConf.isAuthenticated, userCon
 app.post('/api/meetua/user/updateProfile', passportConf.isAuthenticated, userController.api.postUpdateProfile);
 
 // Event
-app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
+// TODO rename events -> event to keep routing consistency
+app.get('/api/meetua/events/find', meetuaEventsApi.get_find);
 app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);

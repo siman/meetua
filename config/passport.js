@@ -51,7 +51,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
  */
 
 function suggestEmailForNotifications(user, email1, email2) {
-  if (!user.ux.setupNotifications && !user.emailNotifications.email) {
+  if (!user.emailNotifications.email) {
     user.emailNotifications.email = email1 || email2;
   }
 }

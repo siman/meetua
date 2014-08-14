@@ -91,9 +91,9 @@ var sendMail = appConfig.IS_WINDOWS ? WindowsMailer() : LinuxMailer();
 function notifyUser(user, subject, event, templateName, cb) {
   logger.debug('notify user', user._id);
   cb = cb || function() {};
-  logger.debug('user.canReceiveEmail', user.canReceiveEmail);
+  logger.debug('user.receivingEmails', user.receivingEmails);
   logger.debug('user.emailNotifications.email', user.emailNotifications.email);
-  if (user.canReceiveEmail) {
+  if (user.receivingEmails) {
     var params = { event: event };
     sendMail(user, subject, templateName, params, cb);
   } else {

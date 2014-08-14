@@ -2,7 +2,6 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
-var crypto = require('crypto');
 var logger = require('../controllers/util/logger')(__filename);
 var utils = require('../controllers/utils');
 var appConfig = require('../../config/app-config');
@@ -40,13 +39,10 @@ var userSchema = new mongoose.Schema({
 
   /**
    * Settings to define whether user had some particular experience with UI or not.
-   * For example: when user has not specified his preferences about email notifications
-   * 'setupNotifications' is false (by default). But once the application asked user
-   * about his preferences about notifications 'setupNotifications' should become true.
    */
-  ux: {
-    setupNotifications: { type: Boolean, default: false }
-  },
+//  ux: {
+//    // Nothing yet
+//  },
 
   resetPasswordToken: String,
   unsubscribeToken: String,
@@ -117,7 +113,7 @@ userSchema.virtual('profile.ru.gender').get(function() {
   }
 });
 
-userSchema.virtual('canReceiveEmail').get(function() {
+userSchema.virtual('receivingEmails').get(function() {
   return this.emailNotifications.enabled && this.emailNotifications.email;
 });
 

@@ -1,25 +1,21 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$rootScope', '$scope', '$http', 'BASE_MAP', 'util', 'ErrorService',
-  function ($rootScope, $scope, $http, BASE_MAP, util, ErrorService) {
+  ['$rootScope', '$scope', '$http', 'util', 'ErrorService',
+  function ($rootScope, $scope, $http, util, ErrorService) {
     var event = _myInit.event;
     console.log("Event", event);
 
     $scope.event = event;
 
-    $scope.map = _.extend(BASE_MAP, {
-      center: {
-        latitude: event.place.latitude,
-        longitude: event.place.longitude
-      },
-      zoom: 16
-    });
-
     function init() {
       var isPart = isCurrentUserTakingPartInEvent();
       changeParticipation(isPart);
     }
+
+    $scope.showNotificationSettings = function() {
+      $rootScope.$broadcast('event:show-notification-settings', {});
+    };
 
     function isCurrentUserTakingPartInEvent() {
       if ($scope.currentUser) {
