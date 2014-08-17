@@ -5,6 +5,8 @@ var path = require('path');
 var config = require('../../config/app-config');
 var logger = require('./util/logger.js')('util.js');
 var crypto = require('crypto');
+var tmp = require('tmp');
+var fs = require('fs-extra');
 
 /**
  *
@@ -69,3 +71,41 @@ exports.getUserIdOpt = function(req) {
   return req.user ? req.user._id : undefined;
 };
 
+/**
+ * Move file to specified directory generating unique name preserving file extension.
+ * @param srcPath - source file path
+ * @param destDir - destination dir
+ * @param fileExtension - extension of the file
+ * @param next
+ */
+module.exports.moveFile = function(srcPath, destDir, next) {
+  logger.debug('move', srcPath, '->', destDir, 'is requested');
+  tmp.tmpName({ dir: destDir, prefix: 'event-', postfix: path.extname(srcPath), tries: 100},
+    function(err, destPath) {
+      logger.debug('Created unique name ', destPath);
+      logger.debug('Moving ', srcPath, ' to ', destPath);
+      fs.copy(srcPath, destPath, function(err) {
+        if (err) return next(err);
+
+        fs.unlink(srcPath, function(err) {
+          if (err) {
+            console.error('Cannot unlink file ', srcPath, err);
+          }
+          next(null, destPath);
+        });
+      });
+    });
+};
+// TODO refactor moveFile and copyFile
+module.exports.copyFile = function(srcPath, destDir, next) {
+  logger.debug('move', srcPath, '->', destDir, 'is requested');
+  tmp.tmpName({ dir: destDir, prefix: 'event-', postfix: path.extname(srcPath), tries: 100},
+    function(err, destPath) {
+      logger.debug('Created unique name ', destPath);
+      logger.debug('Moving ', srcPath, ' to ', destPath);
+      fs.copy(srcPath, destPath, function(err) {
+        if (err) return next(err);
+        next(null, destPath);
+      });
+    });
+};

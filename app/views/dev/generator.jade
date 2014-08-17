@@ -108,5 +108,9 @@ block content
 
     .row
       .col-sm-12
-        pre
-          {{generatedEvents | json}}
+        div(ng-repeat="event in generatedEvents")
+          .row
+            .col-sm-3
+              dimensioned-img(src='event.imagePath', width='120')
+            .col-sm-9
+              pre {{event | json}}

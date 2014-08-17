@@ -9,9 +9,9 @@ var EVENT_IMG_DIR = config.EVENT_IMG_DIR;
 var async = require('async');
 var Event = require('../../../app/models/Event');
 var Image = require('../../../app/models/Image');
-var tmp = require('tmp');
 var notificationService = require('../util/notification-service');
 var logger = require('../util/logger')(__filename);
+var utils = require('../utils');
 
 maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
   if (err) throw err;
@@ -19,7 +19,7 @@ maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
 
 module.exports.postSaveEvent = function(req, res) {
   var args = { params: req.body, isCreate: _.isUndefined(req.body._id), currentUser: req.user, flashFn: req.flash.bind(req) };
-  saveEvent(args, function returnResp(respStatus, respData) {
+  _saveEvent(args, function returnResp(respStatus, respData) {
     res.json(respStatus, respData);
   });
 };
@@ -33,7 +33,8 @@ module.exports.postSaveEvent = function(req, res) {
  * @param {Function} cb
  * @returns {Function}
  */
-module.exports._saveEvent = function(args, cb) {
+module.exports._saveEvent = _saveEvent;
+function _saveEvent(args, cb) {
   var params = args.params;
   var isCreate = args.isCreate;
   var currentUser = args.currentUser;
@@ -175,7 +176,7 @@ function buildAndSaveEvent(args, cb) {
 }
 
 function copyImage(image, next) {
-    logger.debug('copy image ', JSON.stringify(image));
+    logger.debug('copy image ', image);
 
   // Siman: Image uploading works for me if comment next line. Does it work on Linux as well?
 //    var imagePath = path.join('/', image.name); // removes any '..'
@@ -187,7 +188,7 @@ function copyImage(image, next) {
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
           maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
             if (err) return next(err);
-            moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
+            utils.moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
                 next(err, _.extend(image, {name: path.basename(newPath)}));
             });
           });
@@ -211,30 +212,4 @@ function maybeCreateImgDir(imgDir, persistentDir, next) {
       });
     });
   });
-}
-
-/**
- * Move file to specified directory generating unique name preserving file extension.
- * @param srcPath - source file path
- * @param destDir - destination dir
- * @param fileExtension - extension of the file
- * @param next
- */
-function moveFile(srcPath, destDir, next) {
-    logger.debug('move', srcPath, '->', destDir, 'is requested');
-    tmp.tmpName({ dir: destDir, prefix: 'event-', postfix: path.extname(srcPath), tries: 100},
-      function(err, destPath) {
-        logger.debug('Created unique name ', destPath);
-        logger.debug('Moving ', srcPath, ' to ', destPath);
-        fs.copy(srcPath, destPath, function(err) {
-            if (err) return next(err);
-
-            fs.unlink(srcPath, function(err) {
-                if (err) {
-                    console.error('Cannot unlink file ', srcPath, err);
-                }
-                next(null, destPath);
-            });
-        });
-    });
 }

@@ -6,6 +6,8 @@ var path = require('path');
 var async = require('async');
 var random = require("random-js")();
 var _ = require('lodash');
+var utils = require('../utils');
+var appConfig = require('../../../config/app-config');
 
 module.exports.view = function(req, res, next) {
   res.render('dev/generator', { title: 'Mock Generator' });
@@ -38,41 +40,76 @@ function generateEvents(args, cb) {
   for (var i = 0; i < args.params.eventCount; i++) {
     arr.push(i);
   }
-  async.reduce(arr, [], function(memo, item, cb) {
-    generateEvent(args, function(err, event) {
-      memo.push(event);
-      cb(err, memo);
-    });
-  }, cb);
+  function readDescriptionFile(fileItem, cb) {
+    fs.readJson(fileItem.path, cb);
+  }
+  function readImageFile(fileItem, cb) {
+    cb(null, fileItem);
+  }
+  async.parallel({
+    images: function(cb) {
+      findFiles('images', readImageFile, cb);
+    },
+    descriptions: function(cb) {
+      findFiles('descriptions', readDescriptionFile, cb);
+    }
+  }, function(err, results) {
+    async.reduce(arr, [], function(memo, item, cb) {
+      generateEvent(_.extend({}, args, results), function(err, event) {
+        memo.push(event);
+        cb(err, memo);
+      });
+    }, cb);
+  });
 }
 /**
  * @param args
  * @param args.params
+ * @param args.images
+ * @param args.descriptions
  * @param {Function} cb function(err, event)
  */
 function generateEvent(args, cb) {
-  function readDescriptionFile(file, cb) {
-    fs.readJson(file, cb);
-  }
+  var descFiles = args.descriptions;
+  var imageFiles = args.images;
 
-  findFiles('descriptions', readDescriptionFile, function(err, files) {
-    if (err) return cb(err);
-
-    if (args.params.isRandom) {
-      var randomFileIdx = random.integer(0, files.length - 1);
-      var donor = files[randomFileIdx];
+  if (args.params.isRandom) {
+    var donor = randomArrItem(descFiles);
+    logger.debug('imageFiles', imageFiles);
+    var activityImages = _.filter(imageFiles, function(file) {
+      return file.activity == donor.activity;
+    });
+    logger.debug('activityImages', activityImages);
+    var image = randomArrItem(activityImages);
+    async.waterfall([
+      function uploadImage(cb) {
+        if (image) {
+          utils.copyFile(image.path, appConfig.EVENT_IMG_DIR, cb);
+        } else {
+          cb();
+        }
+      }
+    ], function(err, imagePath) {
+      if (err) return cb(err);
       var event = {
         activity: donor.activity,
         title: donor.title[randomSize()],
-        description: donor.description[randomSize()]
+        description: donor.description[randomSize()],
+        imagePath: imagePath ? '/upload/' + path.basename(imagePath) : '' // TODO Image
       };
       cb(null, event);
-    }
-  });
+    });
+  }
+}
+
+function randomArrItem(arr) {
+  var idx = random.integer(0, arr.length - 1);
+  return arr[idx];
 }
 
 /**
  * @param {String} typeOfFiles possible values: ['descriptions', 'images']
+ * @param {Function} readFile function({activity: '', path: ''}, cb)
  * @param cb
  */
 function findFiles(typeOfFiles, readFile, cb) {
@@ -83,17 +120,17 @@ function findFiles(typeOfFiles, readFile, cb) {
     },
     function readFiles(actDirs, cb) {
       logger.debug('actDirs', actDirs);
-      async.reduce(actDirs, [], function(memo, file, cb) {
-        var pathPrefix = staticDir + '/' + file + '/' + typeOfFiles;
+      async.reduce(actDirs, [], function(memo, actDir, cb) {
+        var pathPrefix = staticDir + '/' + actDir + '/' + typeOfFiles;
         fs.readdir(pathPrefix, function(err, files) {
           if (err && err.code == 'ENOENT') {
-            logger.warn('Cannot find ' + typeOfFiles + ' for', file);
+            logger.warn('Cannot find ' + typeOfFiles + ' for', actDir);
             return cb(null, memo);
           }
-          var filePaths = _.map(files, function(file) {
-            return path.join(pathPrefix, file);
+          var fileItems = _.map(files, function(file) {
+            return {activity: actDir, path: path.join(pathPrefix, file)};
           });
-          cb(err, memo.concat(filePaths));
+          cb(err, memo.concat(fileItems));
         });
       }, cb);
     },
@@ -101,7 +138,7 @@ function findFiles(typeOfFiles, readFile, cb) {
       async.map(files, readFile, cb);
     }
   ], function(err, files) {
-    logger.debug('Found mock files', files);
+    logger.debug('Found ' + typeOfFiles + ' files', files.length);
     return cb(err, files);
   });
 }
