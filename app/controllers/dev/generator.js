@@ -17,12 +17,12 @@ module.exports.generate = function(req, res, next) {
   logger.debug('Gen params', params);
 
   // TODO Impl
-  generateEvent({params: params}, function(err, event) {
+  generateEvents({params: params}, function(err, events) {
     if (err) {
       logger.error('Failed to generate events', err);
       return res.json(500, err);
     }
-    res.json(200, [event]);
+    res.json(200, events);
   });
 };
 
@@ -33,6 +33,18 @@ function randomSize() {
   return sizes[idx];
 }
 
+function generateEvents(args, cb) {
+  var arr = [];
+  for (var i = 0; i < args.params.eventCount; i++) {
+    arr.push(i);
+  }
+  async.reduce(arr, [], function(memo, item, cb) {
+    generateEvent(args, function(err, event) {
+      memo.push(event);
+      cb(err, memo);
+    });
+  }, cb);
+}
 /**
  * @param args
  * @param args.params
