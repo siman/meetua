@@ -67,6 +67,13 @@ exports.generateToken = function(done) {
   });
 };
 
+var Random = require("random-js");
+var random = new Random(Random.engines.mt19937().autoSeed());
+
+exports.random = function(min, max) {
+  return random.integer(min, max);
+};
+
 exports.getUserIdOpt = function(req) {
   return req.user ? req.user._id : undefined;
 };

@@ -4,10 +4,10 @@ var logger = require('../util/logger')(__filename);
 var fs = require('fs-extra');
 var path = require('path');
 var async = require('async');
-var random = require("random-js")();
 var _ = require('lodash');
 var utils = require('../utils');
 var appConfig = require('../../../config/app-config');
+var sizes = ['small', 'medium', 'large'];
 
 module.exports.view = function(req, res, next) {
   res.render('dev/generator', { title: 'Mock Generator' });
@@ -27,13 +27,6 @@ module.exports.generate = function(req, res, next) {
     res.json(200, events);
   });
 };
-
-var sizes = ['small', 'medium', 'large'];
-
-function randomSize() {
-  var idx = random.integer(0, sizes.length - 1);
-  return sizes[idx];
-}
 
 function generateEvents(args, cb) {
   var arr = [];
@@ -93,8 +86,8 @@ function generateEvent(args, cb) {
       if (err) return cb(err);
       var event = {
         activity: donor.activity,
-        title: donor.title[randomSize()],
-        description: donor.description[randomSize()],
+        title: donor.title[randomArrItem(sizes)],
+        description: donor.description[randomArrItem(sizes)],
         imagePath: imagePath ? '/upload/' + path.basename(imagePath) : '' // TODO Image
       };
       cb(null, event);
@@ -103,7 +96,7 @@ function generateEvent(args, cb) {
 }
 
 function randomArrItem(arr) {
-  var idx = random.integer(0, arr.length - 1);
+  var idx = utils.random(0, arr.length - 1);
   return arr[idx];
 }
 
