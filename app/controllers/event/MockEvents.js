@@ -63,7 +63,7 @@ module.exports = [
     "_id" : "535551ecc5db1e5c17ba788b",
     "name" : "Code in comfy",
     "description" : "comfy code hackathon",
-    "activity" : "code",
+    "activity" : "it",
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
@@ -83,7 +83,7 @@ module.exports = [
     "_id" : "535551ecc5db1e6c17ba788b",
     "name" : "Code in comfy",
     "description" : "comfy code hackathon",
-    "activity" : "code",
+    "activity" : "it",
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
