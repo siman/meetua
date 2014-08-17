@@ -165,7 +165,7 @@ app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
 app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
 app.post('/event/:id/rm-image/:imageId', rmEventImage);
-app.get('/user/:userId', userController.getUserProfile)
+app.get('/user/:userId', userController.getUserProfile);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 

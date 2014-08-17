@@ -17,7 +17,7 @@ notificationService.notifyAuthorOnCreate = function(arg, cb) {cb();}; // mock
 notificationService.notifyParticipantOnEdit = function(arg, cb) {cb();}; // mock
 var moment = require('moment');
 
-var saveEvent = require('../../../../app/controllers/event/save-event');
+var saveEvent = require('../../../../app/controllers/event/save-event').postSaveEvent;
 
 describe('save-event', function() {
   var user = { _id: mongoose.Types.ObjectId() };
