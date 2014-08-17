@@ -61,7 +61,7 @@ var month = (day * 30);
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'jade');
 app.use(connectAssets({
-  paths: ['public/css', 'public/js'],
+  paths: ['public/css', 'public/js', 'public/lib'],
   helperContext: app.locals,
   build: appConfig.buildAssets
 }));
@@ -188,10 +188,15 @@ app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEve
 app.get('/api/meetua/events/user/:userId/overview', meetuaEventsApi.getUserEventsOverview);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
 
-if (appConfig.IS_DEVELOPMENT) {
+if (!appConfig.IS_PRODUCTION) {
+
+  var generator = require('./app/controllers/dev/generator');
+  app.get('/dev/generator', passportConf.isAuthenticated, generator.view);
+  app.post('/dev/generate', passportConf.isAuthenticated, generator.generate);
+
   var devApi = require('./app/controllers/api/dev');
-  app.get('/dev-api', function(req, res, next) {
-    res.render('dev-api', { title: 'MeetUA API' });
+  app.get('/dev/api', function(req, res, next) {
+    res.render('dev/api', { title: 'MeetUA API' });
   });
   app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticated, devApi.postNotifyParticipantOnJoin);
   app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticated, devApi.postNotifyParticipantOnEdit);

@@ -9,23 +9,22 @@
       a.navbar-brand(href='/') MeetUA
     .collapse.navbar-collapse
       ul.nav.navbar-nav
-        //li(class=title=='API Browser'?'active':undefined)
-        //  a(href='/api') API Browser
-        //li(class=title=='Contact'?'active':undefined)
-        //  a(href='/contact') Contact
-        //li(class=title=='Найти событие'?'active':undefined)
-        //  a(href='#') Найти событие
         li(class=title=='Создать событие'?'active':undefined)
           a(href='/event/create') Создать событие
+
         if user
           li(class=title=='Мои события'?'active':undefined)
             a(href='/profile/my-events') Мои события
-        li(class=title=='Отзывы'?'active':undefined)
+
+        li(class=title=='Отзывы и предложения'?'active':undefined)
           a(href='/feedback') Отзывы
 
         if !appConfig.IS_PRODUCTION
-          li(class=title=='MeetUA API'?'active':undefined)
-            a(href='/dev-api') API
+          li.alert-warning(class=title=='MeetUA API'?'active':undefined)
+            a(href='/dev/api') API
+
+          li.alert-warning(class=title=='Mock Generator'?'active':undefined)
+            a(href='/dev/generator') Generator
 
       ul.nav.navbar-nav.navbar-right
           - var hideWhenUser = user ? 'ng-hide' : undefined

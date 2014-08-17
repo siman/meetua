@@ -1,8 +1,9 @@
-extends layout
+extends ../layout
 
 block content
 
-  h4.modal-title Dev api
+  .page-header
+    h1 #{title}
 
   ul
     li: a(href='/api/meetua/events/find', target='_blank') events/find
