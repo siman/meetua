@@ -26,8 +26,9 @@ exports.errorHandler = function(err, req, res, next) {
 };
 
 exports.mongoConnect = function(done) {
-    console.log('Connecting ...');
-    mongoose.connect('mongodb://localhost/testdb', function() {
+    var db = appConfig.secrets.db;
+    console.log('Connecting to', db);
+    mongoose.connect(db, function() {
         console.log('Connected');
         done();
     });
@@ -133,7 +134,7 @@ exports.buildTestEvent = function(opts) {
     images: []
   };
   return _.extend(reqData, opts);
-}
+};
 
 /**
  * Login the user into application using http call
