@@ -47,21 +47,24 @@ var api = {
   },
 
   postSetupUserNotifications: function(req, res, next) {
-    logger.debug('Setup user notifications');
     var user = req.user;
-    var enabled = req.query.enabled === 'true';
+    var params = req.body;
+    logger.debug('Setup user notifications', params);
+
+    var enabled = params.enabled === true;
     user.emailNotifications.enabled = enabled;
     if (enabled) {
-      user.emailNotifications.email = req.query.email;
+      user.emailNotifications.email = params.email;
     }
     user.save(function(err) {
-    if (err) {
-      return res.json(500, 'Не удалось обновить Ваш профиль');
-    }
-    logger.debug('User updated', user);
+      if (err) {
+        return res.json(500, 'Не удалось обновить Ваш профиль');
+      }
+      logger.debug('User updated', user);
       return res.send(200);
     });
   },
+
   postUpdateProfile: function(req, res, next) {
     var errMsg = 'Не удалось обновить Ваш профиль';
     req.assert('email', 'Неверный email').isEmail();

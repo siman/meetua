@@ -110,8 +110,9 @@ module.exports.get_find = function(req, res, next) {
 
 /** Change participation status for event. */
 module.exports.post_participation = function(req, res, next) {
-  var eventId = req.query.eventId;
-  var act = req.query.act || 'add'; // valid values: add, remove.
+  var params = req.body;
+  var eventId = params.eventId;
+  var act = params.act || 'add'; // valid values: add, remove.
   var curUser = req.user;
   logger.debug('post_participation eventId: ' + eventId + ' act ' + act + ' curUser ' + curUser);
 
@@ -150,7 +151,7 @@ module.exports.post_participation = function(req, res, next) {
         return part.user.equals(curUser._id)});
       updateEvent('removed');
     } else if (act === 'add' && !alreadyParticipated) {
-      event.participants.push({user: curUser._id, guests: req.query.guests});
+      event.participants.push({user: curUser._id, guests: params.guests});
       updateEvent('added');
     } else {
       res.json({status: 'added'});

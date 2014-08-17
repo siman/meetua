@@ -68,7 +68,7 @@ angular.module('myApp').controller('NotificationsCtrl',
         if (enabled) {
           params.email = $scope.notifs.email;
         }
-        $http({ method: 'POST', url: util.apiUrl('/user/notifications'), params: params }).
+        $http.post(util.apiUrl('/user/notifications'), params).
           success(function(data, status, headers, config) {
             console.log('OK: Notification settings saved');
             // We want to re-read current user because it's notification preferences were updated.

@@ -37,7 +37,7 @@ angular.module('myApp').controller('ViewEventCtrl',
       $partBtn.attr('disabled', 'disabled');
 
       var params = {eventId: event._id, act: $scope.isPart ? 'remove' : 'add', guests: guestNumber};
-      $http({method: 'POST', url: util.apiUrl('/events/participation'), params: params}).
+      $http.post(util.apiUrl('/events/participation'), params).
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');  // FIXME: to Siman: controller shouldn't modify DOM. It's directive's responsibility
           var joinedEvent = data.status === 'added';
