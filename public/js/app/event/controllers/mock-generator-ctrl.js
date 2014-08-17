@@ -6,7 +6,9 @@ angular.module('myApp').controller('MockGeneratorCtrl',
 
     $scope.gen = {
       eventCount: 1,
-      activities: 'TODO', // []
+      isRandom: true,
+
+      activities: 'TODO', // [] TODO Get from consts.
 
       titleSizes: {
         small: false,
@@ -56,21 +58,10 @@ angular.module('myApp').controller('MockGeneratorCtrl',
       return sizes;
     }
 
-    function buildGenParams() {
-      var params = {
-        eventCount: $scope.gen.eventCount,
-        titleSizes: sizesToArray($scope.gen.titleSizes),
-        descSizes: sizesToArray($scope.gen.descSizes)
-      };
-      return params;
-    }
-
     $scope.generateEvents = function() {
       console.log('Generating ' + $scope.gen.eventCount + ' events...');
       console.log('UI state:\n', $scope.gen);
-      var genParams = buildGenParams();
-      console.log('Generation params:\n', genParams);
-      $http({method: 'POST', url: '/dev/generate', params: genParams}).
+      $http.post('/dev/generate', $scope.gen).
         success(function(data, status, headers, config) {
           // TODO Notify
         }).

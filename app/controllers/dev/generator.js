@@ -8,5 +8,10 @@ module.exports.view = function(req, res, next) {
 
 module.exports.generate = function(req, res, next) {
   logger.debug('Generating mock events...');
+  var params = req.body;
+  logger.debug('Gen params', params);
+
   // TODO Impl
+  
+  res.send(200);
 };
