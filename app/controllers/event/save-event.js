@@ -13,7 +13,7 @@ var tmp = require('tmp');
 var notificationService = require('../util/notification-service');
 var logger = require('../util/logger')(__filename);
 
-maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
+maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
   if (err) throw err;
 });
 
@@ -149,7 +149,7 @@ function copyImage(image, next) {
         logger.debug('Image ', imagePath, 'exists ', exists);
         logger.debug('uploadDir ', UPLOAD_DIR);
         if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
-          maybeCreateImgDir(EVENT_IMG_DIR, path.join(config.PERSISTENT_DATA_DIR, EVENT_IMG_DIR), function(err) {
+          maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
             if (err) return next(err);
             moveFile(imagePath, EVENT_IMG_DIR, function(err, newPath) {
                 next(err, _.extend(image, {name: path.basename(newPath)}));
@@ -163,10 +163,13 @@ function copyImage(image, next) {
 
 function maybeCreateImgDir(imgDir, persistentDir, next) {
   fs.exists(imgDir, function(alreadyExists) {
+    logger.debug('imgDir', imgDir, 'exists', alreadyExists);
     if (alreadyExists) return next(null);
 
+    logger.debug('mkdirp', persistentDir);
     fs.mkdirp(persistentDir, function(err) {
       if (err) return next(err);
+      logger.debug('symlink', persistentDir, '->', imgDir);
       fs.symlink(persistentDir, imgDir, function(err) { // symlink imgDir -> persistentDir
         next(err);
       });
