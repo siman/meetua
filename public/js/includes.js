@@ -22,8 +22,8 @@
 //= require lib/http-auth-interceptor
 //= require lib/angular-file-upload-0.5.5
 //= require lib/angular-google-maps-1.0.18
-//= require lib/angular-strap-2.0.1
-//= require lib/angular-strap-tpl-2.0.1
+//= require ../lib/angular-strap/2.0.5/js/angular-strap.js
+//= require ../lib/angular-strap/2.0.5/js/angular-strap.tpl.js
 //= require lib/summernote-0.5.2
 //= require lib/angular-summernote-0.2.2
 //= require my-app
