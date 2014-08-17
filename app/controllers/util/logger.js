@@ -1,6 +1,8 @@
 'use strict';
 
 var winston = require('winston');
+var _ = require('lodash');
+var json = require('circular-json');
 var path = require('path');
 var fs = require('fs-extra');
 var moment = require('moment');
@@ -39,7 +41,11 @@ module.exports = function(module) {
   function buildMsg(args) {
     var msg = '[' + loggerName + ']';
     for (var i = 0; i < args.length; i++) {
-      msg = msg + ' ' + args[i];
+      var arg = args[i];
+      if (_.isObject(arg)) {
+        arg = JSON.stringify(arg, null, 2);
+      }
+      msg = msg + ' ' + arg;
     }
     return msg;
   }
