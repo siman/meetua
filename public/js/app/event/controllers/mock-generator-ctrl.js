@@ -63,7 +63,7 @@ angular.module('myApp').controller('MockGeneratorCtrl',
       console.log('UI state:\n', $scope.gen);
       $http.post('/dev/generate', $scope.gen).
         success(function(data, status, headers, config) {
-          // TODO Notify
+          $scope.generatedEvents = data;
         }).
         error(function(data, status, headers, config) {
           // TODO Notify
