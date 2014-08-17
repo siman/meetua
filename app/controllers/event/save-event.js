@@ -17,20 +17,41 @@ maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
   if (err) throw err;
 });
 
-module.exports = function(req, res, next) {
-    if (isCreate(req)) {
-      logger.debug('Create event request', JSON.stringify(req.body));
+module.exports.postSaveEvent = function(req, res) {
+  var args = { params: req.body, isCreate: _.isUndefined(req.body._id), currentUser: req.user, flashFn: req.flash.bind(req) };
+  saveEvent(args, function returnResp(respStatus, respData) {
+    res.json(respStatus, respData);
+  });
+};
+
+/**
+ * @param args
+ * @param {Object} args.params
+ * @param {Boolean} args.isCreate
+ * @param {User} args.currentUser
+ * @param {Function} args.flashFn
+ * @param {Function} cb
+ * @returns {Function}
+ */
+module.exports._saveEvent = function(args, cb) {
+  var params = args.params;
+  var isCreate = args.isCreate;
+  var currentUser = args.currentUser;
+  var flashFn = args.flashFn;
+
+  if (isCreate) {
+      logger.debug('Create event request', params);
     } else {
-      logger.debug('Update event request', JSON.stringify(req.body));
+      logger.debug('Update event request', params);
     }
 
     var event;
-    var reqImages = req.body.images || [];
+    var reqImages = params.images || [];
 
-    if (!isCreate(req)) {
-      Event.findById(req.body._id, function(err, eventFound) {
-        if (err) res.json(500, err); // TODO find out standard way to pass errors when UI will have standard error handler
-        if (!eventFound || !eventFound.author.equals(req.user._id)) return res.json(404, {error: 'Event is not found'});
+    if (!isCreate) {
+      Event.findById(params._id, function(err, eventFound) {
+        if (err) cb(500, err); // TODO find out standard way to pass errors when UI will have standard error handler
+        if (!eventFound || !eventFound.author.equals(currentUser._id)) return cb(404, {error: 'Event is not found'});
         event = eventFound;
 
         // merge images overriding from request
@@ -48,28 +69,26 @@ module.exports = function(req, res, next) {
       verifyLogoCount(reqImages, doSave(reqImages, []));
     }
 
-    function verifyLogoCount(images, cb) {
+    function verifyLogoCount(images, next) {
       logger.debug('verifyLogoCount');
       async.reduce(images, 0, countLogoImages, function(err, logoCount) {
-        if (err) return res.json(500, err);
+        if (err) return cb(500, err);
         if (images.length > 0 && logoCount != 1) {
           var errorMsg = 'Invalid logo count ' + logoCount;
           logger.debug(errorMsg);
-          return res.json(400, {error: errorMsg});
+          return cb(400, {error: errorMsg});
         }
-        cb();
+        next();
       });
     }
     function doSave(newImages, imagesWithId) {
       return function() {
         logger.debug('doSave');
-        async.map(newImages, copyImage, buildAndSaveEvent(event, imagesWithId, req, res, next));
+        var saveEventParams = {event: event, imagesWithId: imagesWithId, currentUser: currentUser,
+          isCreate: isCreate, params: params, flashFn: flashFn};
+        async.map(newImages, copyImage, buildAndSaveEvent(saveEventParams, cb));
       };
     }
-};
-
-function isCreate(req) {
-  return _.isUndefined(req.body._id);
 }
 
 function countLogoImages(acc, image, next) {
@@ -78,11 +97,28 @@ function countLogoImages(acc, image, next) {
   next(null, acc + add);
 }
 
-function buildAndSaveEvent(event, imagesWithId, req, res, next) {
+/**
+ * @param args
+ * @param {Event} args.event
+ * @param {Array} args.imagesWithId
+ * @param {Object} args.params
+ * @param {Function} args.flashFn
+ * @param {User} args.currentUser
+ * @param {Boolean} args.isCreate
+ * @param {Function} cb
+ * @returns {Function}
+ */
+function buildAndSaveEvent(args, cb) {
+    var event = args.event;
+    var imagesWithId = args.imagesWithId;
+    var params = args.params;
+    var flashFn = args.flashFn;
+    var currentUser = args.currentUser;
+    var isCreate = args.isCreate;
     return function(err, images) {
-        if (err) return res.json(400, err);
+        if (err) return cb(400, err);
 
-        delete req.body.images;
+      delete params.images;
 
         if (event) {
           updateEvent();
@@ -91,11 +127,11 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
         }
 
         function createEvent() {
-          var eventObj = _.extend(req.body, {
+          var eventObj = _.extend(params, {
             images: _.map(images, function(image){
               return new Image(image);
             }),
-            author: req.user._id
+            author: currentUser._id
           });
           logger.debug('Creating event ', eventObj);
           event = new Event(eventObj);
@@ -103,7 +139,7 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
         }
 
         function updateEvent() {
-          _.extend(event, req.body, {images: images.concat(imagesWithId)});
+          _.extend(event, params, {images: images.concat(imagesWithId)});
 
           logger.debug('Updating event by id', event._id, event);
           var respEvent = _.extend({}, event, {_id: event._id});
@@ -114,25 +150,25 @@ function buildAndSaveEvent(event, imagesWithId, req, res, next) {
           return function(err) {
             if (err) {
               logger.error("error while saving event", err);
-              return res.json(400, {error: err});
+              return cb(400, {error: err});
             }
 
             var onNotifyComplete = function(err, resp) {
               logger.debug('Notification response: %s, error: %s', resp, err);
             };
-            if (isCreate(req)) {
+            if (isCreate) {
               notificationService.notifyAuthorOnCreate(event, onNotifyComplete)
             } else {
               notificationService.notifyParticipantOnEdit(event, onNotifyComplete);
             }
 
             var respJson = {event: event};
-            logger.debug('Sending response ', JSON.stringify(respJson));
-            req.flash('success', { msg: isCreate(req) ? 'Ваше событие создано! Детали отправлены Вам на почту.': 'Ваше событие обновлено!' });
-            if (isCreate(req)) {
-              req.flash('showFirstTime', 'true')
+            logger.debug('Sending response', respJson);
+            flashFn('success', { msg: isCreate ? 'Ваше событие создано! Детали отправлены Вам на почту.': 'Ваше событие обновлено!' });
+            if (isCreate) {
+              flashFn('showFirstTime', 'true')
             }
-            res.send(respJson);
+            cb(200, respJson);
           }
         }
     };
