@@ -9,6 +9,7 @@
     "start-win": "nodemon app.js",
     "start": "export NODE_ENV=development;nodemon app.js",
     "test": "export NODE_ENV=test;jasmine-node app/spec --captureExceptions",
+    "test-win": "set NODE_ENV=test\njasmine-node app/spec --captureExceptions",
     "mocha-test": "export NODE_ENV=test;mocha --recursive app/test",
     "selenium-server": "./node_modules/protractor/bin/webdriver-manager start",
     "e2e-test": "./node_modules/protractor/bin/protractor spec-e2e/protractor_conf.js"
