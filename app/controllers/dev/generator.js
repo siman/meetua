@@ -121,8 +121,7 @@ function generateEvent(args, cb) {
 
       var saveArgs = { params: eventData, isCreate: true, currentUser: args.currentUser,
         flashFn: function(flashKey, flashValue) {
-          logger.debug('Flash key:', flashKey);
-          logger.debug('Flash value:', flashValue);
+          logger.debug('Flash ', flashKey + '=' + flashValue);
         },
         beforeSaveEventFn: function(newEvent) {
           logger.debug('beforeSaveEventFn: hasLogo', hasLogo);

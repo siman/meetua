@@ -53,7 +53,7 @@ function _saveEvent(args, cb) {
   }
 
   var event;
-  var reqImages = params.images || preparedIm || [];
+  var reqImages = params.images || [];
 
   if (!isCreate) {
     Event.findById(params._id, function(err, eventFound) {
@@ -118,12 +118,12 @@ function countLogoImages(acc, image, next) {
  */
 function buildAndSaveEvent(args, cb) {
   var event = args.event;
-  var imagesWithId = args.imagesWithId;
+  var imagesWithId = args.imagesWithId || [];
   var params = args.params;
   var currentUser = args.currentUser;
-  var isCreate = args.isCreate;
-  var flashFn = args.flashFn;
-  var beforeSaveEventFn = args.beforeSaveEventFn;
+  var isCreate = args.isCreate || true;
+  var flashFn = args.flashFn || function() {};
+  var beforeSaveEventFn = args.beforeSaveEventFn || function() {};
 
   return function(err, images) {
     if (err) return cb(400, err);
