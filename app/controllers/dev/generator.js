@@ -5,8 +5,13 @@ var fs = require('fs-extra');
 var path = require('path');
 var async = require('async');
 var _ = require('lodash');
-var utils = require('../utils');
+var moment = require('moment');
+
 var appConfig = require('../../../config/app-config');
+var utils = require('../utils');
+var Image = require('../../../app/models/Image');
+var saveEvent = require('../event/save-event')._saveEvent;
+
 var sizes = ['small', 'medium', 'large'];
 
 module.exports.view = function(req, res, next) {
@@ -19,7 +24,7 @@ module.exports.generate = function(req, res, next) {
   logger.debug('Gen params', params);
 
   // TODO Impl
-  generateEvents({params: params}, function(err, events) {
+  generateEvents({params: params, currentUser: req.user}, function(err, events) {
     if (err) {
       logger.error('Failed to generate events', err);
       return res.json(500, err);
@@ -55,6 +60,7 @@ function generateEvents(args, cb) {
     }, cb);
   });
 }
+
 /**
  * @param args
  * @param args.params
@@ -84,15 +90,90 @@ function generateEvent(args, cb) {
       }
     ], function(err, imagePath) {
       if (err) return cb(err);
-      var event = {
+
+      var hasLogo = !_.isUndefined(imagePath);
+
+      // TODO: Random dates: past, current, future.
+      var startMoment = randomFutureMoment();
+      var endMoment = randomEndMoment(startMoment); // TODO: Fix! is the same as startMoment
+
+      var eventData = {
         activity: donor.activity,
-        title: donor.title[randomArrItem(sizes)],
+        name: donor.title[randomArrItem(sizes)],
         description: donor.description[randomArrItem(sizes)],
-        imagePath: imagePath ? '/upload/' + path.basename(imagePath) : '' // TODO Image
+
+        place: { // TODO Generate random place?
+          name: 'Тараса Шевченка, Київ, місто Київ, Україна',
+          latitude: 50.474155,
+          longitude: 30.503491
+        },
+        start: {
+          dateTime: startMoment.toDate()
+        },
+        end: {
+          dateTime: endMoment.toDate()
+        },
+//        canceledOn: undefined, // TODO
+
+        participants: [], // TODO
+        images: [] // No images at this point. We will add logo explicitly later
       };
-      cb(null, event);
+
+      var saveArgs = { params: eventData, isCreate: true, currentUser: args.currentUser,
+        flashFn: function(flashKey, flashValue) {
+          logger.debug('Flash key:', flashKey);
+          logger.debug('Flash value:', flashValue);
+        },
+        beforeSaveEventFn: function(newEvent) {
+          logger.debug('beforeSaveEventFn: hasLogo', hasLogo);
+          if (hasLogo) {
+            var logoImage = Image.newLogoFromPath(imagePath);
+            logger.debug('beforeSaveEventFn: logoImage', logoImage);
+            newEvent.images.push(logoImage);
+          }
+        }
+      };
+      saveEvent(saveArgs, function(resCode, resData) {
+        logger.debug('Response code for save event:', resCode);
+        cb(null, resData.event);
+      });
     });
   }
+}
+
+function randomPastMoments() {
+  // TODO
+}
+
+function randomCurrentMoments() {
+  // TODO
+}
+
+function randomFutureMoments() {
+  // TODO
+}
+
+function randomPastMoment() {
+  return moment().
+    subtract('y', utils.random(0, 2)).
+    subtract('M', utils.random(0, 12)).
+    subtract('d', utils.random(0, 30)).
+    subtract('h', utils.random(1, 24));
+}
+
+function randomFutureMoment() {
+  return moment().
+    add('y', utils.random(0, 2)).
+    add('M', utils.random(0, 12)).
+    add('d', utils.random(0, 30)).
+    add('h', utils.random(1, 24));
+}
+
+function randomEndMoment(startMoment) {
+  return startMoment.
+    add('d', utils.random(0, 7)).
+    add('h', utils.random(1, 24)).
+    add('m', utils.random(0, 3) * 15);
 }
 
 function randomArrItem(arr) {

@@ -111,6 +111,6 @@ block content
         div(ng-repeat="event in generatedEvents")
           .row
             .col-sm-3
-              dimensioned-img(src='event.imagePath', width='120')
+              dimensioned-img.pull-right(src='event.logoUrl', width='300')
             .col-sm-9
               pre {{event | json}}

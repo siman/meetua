@@ -16,6 +16,9 @@ var activityNames = _.map(activities, function(activity) {
 });
 
 var eventSchema = new mongoose.Schema({
+
+    // TODO: by Siman: Add fields: 'createdOn', 'updatedOn'
+
     name: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     participants: [{

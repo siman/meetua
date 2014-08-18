@@ -30,15 +30,21 @@ module.exports.postSaveEvent = function(req, res) {
  * @param {Boolean} args.isCreate
  * @param {User} args.currentUser
  * @param {Function} args.flashFn
- * @param {Function} cb
+ * @param {Function} args.beforeSaveEventFn function(event)
+ * @param {Function} cb function(respStatus, respData)
  * @returns {Function}
  */
-module.exports._saveEvent = _saveEvent;
+// Function is explicit here to have autocompletion in IDE
+module.exports._saveEvent = function(args, cb) {
+  _saveEvent(args, cb);
+};
+
 function _saveEvent(args, cb) {
   var params = args.params;
   var isCreate = args.isCreate;
   var currentUser = args.currentUser;
   var flashFn = args.flashFn;
+  var beforeSaveEventFn = args.beforeSaveEventFn;
 
   if (isCreate) {
     logger.debug('Create event request', params);
@@ -47,7 +53,7 @@ function _saveEvent(args, cb) {
   }
 
   var event;
-  var reqImages = params.images || [];
+  var reqImages = params.images || preparedIm || [];
 
   if (!isCreate) {
     Event.findById(params._id, function(err, eventFound) {
@@ -86,7 +92,7 @@ function _saveEvent(args, cb) {
     return function() {
       logger.debug('doSave');
       var saveEventParams = {event: event, imagesWithId: imagesWithId, currentUser: currentUser,
-        isCreate: isCreate, params: params, flashFn: flashFn};
+        isCreate: isCreate, params: params, flashFn: flashFn, beforeSaveEventFn: beforeSaveEventFn};
       async.map(newImages, copyImage, buildAndSaveEvent(saveEventParams, cb));
     };
   }
@@ -103,19 +109,22 @@ function countLogoImages(acc, image, next) {
  * @param {Event} args.event
  * @param {Array} args.imagesWithId
  * @param {Object} args.params
- * @param {Function} args.flashFn
  * @param {User} args.currentUser
  * @param {Boolean} args.isCreate
- * @param {Function} cb
+ * @param {Function} args.flashFn
+ * @param {Function} args.beforeSaveEventFn function(event)
+ * @param {Function} cb function(respStatus, respData)
  * @returns {Function}
  */
 function buildAndSaveEvent(args, cb) {
   var event = args.event;
   var imagesWithId = args.imagesWithId;
   var params = args.params;
-  var flashFn = args.flashFn;
   var currentUser = args.currentUser;
   var isCreate = args.isCreate;
+  var flashFn = args.flashFn;
+  var beforeSaveEventFn = args.beforeSaveEventFn;
+
   return function(err, images) {
     if (err) return cb(400, err);
 
@@ -136,6 +145,7 @@ function buildAndSaveEvent(args, cb) {
       });
       logger.debug('Creating event ', eventObj);
       event = new Event(eventObj);
+      beforeSaveEventFn(event);
       event.save(afterSave(event));
     }
 
@@ -144,6 +154,7 @@ function buildAndSaveEvent(args, cb) {
 
       logger.debug('Updating event by id', event._id, event);
       var respEvent = _.extend({}, event, {_id: event._id});
+      beforeSaveEventFn(respEvent);
       event.save(afterSave(respEvent));
     }
 
