@@ -12,9 +12,8 @@
         li(class=title=='Создать событие'?'active':undefined)
           a(href='/event/create') Создать событие
 
-        if user
-          li(class=title=='Мои события'?'active':undefined)
-            a(href='/profile/my-events') Мои события
+        li(ng-if="currentUser", class=title=='Мои события'?'active':undefined)
+          a(href='/profile/my-events') Мои события
 
         li(class=title=='Отзывы и предложения'?'active':undefined)
           a(href='/feedback') Отзывы
