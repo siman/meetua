@@ -53,6 +53,18 @@ describe('save-event', function() {
           })
         });
     });
+    it('should add author as a participant', function(done) {
+      callSaveEvent(testUtil.buildTestEvent())
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          Event.findOne({_id: res.body.event._id }, function(err, doc) {
+            expect(doc.participants[0].user).toEqual(user._id);
+            expect(doc.participants[0].guests).toEqual(0);
+            done();
+          })
+        });
+    });
     it('should sanitize description', function(done) {
       callSaveEvent(testUtil.buildTestEvent({description: '<p><script>alert("XSS");</script><b>Text</b></p>'}))
         .expect(200)

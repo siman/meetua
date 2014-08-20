@@ -141,7 +141,8 @@ function buildAndSaveEvent(args, cb) {
         images: _.map(images, function(image){
           return new Image(image);
         }),
-        author: currentUser._id
+        author: currentUser._id,
+        participants: [{user: currentUser._id, guests: 0}]
       });
       logger.debug('Creating event ', eventObj);
       event = new Event(eventObj);
