@@ -42,10 +42,6 @@ var eventSchema = new mongoose.Schema({
     images: [Image.schema] // default order, logo first TODO
 });
 
-eventSchema.virtual('prettyStartDate').get(function() {
-  return moment(this.start.dateTime).format('dddd Do MMMM HH:mm');
-});
-
 eventSchema.virtual('googleMapsUrl').get(function() {
   var coords = '' + this.place.latitude + ',' + this.place.longitude;
   return 'https://www.google.com/maps/place/' + coords + '/@' + coords + ',16z';

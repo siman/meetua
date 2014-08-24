@@ -47,7 +47,7 @@ block content
       .col-md-7
         div: h1 #{event.name}
         div.view_event
-          +eventField("Когда", event.prettyStartDate)
+          span {{event.start.dateTime | prettyDateTime}}
   
           div
             span.event_label Где:

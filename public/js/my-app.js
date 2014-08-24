@@ -51,6 +51,11 @@ angular.module('myApp', [
       ['misc', ['help']]
     ],
     disableDragAndDrop: true
+  })
+  .filter('prettyDateTime', function() {
+    return function(date) {
+      return moment(date).format('dddd Do MMMM HH:mm');
+    };
   });
 
 angular.module('myApp.shared', []);
