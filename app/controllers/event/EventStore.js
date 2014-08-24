@@ -6,6 +6,7 @@ var mockEvents = require("./MockEvents");
 var Event = require('../../models/Event');
 var util = require('../utils');
 var moment = require('moment');
+var logger = require('../util/logger')(__filename);
 
 // TODO: Order by 'startDate asc' to show most recent events.
 
@@ -45,6 +46,7 @@ function findSingleEvent(id, population, cb, isCanceled) {
  * @deprecated
  */
 function findEvents(findQuery, populationList, cb) {
+  logger.debug('findEvents() query:', findQuery, 'populate:', populationList);
   return Event.find(findQuery)
     .populate(populationList)
     .exec(cb);

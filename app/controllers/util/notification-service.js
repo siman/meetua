@@ -133,7 +133,7 @@ module.exports.notifyComingSoonEvent = notifyComingSoonEvent;
 function notifyComingSoonEvent(event) {
   logger.debug('Notify all participants about upcoming event', event._id);
   var subject = 'Ближайшее событие';
-  store.findById(event._id, ['author', 'participants'], function (err, eventFound) {
+  store.findById(event._id, ['author', 'participants.user'], function (err, eventFound) {
     if (err) {
       logger.warn('Failed to notify about upcoming event.', err);
       return;
