@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('myApp')
-    .factory('EventImageService', ['$fileUploader', 'EventService', 'SharedEventService', '$cookies', '$window',
+    .factory('EventImageService', ['FileUploader', 'EventService', 'SharedEventService', '$cookies', '$window',
     'ErrorService',
-    function($fileUploader, EventService, SharedEventService, $cookies, $window, ErrorService) {
+    function(FileUploader, EventService, SharedEventService, $cookies, $window, ErrorService) {
         /**
          *
          * @param {Object} params
@@ -29,10 +29,10 @@ angular.module('myApp')
 
           var helper = {
             allImages: function() {
-              return (self.event.images || []).concat(self.uploader.queue);
+              return self.uploader.queue;
             },
             isUploadedImage: function(item) {
-              return self.uploader.getIndexOfItem(item) < 0 && item._id;
+              return item.isUploaded;
             }
           };
 
@@ -69,39 +69,59 @@ angular.module('myApp')
           }
 
           function createFileUploader() {
-            var uploader = $fileUploader.create({
-              scope: self.scope,
+            var uploader = new FileUploader({
               url: self.uploadUrl,
               headers: {
                 'X-CSRF-TOKEN': $cookies['XSRF-TOKEN']
               },
               queueLimit: self.queueLimit // possible images count
             });
-            uploader.filters.push(function(item /*{File|HTMLInputElement}*/) {
+            uploader.filters.push({name: 'onlyImages', fn: function(item /*{File|HTMLInputElement}*/) {
               var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
               type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
               return self.acceptedFormats.indexOf(type) !== -1;
-            });
-            uploader.bind('afteraddingfile', function(e, item){
+            }});
+            uploader.onAfterAddingFile = function(item){
               // first img is logo by default
               if (helper.allImages().length === 1) {
                 item.isLogo = true;
               }
-            });
-            uploader.bind('error', function(event, xhr, item, response) {
+            };
+            uploader.onErrorItem = function(item, response, status, headers) {
               var msg = 'Не удалось сохранить изображение ' + item.file.name + '. ' + (response.error ? response.error : response);
               console.error(msg);
               ErrorService.alert(msg);
               item.remove(); // from queue
-            });
-            uploader.bind('completeall', function submitAfterUpload(event, uploadItems, progress) {
-              function getItemUploadResponse(item){
+            };
+            uploader.onCompleteAll = function submitAfterUpload() {
+              console.log('onCompleteAll', uploader.queue);
+              var uploadedImages = _.map(uploader.queue, getItemUploadResponse);
+              function getItemUploadResponse(item) {
                 var uploadResponse = JSON.parse(item._xhr.response);
                 return _.extend(uploadResponse, {isLogo: item.isLogo});
               }
-              var uploadedImages = _.map(uploadItems, getItemUploadResponse);
               self.onAllUploaded(uploadedImages);
-            });
+            };
+
+            // add already uploaded images to the queue
+            if (uploader.queue.length == 0 && self.event) {
+              _.each(self.event.images, function(image) {
+                var dummy = new FileUploader.FileItem(uploader, {
+                  lastModifiedDate: new Date(),
+                  size: 1e6,
+                  type: image.type,
+                  name: image.originalName,
+                  url: image.url
+                });
+
+                dummy.progress = 100;
+                dummy.isUploaded = true;
+                dummy.isSuccess = true;
+                dummy.isLogo = image.isLogo;
+                dummy._id = image._id;
+                uploader.queue.push(dummy);
+              });
+            }
             return uploader;
           }
         }

@@ -16,7 +16,7 @@ angular.module('myApp')
     });
     var uploader = $scope.uploader = imageService.uploader;
     $scope.submit = function() {
-      if (uploader.queue.length > 0) {
+      if (uploader.getNotUploadedItems().length > 0) {
         uploader.uploadAll();
       } else {
         EventService.postSave(buildReqData());

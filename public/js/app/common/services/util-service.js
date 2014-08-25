@@ -32,8 +32,8 @@ angular.module('myApp')
     function calculateImgDimensions(original, desired) {
       var width = desired.width || original.width / original.height * desired.height;
       var height = desired.height || original.height / original.width * desired.width;
-      console.log('original: %sx%s, desired: %sx%s, calculated: %sx%s',
-        original.width, original.height, desired.width, desired.height, width, height);
+//      console.log('original: %sx%s, desired: %sx%s, calculated: %sx%s',
+//        original.width, original.height, desired.width, desired.height, width, height);
       return {
         width: width,
         height: height
