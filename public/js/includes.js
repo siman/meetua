@@ -19,6 +19,8 @@
 //= require lib/angular-locale_ru-ru
 //= require lib/angular-route-1.2.16
 //= require lib/angular-cookies-1.2.16
+//= require lib/angular-animate-1.2.16
+//= require lib/angular-sanitize-1.2.16
 //= require lib/http-auth-interceptor
 //= require lib/angular-file-upload-1.1.1
 //= require lib/angular-google-maps-1.0.18

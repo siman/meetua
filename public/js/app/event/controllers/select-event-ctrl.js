@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('SelectEventCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService) {
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = [];
@@ -47,7 +47,8 @@ angular.module('myApp').controller('SelectEventCtrl',
       }
       $scope.currentUser.profile.preferredActivities = preferred;
       $http.post(util.apiUrl('/user/updateProfile'), $scope.currentUser).success(function(res) {
-        $scope.msg = wasSubscribed ? 'Вы отписаны от событий ' + selected : 'Вы подписаны на события ' + selected;
+        var msg = wasSubscribed ? 'Вы отписаны от событий ' + selected : 'Вы подписаны на события ' + selected;
+        $alert({content: msg});
       }).error(function(err) {
         ErrorService.handleResponse(err);
       });

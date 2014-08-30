@@ -5,11 +5,6 @@ block content
   p.lead Лучшие события Киева
 
   div(ng-controller='SelectEventCtrl')
-    .alert.alert-info.alert-dismissible(ng-if='msg') {{msg}}
-      button.close(type='button', data-dismiss='alert')
-        span(aria-hidden='true') &times
-        span.sr-only Close
-
     div.act_bar
       act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
       div.clearfix

@@ -5,6 +5,8 @@ angular.module('myApp', [
     'ngRoute',
     'myApp.shared',
     'ngAutocomplete', /*google places autocomplete*/
+    'ngAnimate',
+    'ngSanitize', // dependency of angular-motion
     'angularFileUpload',
     'google-maps',
     'ngCookies',
@@ -60,6 +62,15 @@ angular.module('myApp', [
         console.warn('prettyDateTime arg is undefined');
       }
     };
-  });
+  })
+  .config(['$alertProvider', function($alertProvider) {
+    angular.extend($alertProvider.defaults, {
+      animation: 'am-fade-and-slide-top',
+      placement: 'top-right',
+      container: '#flash',
+      type: 'info',
+      duration: 3 // seconds
+    });
+  }]);
 
 angular.module('myApp.shared', []);
