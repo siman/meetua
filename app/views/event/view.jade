@@ -19,7 +19,7 @@ block content
         a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
           i.fa.fa-edit
           | Редактировать
-        a.btn.btn-default.btn-sm(ng-if='event.canceledOn', data-toggle="modal", data-target="#cancel_modal", role="button")
+        a.btn.btn-default.btn-sm(ng-if='!event.canceledOn', data-toggle="modal", data-target="#cancel_modal", role="button")
           i.fa.fa-times
           | Отменить событие
 
