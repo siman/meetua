@@ -26,9 +26,7 @@ module.exports = function(req, res, next) {
       res.render('event/view', {
         title: event.name,
         event: event,
-        social: social,
-        // If current user is an author of event
-        isCurrentUserAnAuthor: event.author && req.user && event.author._id.equals(req.user._id)
+        social: social
       });
     }
   }).populate('author participants.user');

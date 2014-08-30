@@ -8,135 +8,128 @@ mixin eventField(label, data, href)
     else
       span #{data}
 
-block top_panel
-  if (event.isPassed)
-    #on_my_event_panel.alert-warning
+block content
+  div(ng-controller='ViewEventCtrl')
+    #on_my_event_panel.alert-warning(ng-if='event.isPassed', ng-cloak)
       div.event_edit_panel
       | Событие уже прошло
 
-  if (isCurrentUserAnAuthor && !event.isPassed)
-    #on_my_event_panel.alert-warning
+    #on_my_event_panel.alert-warning(ng-if='isCurrentUserAnAuthor() && !event.isPassed', ng-cloak)
       div.event_edit_panel
         a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
           i.fa.fa-edit
           | Редактировать
-        if (!event.canceledOn)
-          a.btn.btn-default.btn-sm(data-toggle="modal", data-target="#cancel_modal", role="button")
-            i.fa.fa-times
-            | Отменить событие
+        a.btn.btn-default.btn-sm(ng-if='event.canceledOn', data-toggle="modal", data-target="#cancel_modal", role="button")
+          i.fa.fa-times
+          | Отменить событие
 
-  if (event.canceledOn && !event.isPassed)
-    #on_my_event_panel.alert-warning
+    #on_my_event_panel.alert-warning(ng-if='event.canceledOn && !event.isPassed', ng-cloak)
       div.event_edit_panel
         | Автор отменил это событие
 
+    if (!event)
+      h1 Событие не найдено
+    else
+      +jsVar("event", event)
+      div#view_event_page
+        .col-md-2
+          div#view_event_logo_box.pull-right(style="text-align: right")
+            if (!event.logoUrl)
+              div.no_image
+            else
+              dimensioned-img(src='"#{event.logoUrl}"', width='240')
 
-block content
-  if (!event)
-    h1 Событие не найдено
-  else
-    +jsVar("event", event)
-    div#view_event_page(ng-controller='ViewEventCtrl')
-      .col-md-2
-        div#view_event_logo_box.pull-right(style="text-align: right")
-          if (!event.logoUrl)
-            div.no_image
-          else
-            dimensioned-img(src='"#{event.logoUrl}"', width='240')
-      
-      .col-md-7
-        div: h1 #{event.name}
-        div.view_event
-          span.event_label Когда
-          span {{event.start.dateTime | prettyDateTime}}
-  
-          div
-            span.event_label Где:
-            a(href=event.googleMapsUrl, target="_blank") #{event.place.name}
-  
-          if event.author
-            +eventField("Организатор", event.author.profile.name, event.author.url)
-          div.event_desc
-            !=event.description
+        .col-md-7
+          div: h1 #{event.name}
+          div.view_event
+            span.event_label Когда
+            span {{event.start.dateTime | prettyDateTime}}
 
-      .col-md-3(style="padding-top: 30px; padding-bottom: 20px")
-        #share_event_box
-          .btn-group.share_label Поделиться
-          include ../partials/share-event
+            div
+              span.event_label Где:
+              a(href=event.googleMapsUrl, target="_blank") #{event.place.name}
 
-        #partBox.ng-cloak
+            if event.author
+              +eventField("Организатор", event.author.profile.name, event.author.url)
+            div.event_desc
+              !=event.description
 
-          // TODO: #196: Replace server user (jade's #{}) related logic with Angular
-          // So Angular will trigger changes on UI after user logged in after viewing like a guest
+        .col-md-3(style="padding-top: 30px; padding-bottom: 20px")
+          #share_event_box
+            .btn-group.share_label Поделиться
+            include ../partials/share-event
 
-          if (isCurrentUserAnAuthor)
-            #partStatus Вы &mdash; автор события
+          #partBox.ng-cloak
 
-          if (!isCurrentUserAnAuthor)
-            div(ng-show="event.isPassed")
-              div Событие уже прошло
-            div(ng-show="event.canceledOn")
-              div Событие отменено
-            div(ng-show="!event.isPassed")
-              button#partBtn.btn.btn-lg(ng-class="{'btn-default': isPart, 'btn-success': !isPart}",
-                  ng-disabled="event.canceledOn",
-                  data-toggle="modal", data-target=".guest-number-modal"
-                  ng-click="isPart && participate(0)"
-                )
-                span(ng-hide="isPart")
-                  i.fa.fa-check
-                  | Принять участие
-                span(ng-show="isPart")
-                  i.fa.fa-times
-                  | Отказаться от участия
+            // TODO: #196: Replace server user (jade's #{}) related logic with Angular
+            // So Angular will trigger changes on UI after user logged in after viewing like a guest
 
-          div(ng-if="currentUser && isPart")
-            #part_notif_settings
-              a(href="javascript:void(0)", ng-click="showNotificationSettings()")
-                i.fa.fa-envelope-o
-                span(ng-if="currentUser.receivingEmails")
-                  | Отписаться от уведомлений
-                span(ng-if="!currentUser.receivingEmails")
-                  | Подписаться на уведомления
+            #partStatus(ng-if='isCurrentUserAnAuthor()') Вы &mdash; автор события
 
-          .modal.fade.guest-number-modal(tabindex='-1', role='dialog', aria-hidden='true')
-            .modal-dialog.modal-sm
-              .modal-content
-                .modal-header
-                  h4.modal-title Возьмете с собой друзей?
-                .modal-body
-                  .btn-toolbar(role='toolbar')
-                    .btn-group
-                      div(bring-guests max-guests="4")
+            div(ng-if='!isCurrentUserAnAuthor()')
+              div(ng-if="event.isPassed")
+                div Событие уже прошло
+              div(ng-if="event.canceledOn")
+                div Событие отменено
+              div(ng-if="!event.isPassed")
+                button#partBtn.btn.btn-lg(ng-class="{'btn-default': isPart(), 'btn-success': !isPart()}",
+                    ng-disabled="event.canceledOn",
+                    data-toggle="modal", data-target=".guest-number-modal"
+                    ng-click="isPart() && participate(0)"
+                  )
+                  span(ng-if="!isPart()")
+                    i.fa.fa-check
+                    | Принять участие
+                  span(ng-if="isPart()")
+                    i.fa.fa-times
+                    | Отказаться от участия
 
-          #participants
-            div(ng-hide="event.participantCount")
-              span.event_label Еще нет участников
-            div(ng-show="event.participantCount")
-              span.event_label
-                | Участники
-                span(ng-show="event.participantCount > 0") &nbsp;({{event.participantCount}})
-              ul.media-list
-                li.media(ng-repeat="participant in event.participants")
-                  img(class="media-object pull-left avatar-medium" ng-src="{{participant.user.profile.picture}}")
-                  .media-body
-                    a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
-                      span(class="badge pull-right" ng-show="participant.guests > 0") +{{participant.guests}}
+            div(ng-if="currentUser && isPart()")
+              #part_notif_settings
+                a.pointer(ng-click="showNotificationSettings()")
+                  i.fa.fa-envelope-o
+                  span(ng-if="currentUser.receivingEmails")
+                    | Отписаться от уведомлений
+                  span(ng-if="!currentUser.receivingEmails")
+                    | Подписаться на уведомления
 
-      #cancel_modal.modal.fade(tabindex='-1', role='dialog')
-        .modal-dialog
-          .modal-content
-            .modal-header
-              h4.modal-title Отмена события
-            .modal-body
-              p Вы уверены, что хотите отменить событие?
-              p Все участники будут уведомлены об отмене.
-            .modal-footer
-              a.button.btn.btn-primary(href="/event/#{event._id}/cancel", type='button') Да, отменить событие
-              button.btn.btn-default(type='button', data-dismiss='modal') Не отменять
+            .modal.fade.guest-number-modal(tabindex='-1', role='dialog', aria-hidden='true')
+              .modal-dialog.modal-sm
+                .modal-content
+                  .modal-header
+                    h4.modal-title Возьмете с собой друзей?
+                  .modal-body
+                    .btn-toolbar(role='toolbar')
+                      .btn-group
+                        div(bring-guests max-guests="4")
 
-      if(messages.showFirstTime && isCurrentUserAnAuthor)
-        .modal.share-created-event(open-modal modal-name='share-created-event' tabindex='-1', role='dialog', aria-hidden='true')
+            #participants
+              div(ng-if="!event.participantCount")
+                span.event_label Еще нет участников
+              div(ng-if="event.participantCount")
+                span.event_label
+                  | Участники
+                  span(ng-if="event.participantCount > 0") &nbsp;({{event.participantCount}})
+                ul.media-list
+                  li.media(ng-repeat="participant in event.participants")
+                    img(class="media-object pull-left avatar-medium" ng-src="{{participant.user.profile.picture}}")
+                    .media-body
+                      a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
+                        span(class="badge pull-right", ng-if="participant.guests > 0") +{{participant.guests}}
+
+        #cancel_modal.modal.fade(tabindex='-1', role='dialog')
+          .modal-dialog
+            .modal-content
+              .modal-header
+                h4.modal-title Отмена события
+              .modal-body
+                p Вы уверены, что хотите отменить событие?
+                p Все участники будут уведомлены об отмене.
+              .modal-footer
+                a.button.btn.btn-primary(href="/event/#{event._id}/cancel", type='button') Да, отменить событие
+                button.btn.btn-default(type='button', data-dismiss='modal') Не отменять
+
+        .modal.share-created-event(ng-if='messages.showFirstTime && isCurrentUserAnAuthor()', open-modal modal-name='share-created-event' tabindex='-1', role='dialog', aria-hidden='true')
           .modal-dialog.modal-sm
             .modal-content
               .modal-header
@@ -149,8 +142,8 @@ block content
               .modal-footer
                 button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
 
-      // TODO: Load with Angular $modal
-      include ../partials/notifications-modal
+        // TODO: Load with Angular $modal
+        include ../partials/notifications-modal
 
-    #comments
-      include ../partials/disqus
+      #comments
+        include ../partials/disqus
