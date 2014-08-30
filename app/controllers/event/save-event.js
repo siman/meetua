@@ -121,7 +121,7 @@ function buildAndSaveEvent(args, cb) {
   var imagesWithId = args.imagesWithId || [];
   var params = args.params;
   var currentUser = args.currentUser;
-  var isCreate = args.isCreate || true;
+  var isCreate = !_.isUndefined(args.isCreate) ? args.isCreate : true;
   var flashFn = args.flashFn || function() {};
   var beforeSaveEventFn = args.beforeSaveEventFn || function() {};
 
