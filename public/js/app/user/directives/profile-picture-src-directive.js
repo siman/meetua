@@ -11,7 +11,7 @@ angular.module('myApp')
           if (user.profile && user.profile.picture) {
             element.attr('src', user.profile.picture);
           } else {
-            var size = 60;
+            var size = attrs.size || 60;
             var gravatarLink = GravatarService.gravatarLink(user, size);
             element.attr('src', gravatarLink);
           }
