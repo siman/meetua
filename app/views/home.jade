@@ -5,10 +5,19 @@ block content
   p.lead Лучшие события Киева
 
   div(ng-controller='SelectEventCtrl')
+    .alert.alert-info.alert-dismissible(ng-if='msg') {{msg}}
+      button.close(type='button', data-dismiss='alert')
+        span(aria-hidden='true') &times
+        span.sr-only Close
+
     div.act_bar
       act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
       div.clearfix
 
+    .row.fade-in.text-center(ng-if='data.selectedAct'): .col-md-4
+      .checkbox-inline: label
+        input(type='checkbox', ng-checked='isSubscribedOnSelectedActivity()', ng-click="toggleSubscriptionOnSelectedActivity()")
+        | Подписаться на {{activityByName(data.selectedAct).textOver}}
     .row
       .col-md-4.preview_events_box
         div.events_view(ng-show="foundEvents.length > 0")

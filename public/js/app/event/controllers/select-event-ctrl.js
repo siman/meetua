@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('SelectEventCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities) {
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = [];
@@ -26,6 +26,31 @@ angular.module('myApp').controller('SelectEventCtrl',
     // TODO Copypaste: Extract to common utils.
     $scope.viewEvent = function (event) {
       window.location = "/event/" + event._id;
+    };
+
+    $scope.activityByName = function(actName) {
+      return _.findWhere(activities, {name: actName});
+    };
+
+    $scope.isSubscribedOnSelectedActivity = function() {
+      return $scope.currentUser && _.contains($scope.currentUser.profile.preferredActivities, $scope.data.selectedAct);
+    };
+
+    $scope.toggleSubscriptionOnSelectedActivity = function() {
+      var selected = $scope.data.selectedAct;
+      var preferred = $scope.currentUser.profile.preferredActivities;
+      var wasSubscribed = _.contains(preferred, selected);
+      if (wasSubscribed) {
+        preferred = _.without(preferred, selected);
+      } else {
+        preferred.push(selected);
+      }
+      $scope.currentUser.profile.preferredActivities = preferred;
+      $http.post(util.apiUrl('/user/updateProfile'), $scope.currentUser).success(function(res) {
+        $scope.msg = wasSubscribed ? 'Вы отписаны от событий ' + selected : 'Вы подписаны на события ' + selected;
+      }).error(function(err) {
+        ErrorService.handleResponse(err);
+      });
     };
 
     $scope.$watch('data.selectedAct', function(newAct) {
