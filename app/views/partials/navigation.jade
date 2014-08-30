@@ -39,6 +39,7 @@
               | {{currentUser.profile.name || currentUser.email || currentUser.id}}&nbsp;
               i.caret
             ul.dropdown-menu
-              li: a(href='/account') Мой аккаунт
+              li: a(href='/user/{{currentUser._id}}') Моя страница
+              li: a(href='/account') Настройки профиля
               li.divider
               li: a(href='/logout') Выйти
