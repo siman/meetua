@@ -13,35 +13,35 @@ block content
       .form-group(ng-class='{"has-error": accountForm.email.$invalid && accountForm.email.$dirty}')
         label.col-sm-2.control-label(for='email') Почтовый ящик
         .col-sm-4
-          input.form-control(type='email', name='email', ng-model='account.email', required)
+          input.form-control(type='email', name='email', ng-model='currentUser.email', required)
           .help-block(ng-if='accountForm.email.$invalid && accountForm.email.$dirty') Неверный email
       .form-group(ng-class='{"has-error": accountForm.name.$invalid && accountForm.name.$dirty}')
         label.col-sm-2.control-label(for='name') Имя
         .col-sm-4
-          input.form-control(type='text', name='name', ng-model='account.name', required)
+          input.form-control(type='text', name='name', ng-model='currentUser.profile.name', required)
       .form-group
         label.col-sm-2.control-label(for='gender') Пол
         .col-sm-4
           label.radio
-            input(type='radio', name='gender', value='male', ng-model='account.gender', data-toggle='radio')
+            input(type='radio', name='gender', value='male', ng-model='currentUser.profile.gender', data-toggle='radio')
             span Мужской
           label.radio
-            input(type='radio', name='gender', value='female', ng-model='account.gender', data-toggle='radio')
+            input(type='radio', name='gender', value='female', ng-model='currentUser.profile.gender', data-toggle='radio')
             span Женский
       .form-group
         label.col-sm-2.control-label(for='location') Адрес
         .col-sm-4
-          input.form-control(type='text', name='location', ng-model='account.location')
+          input.form-control(type='text', name='location', ng-model='currentUser.profile.location')
       .form-group(ng-class='{"has-error": accountForm.website.$invalid && accountForm.website.$dirty}')
         label.col-sm-2.control-label(for='website') Сайт
         .col-sm-4
-          input.form-control(type='url', name='website', ng-model='account.website')
+          input.form-control(type='url', name='website', ng-model='currentUser.profile.website')
           .help-block(ng-if='accountForm.website.$invalid && accountForm.website.$dirty') Ссылка должна быть формата http://<адрес_сайта>
       .form-group
         label.col-sm-2.control-label(for='notification') Получать почтовые уведомления
         .col-sm-4
           label.checkbox
-            input(type='checkbox', name='notification', ng-model='account.receiveNotifications')
+            input(type='checkbox', name='notification', ng-model='currentUser.profile.receiveNotifications')
       .form-group
         label.col-sm-2.control-label(for='gravatar') Gravatar
         .col-sm-4
@@ -49,7 +49,7 @@ block content
       .form-group
         label.col-sm-2.control-label Избранные типы событий
         .col-sm-8: div.act_bar
-            act-icon(ng-repeat='activity in activities', ng-model='account.preferredActivities', activity='activity', multiple='true')
+            act-icon(ng-repeat='activity in activities', ng-model='currentUser.profile.preferredActivities', activity='activity', multiple='true')
             div.clearfix
       .form-group
         .col-sm-offset-2.col-sm-4

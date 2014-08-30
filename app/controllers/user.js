@@ -68,8 +68,10 @@ var api = {
   postUpdateProfile: function(req, res, next) {
     var errMsg = 'Не удалось обновить Ваш профиль';
     req.assert('email', 'Неверный email').isEmail();
-    req.assert('name', 'Не указано имя').notEmpty();
+    req.assert('profile.name', 'Не указано имя').notEmpty();
     req.body.website && req.assert('website', 'Ссылка должна быть формата http://<адрес_сайта>').isURL();
+    var reqUser = req.body;
+    logger.debug('reqUser', reqUser);
 
     var errors = req.validationErrors();
     if (errors) {
@@ -79,16 +81,15 @@ var api = {
 
     User.findById(req.user.id, function(err, user) {
       if (err) return res.json(500, errMsg);
-      logger.debug('req.body', req.body);
-      user.email = req.body.email;
-      user.profile.name = req.body.name || '';
-      user.profile.gender = req.body.gender || '';
-      user.profile.location = req.body.location || '';
-      user.profile.website = req.body.website || '';
-      user.profile.preferredActivities = req.body.preferredActivities || [];
+      user.email = reqUser.email;
+      user.profile.name = reqUser.profile.name || '';
+      user.profile.gender = reqUser.profile.gender || '';
+      user.profile.location = reqUser.profile.location || '';
+      user.profile.website = reqUser.profile.website || '';
+      user.profile.preferredActivities = reqUser.profile.preferredActivities || [];
 
       // TODO: Replace with new notifications widget
-		user.profile.receiveNotifications = req.body.notification === 'on';
+      user.profile.receiveNotifications = reqUser.profile.receiveNotifications;
 
       user.save(function(err) {
         if (err) return res.json(500, errMsg);
