@@ -117,7 +117,17 @@ app.use(function(req, res, next) {
 });
 app.use(app.router);
 app.use(function(req, res) {
-  res.renderNotFound();
+  res.format({
+    html: res.renderNotFound.bind(res),
+
+    json: function () {
+      res.send(404, { error: 'Ресурс не найден' });
+    },
+
+    text: function () {
+      res.send(404, 'Ресурс не найден');
+    }
+  });
 });
 app.use(appConfig.IS_PRODUCTION ? errorHandler.error : express.errorHandler());
 
