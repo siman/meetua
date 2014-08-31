@@ -21,6 +21,7 @@ angular.module('myApp')
      */
     function isUserAuthorOfEvent(user, event) {
       // user may be unavailable (e.g. currentUser)
-      return user && event.author._id == user._id;
+      var authorId = event.author && event.author._id || event.author; // may be populated or not
+      return user && authorId == user._id;
     }
   }]);
