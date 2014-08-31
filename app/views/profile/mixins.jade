@@ -8,7 +8,7 @@ mixin listMyEvents(groupType)
       .col-sm-2
         if groupType == 'my'
           .btn-group
-            a.btn.btn-default(ng-if='currentUser._id === event.author', ng-hide="event.isPassed", ng-href="/event/{{event._id}}/edit", role="button") Редактировать
+            a.btn.btn-default(ng-if='app.UserService.isUserAuthorOfEvent(currentUser, event)', ng-hide="event.isPassed", ng-href="/event/{{event._id}}/edit", role="button") Редактировать
           //a.btn.btn-default(href="#", role="button") Удалить // TODO
         if groupType == 'going'
           .btn-group

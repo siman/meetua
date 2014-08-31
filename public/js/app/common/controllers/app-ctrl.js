@@ -6,7 +6,11 @@ angular.module('myApp')
    * It holds only currentUser object, so it's available on any controller without injection.
    * Don't add any other objects to it, since we have to keep global objects as little as possible.
    */
-  .controller('AppCtrl', ['$scope', function($scope) {
+  .controller('AppCtrl', ['$scope', 'util', 'UserService', function($scope, util, UserService) {
     $scope.currentUser = _myInit.currentUser;
+    $scope.app = {
+      util: util,
+      UserService: UserService
+    };
     console.log("Current user", $scope.currentUser);
   }]);

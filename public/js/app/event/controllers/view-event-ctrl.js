@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$rootScope', '$scope', '$http', 'util', 'ErrorService', 'UserService',
-  function ($rootScope, $scope, $http, util, ErrorService, UserService) {
+  ['$rootScope', '$scope', '$http', 'util', 'ErrorService',
+  function ($rootScope, $scope, $http, util, ErrorService) {
     var event = _myInit.event;
     console.log("Event", event);
 
     $scope.event = event;
 
     $scope.isCurrentUserAnAuthor = function() {
-      return UserService.isUserAuthorOfEvent($scope.currentUser, $scope.event);
+      return $scope.app.UserService.isUserAuthorOfEvent($scope.currentUser, $scope.event);
     };
 
     $scope.showNotificationSettings = function() {
