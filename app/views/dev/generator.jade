@@ -32,6 +32,10 @@ block content
             .col-sm-6.btn-group
               +radio('Yes', 'gen.isRandom', 'true')
               +radio('No', 'gen.isRandom', 'false')
+          .form-group(ng-class="{'has-error': false}")
+            label.col-sm-2.control-label Clean database
+            .col-sm-6.btn-group
+              +checkbox('Clean database', 'gen.cleanDatabase')
 
           div(ng-show='!gen.isRandom')
             .form-group(ng-class="{'has-error': false}")

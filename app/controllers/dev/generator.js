@@ -10,6 +10,7 @@ var moment = require('moment');
 var appConfig = require('../../../config/app-config');
 var utils = require('../utils');
 var Image = require('../../../app/models/Image');
+var Event = require('../../../app/models/Event');
 var saveEvent = require('../event/save-event')._saveEvent;
 
 var sizes = ['small', 'medium', 'large'];
@@ -23,14 +24,39 @@ module.exports.generate = function(req, res, next) {
   var params = req.body;
   logger.debug('Gen params', params);
 
+  var fns = [];
+  if (params.cleanDatabase) {
+    fns.push(cleanDatabase);
+  }
+  fns.push(callGenerate);
+  async.waterfall(fns, end);
+  function cleanDatabase(cb) {
+    Event.find({}, function(err, allEvents) {
+      if (err) return cb(err);
+
+      allEvents.forEach(function(event) {
+        event.remove({}, function(err) {
+          if (err) return cb(err);
+          logger.debug('Event', event.name, 'is removed');
+        });
+      });
+      cb();
+    });
+  }
   // TODO Impl
-  generateEvents({params: params, currentUser: req.user}, function(err, events) {
-    if (err) {
-      logger.error('Failed to generate events', err);
-      return res.json(500, err);
-    }
+  function callGenerate(cb) {
+    generateEvents({params: params, currentUser: req.user}, function(err, events) {
+      if (err) {
+        logger.error('Failed to generate events', err);
+        return cb(err);
+      }
+      cb(null, events);
+    });
+  }
+  function end(err, events) {
+    if (err) return res.json(500, err);
     res.json(200, events);
-  });
+  }
 };
 
 function generateEvents(args, cb) {
