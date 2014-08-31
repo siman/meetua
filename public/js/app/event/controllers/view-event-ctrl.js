@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$rootScope', '$scope', '$http', 'util', 'ErrorService',
-  function ($rootScope, $scope, $http, util, ErrorService) {
+  ['$rootScope', '$scope', '$http', 'util',
+  function ($rootScope, $scope, $http, util) {
     var event = _myInit.event;
     console.log("Event", event);
 
@@ -49,7 +49,7 @@ angular.module('myApp').controller('ViewEventCtrl',
           var err = (data.error ? data.error : data);
           var msg = 'Не удалось принять участие.  ' + _.isObject(err) ? JSON.stringify(err) : err;
           console.error(msg, data);
-          ErrorService.alert(msg);
+          $scope.app.ErrorService.alert(msg);
         });
     };
   }]);
