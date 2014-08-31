@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp').controller('SelectEventCtrl',
+angular.module('myApp').controller('HomeCtrl',
   ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert',
   function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert) {
     $scope.data = {};

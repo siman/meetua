@@ -1,10 +1,10 @@
 extends layout
 
 block content
-  h1 MeetUA
-  p.lead Лучшие события Киева
+  div(ng-controller='HomeCtrl')
+    h1 MeetUA
+    p.lead Лучшие события Киева
 
-  div(ng-controller='SelectEventCtrl')
     div.act_bar
       act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
       div.clearfix
