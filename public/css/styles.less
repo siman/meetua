@@ -327,7 +327,11 @@ html, body {
   color: @link-color;
 }
 
-.pointer { cursor: pointer; }
+.pointer {
+  .pointer();
+}
+
+.pointer() { cursor: pointer; }
 
 .event_img {
   position: relative;
@@ -349,6 +353,15 @@ html, body {
 
 .preferred-events-block {
   border-bottom: @gray-lighter 1px solid;
+}
+
+.hover-bg-info {
+  padding: 7px;
+}
+
+.hover-bg-info:hover {
+  .bg-variant(@state-info-bg);
+  .pointer();
 }
 
 label[disabled] {

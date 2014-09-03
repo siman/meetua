@@ -23,6 +23,10 @@ angular.module('myApp').controller('HomeCtrl',
       });
     }
 
+    $scope.goToEvent = function(event) {
+      window.location.href = '/event/' + event._id;
+    };
+
     // Zoom map on Kiev.
     $scope.map = _.extend(BASE_MAP, KIEV_MAP);
 

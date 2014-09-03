@@ -12,7 +12,8 @@ block content
             strong {{' ' +   activityByName(activity).textOver}}
             {{$last ? '' : ','}}
           a.btn.btn-link.btn-mini(href="/account#preferred") Изменить
-      .col-md-3.col-sm-6.col-xs-12.top15.media(ng-repeat='event in subscription.events | limitTo:data.eventsLimit')
+      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(ng-click='goToEvent(event)',
+          ng-repeat='event in subscription.events | limitTo:data.eventsLimit')
         a.pull-left
           dimensioned-img.img-rounded.media-object(src='event.logoUrl', height='180')
         .media-body(ng-init='cityLength = event.name.length > 20 ? 20 : 40')
