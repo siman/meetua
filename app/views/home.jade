@@ -3,11 +3,33 @@ extends layout
 block content
   div(ng-controller='HomeCtrl')
     h1 MeetUA
-    p.lead Лучшие события Киева
 
-    div.act_bar
-      act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
-      div.clearfix
+    .row.ng-cloak.preferred-events-block(ng-if='subscription.events.length', data-animation='am-fade',
+        ng-init='limitSmall = 8; limitBig = 20; data.eventsLimit = limitSmall;')
+      .col-xs-12
+        h2 Избранные события
+          span.text-lowercase(ng-repeat='activity in subscription.activities')
+            strong {{' ' +   activityByName(activity).textOver}}
+            {{$last ? '' : ','}}
+          a.btn.btn-link.btn-mini(href="/account#preferred") Изменить
+      .col-md-3.col-sm-6.col-xs-12.top15.media(ng-repeat='event in subscription.events | limitTo:data.eventsLimit')
+        a.pull-left
+          dimensioned-img.img-rounded.media-object(src='event.logoUrl', height='180')
+        .media-body(ng-init='cityLength = event.name.length > 20 ? 20 : 40')
+          h4.media-heading: a(ng-href="{{event.url}}") {{event.name|truncate:30}}
+          .row
+            .col-xs-12 {{event.place.city|truncate:cityLength}}
+            .col-xs-12 {{event.start.dateTime | prettyDateTime}}
+            .col-xs-12 Участников: {{event.participants.length}}
+      .col-xs-12.text-right(ng-if='subscription.events.length > limitSmall')
+        button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitBig', ng-click='data.eventsLimit = limitBig;') Показать больше
+        button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitSmall', ng-click='data.eventsLimit = limitSmall;') Показать меньше
+
+    .row.top30
+      h2 События на карте
+      div.act_bar
+        act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
+        div.clearfix
 
     .row.fade-in.text-center(ng-if='data.selectedAct'): .col-md-4
       .checkbox-inline: label

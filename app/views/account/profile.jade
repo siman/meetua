@@ -46,7 +46,7 @@ block content
         label.col-sm-2.control-label(for='gravatar') Gravatar
         .col-sm-4
           img(profile-picture-src='currentUser', class='profile', width='100', height='100')
-      .form-group
+      #preferred.form-group
         label.col-sm-2.control-label Избранные типы событий
         .col-sm-8: div.act_bar
             act-icon(ng-repeat='activity in activities', ng-model='currentUser.profile.preferredActivities', activity='activity', multiple='true')

@@ -30,7 +30,9 @@ var eventSchema = new mongoose.Schema({
     place: {
         name: { type: String, required: true, trim: true },
         latitude: Number,
-        longitude: Number
+        longitude: Number,
+        placeId: String,
+        city: String
     },
     start: {
         dateTime: { type: Date, require: true }

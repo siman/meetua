@@ -12,7 +12,7 @@ mixin eventFields(isCreate)
   .form-group(ng-if='place.details')
     label.col-sm-2.control-label
     .col-sm-8
-      place-map(details='place.details', lat='event.place.latitude', lng='event.place.longitude')
+      place-map(details='place.details', lat='event.place.latitude', lng='event.place.longitude', place='event.place')
   .form-group
     label.col-sm-2.control-label(for='startDate')
       i.fa.fa-calendar

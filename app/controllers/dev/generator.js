@@ -131,7 +131,9 @@ function generateEvent(args, cb) {
         place: { // TODO Generate random place?
           name: 'Тараса Шевченка, Київ, місто Київ, Україна',
           latitude: 50.474155,
-          longitude: 30.503491
+          longitude: 30.503491,
+          placeId: 'ChIJWYvumA3O1EARPB_NTwi1nMs',
+          city: 'Київ'
         },
         start: {
           dateTime: startMoment.toDate()

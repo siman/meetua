@@ -1,11 +1,27 @@
 'use strict';
 
 angular.module('myApp').controller('HomeCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert) {
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = [];
+
+    if ($scope.currentUser) {
+      // load preferred activities, keep logic on the client, because it's not critical now and keeps our REST more generic
+      var preferredActivities = $scope.currentUser.profile.preferredActivities;
+      var fetchPrefEvents = _.map(preferredActivities, function(activity) {
+        return $http.get(util.apiUrl('/events/find'), {params:{act: activity}});
+      });
+      $q.all(fetchPrefEvents).then(function(ress) {
+        var events = _.flatten(_.map(ress, function(res) {return res.data}));
+        var imgEvents = _.filter(events, function (event) { return event.images.length > 0; });
+        $scope.subscription = {
+          events: imgEvents,
+          activities: preferredActivities
+        };
+      });
+    }
 
     // Zoom map on Kiev.
     $scope.map = _.extend(BASE_MAP, KIEV_MAP);
@@ -71,7 +87,6 @@ angular.module('myApp').controller('HomeCtrl',
           $scope.mapEvents = _.map(data, function (ev) {
             return ev.place
           });
-          console.log('Selected events ', $scope.foundEvents);
         }).
         error(function (data) {
           console.error('Failed to find events by ' + actName, data);
