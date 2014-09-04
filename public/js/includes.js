@@ -10,8 +10,8 @@
  */
 
 //= require lib/jquery-2.1.0.min
-//= require lib/moment-2.6.0.min
-//= require lib/moment-langs.min
+//= require ../lib/moment/2.6.0/js/moment.min
+//= require ../lib/moment/2.6.0/js/moment-langs.min
 //= require ../lib/bootstrap/3.2.0/js/bootstrap.min
 //= require lib/underscore-1.6.0.min
 //= require lib/md5.min
