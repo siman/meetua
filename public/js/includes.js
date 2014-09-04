@@ -9,24 +9,24 @@
  * at the bottom of the compiled file.
  */
 
-//= require ../lib/jquery/2.1.0/js/jquery.min
-//= require ../lib/moment/2.6.0/js/moment.min
-//= require ../lib/moment/2.6.0/js/moment-langs.min
-//= require ../lib/bootstrap/3.2.0/js/bootstrap.min
-//= require ../lib/underscore/1.6.0/js/underscore.min
-//= require ../lib/angular/1.2.16/js/angular
-//= require ../lib/angular/1.2.16/js/angular-locale_ru-ru
-//= require ../lib/angular/1.2.16/js/angular-route
-//= require ../lib/angular/1.2.16/js/angular-cookies
-//= require ../lib/angular/1.2.16/js/angular-animate
-//= require ../lib/angular/1.2.16/js/angular-sanitize
-//= require ../lib/http-auth-interceptor/1.2.0/js/http-auth-interceptor
-//= require ../lib/angular-file-upload/1.1.1/js/angular-file-upload
-//= require ../lib/angular-google-maps/1.0.18/js/angular-google-maps
-//= require ../lib/angular-strap/2.0.5/js/angular-strap.js
-//= require ../lib/angular-strap/2.0.5/js/angular-strap.tpl.js
-//= require ../lib/summernote/0.5.8/js/summernote
-//= require ../lib/angular-summernote/0.2.3/js/angular-summernote
-//= require ../lib/angular-md5/0.1.7/js/angular-md5
+//= require ../lib/jquery/dist/jquery.min
+//= require ../lib/moment/min/moment.min
+//= require ../lib/moment/locale/ru
+//= require ../lib/bootstrap/dist/js/bootstrap.min
+//= require ../lib/underscore/underscore-min
+//= require ../lib/angular/angular.min
+//= require ../lib/angular-i18n/angular-locale_ru-ru
+//= require ../lib/angular-route/angular-route.min
+//= require ../lib/angular-cookies/angular-cookies.min
+//= require ../lib/angular-animate/angular-animate.min
+//= require ../lib/angular-sanitize/angular-sanitize.min
+//= require ../lib/angular-http-auth/src/http-auth-interceptor
+//= require ../lib/angular-file-upload/angular-file-upload.min
+//= require ../lib/angular-google-maps/dist/angular-google-maps.min
+//= require ../lib/angular-strap/dist/angular-strap.min
+//= require ../lib/angular-strap/dist/angular-strap.tpl.min.js
+//= require ../lib/summernote/dist/summernote.min
+//= require ../lib/angular-summernote/dist/angular-summernote.min
+//= require ../lib/angular-md5/angular-md5.min
 //= require my-app
 //= require_tree app

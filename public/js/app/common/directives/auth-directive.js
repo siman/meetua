@@ -4,8 +4,8 @@
  * Created by oleksandr at 6/1/14 1:47 PM
  */
 angular.module('myApp').directive('auth',
-  ['AuthModal', 'AuthInterceptorService', 'UserService',
-  function(AuthModal, AuthInterceptorService, UserService) {
+  ['AuthModal', 'authService', 'UserService',
+  function(AuthModal, HttpAuthInterceptor, UserService) {
     function link($scope) {
 
       $scope.$on('event:reload-current-user', function(angEvent, data) {
@@ -23,9 +23,9 @@ angular.module('myApp').directive('auth',
         // and can even e.g. pass to the modal an element to stick with.
         AuthModal.open().then(function(user) {
           $scope.currentUser = user; // save as application-wide object
-          AuthInterceptorService.loginConfirmed();
+          HttpAuthInterceptor.loginConfirmed();
         }, function() {
-          AuthInterceptorService.loginCancelled(null/*data for event broadcast*/, rejection);
+          HttpAuthInterceptor.loginCancelled(null/*data for event broadcast*/, rejection);
         });
       });
     }
