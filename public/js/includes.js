@@ -21,7 +21,7 @@
 //= require ../lib/angular/1.2.16/js/angular-cookies
 //= require ../lib/angular/1.2.16/js/angular-animate
 //= require ../lib/angular/1.2.16/js/angular-sanitize
-//= require lib/http-auth-interceptor
+//= require ../lib/http-auth-interceptor/1.2.0/js/http-auth-interceptor
 //= require ../lib/angular-file-upload/1.1.1/js/angular-file-upload
 //= require ../lib/angular-google-maps/1.0.18/js/angular-google-maps
 //= require ../lib/angular-strap/2.0.5/js/angular-strap.js
