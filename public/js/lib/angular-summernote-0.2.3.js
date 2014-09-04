@@ -10,10 +10,11 @@ angular.module('summernote', [])
     'use strict';
 
     var currentElement,
-      summernoteConfig = $scope.summernoteConfig || {};
+        summernoteConfig = $scope.summernoteConfig || {};
 
     if (angular.isDefined($attrs.height)) { summernoteConfig.height = $attrs.height; }
     if (angular.isDefined($attrs.focus)) { summernoteConfig.focus = true; }
+    if (angular.isDefined($attrs.airmode)) { summernoteConfig.airMode = true; }
     if (angular.isDefined($attrs.lang)) {
       if (!angular.isDefined($.summernote.lang[$attrs.lang])) {
         throw new Error('"' + $attrs.lang + '" lang file must be exist.');
@@ -26,7 +27,11 @@ angular.module('summernote', [])
     summernoteConfig.onfocus = function(evt) { $scope.focus({evt:evt}); };
     summernoteConfig.onblur = function(evt) { $scope.blur({evt:evt}); };
     summernoteConfig.onpaste = function(evt) { $scope.paste({evt:evt}); };
+    summernoteConfig.onkeyup = function(evt) { $scope.keyup({evt:evt}); };
     summernoteConfig.onkeydown = function(evt) { $scope.keydown({evt:evt}); };
+    summernoteConfig.onChange = function(contents, editable$) {
+      $scope.change({contents:contents, editable$: editable$});
+    };
     if (angular.isDefined($attrs.onImageUpload)) {
       summernoteConfig.onImageUpload = function(files, editor, welEditable) {
         $scope.imageUpload({files:files, editor:editor, welEditable:welEditable});
@@ -44,15 +49,15 @@ angular.module('summernote', [])
         }
       };
 
-      summernoteConfig.onkeyup = function(evt) {
+      summernoteConfig.onChange = function(contents, editable$) {
         updateNgModel();
-        $scope.keyup({evt:evt});
+        $scope.change({contents:contents, editable$: editable$});
       };
 
       element.summernote(summernoteConfig);
 
       var editor$ = element.next('.note-editor'),
-        unwatchNgModel;
+          unwatchNgModel;
       editor$.find('.note-toolbar').click(function() {
         updateNgModel();
 
@@ -105,12 +110,13 @@ angular.module('summernote', [])
         paste: '&onPaste',
         keyup: '&onKeyup',
         keydown: '&onKeydown',
+        change: '&onChange',
         imageUpload: '&onImageUpload'
       },
       template: '<div class="summernote"></div>',
       link: function(scope, element, attrs, ctrls) {
         var summernoteController = ctrls[0],
-          ngModel = ctrls[1];
+            ngModel = ctrls[1];
 
         summernoteController.activate(scope, element, ngModel);
       }
