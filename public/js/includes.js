@@ -9,11 +9,11 @@
  * at the bottom of the compiled file.
  */
 
-//= require lib/jquery-2.1.0.min
+//= require ../lib/jquery/2.1.0/js/jquery.min
 //= require ../lib/moment/2.6.0/js/moment.min
 //= require ../lib/moment/2.6.0/js/moment-langs.min
 //= require ../lib/bootstrap/3.2.0/js/bootstrap.min
-//= require lib/underscore-1.6.0.min
+//= require ../lib/underscore/1.6.0/js/underscore.min
 //= require lib/md5.min
 //= require ../lib/angular/1.2.16/js/angular
 //= require ../lib/angular/1.2.16/js/angular-locale_ru-ru
