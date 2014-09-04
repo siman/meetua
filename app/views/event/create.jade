@@ -2,10 +2,12 @@ extends ../layout
 
 include event-fields
 include form-btns
+include form
 
 block content
-    .page-header
-        h3 Создать событие
-    form.form-horizontal(role='form', method='POST', ng-controller='CreateEventCtrl', ng-submit='submit()', name='eventForm', novalidate)
-      +eventFields(true)
-      +formBtns()
+  .page-header
+      h3 Создать событие
+
+  +form(ng-controller='CreateEventCtrl')
+    +eventFields(true)
+    +formBtns()

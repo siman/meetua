@@ -1,0 +1,6 @@
+mixin form
+  form.form-horizontal(ng-controller=attributes['ng-controller'], role='form', method='POST', name='eventForm'
+    ng-submit='submitted = true; eventForm.$valid && submit()', novalidate)
+    block
+    .form-group(ng-if='eventForm.$invalid && submitted'): .col-sm-offset-2.col-sm-8.has-error
+      label.help-block Некоторые поля заполнены неверно
