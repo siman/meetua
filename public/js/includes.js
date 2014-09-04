@@ -26,8 +26,8 @@
 //= require ../lib/angular-google-maps/1.0.18/js/angular-google-maps
 //= require ../lib/angular-strap/2.0.5/js/angular-strap.js
 //= require ../lib/angular-strap/2.0.5/js/angular-strap.tpl.js
-//= require lib/summernote-0.5.8
-//= require lib/angular-summernote-0.2.3
+//= require ../lib/summernote/0.5.8/js/summernote
+//= require ../lib/angular-summernote/0.2.3/js/angular-summernote
 //= require my-app
 //= require_tree app
 //= require lib/ng-directives
