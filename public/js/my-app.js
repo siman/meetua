@@ -46,10 +46,7 @@ angular.module('myApp', [
     toolbar: [
       ['style', ['style', 'bold', 'italic', 'clear']],
       ['para', ['ul', 'ol']],
-      // temp. disable insert buttons, since they don't get update to the model correctly
-      // @see the issue https://github.com/outsideris/angular-summernote/issues/15
-      // enable when the issue is resolved
-      /*['insert', ['picture', 'link', 'video', 'table']],*/
+      ['insert', ['picture', 'link', 'video'/*, 'table' disable table because it's ugly on current bootstrap theme*/]],
       ['misc', ['help']]
     ],
     disableDragAndDrop: true
