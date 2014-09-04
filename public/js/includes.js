@@ -14,7 +14,6 @@
 //= require ../lib/moment/2.6.0/js/moment-langs.min
 //= require ../lib/bootstrap/3.2.0/js/bootstrap.min
 //= require ../lib/underscore/1.6.0/js/underscore.min
-//= require lib/md5.min
 //= require ../lib/angular/1.2.16/js/angular
 //= require ../lib/angular/1.2.16/js/angular-locale_ru-ru
 //= require ../lib/angular/1.2.16/js/angular-route
@@ -28,6 +27,6 @@
 //= require ../lib/angular-strap/2.0.5/js/angular-strap.tpl.js
 //= require ../lib/summernote/0.5.8/js/summernote
 //= require ../lib/angular-summernote/0.2.3/js/angular-summernote
+//= require ../lib/angular-md5/0.1.7/js/angular-md5
 //= require my-app
 //= require_tree app
-//= require lib/ng-directives

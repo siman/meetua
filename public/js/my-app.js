@@ -12,6 +12,7 @@ angular.module('myApp', [
     'ngCookies',
     'mgcrea.ngStrap', /*angularstrap*/
     'http-auth-interceptor',
+    'angular-md5',
     'summernote' /*wysiwyg*/
   ]).run(function () {
     moment.lang('ru');
