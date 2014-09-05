@@ -237,9 +237,9 @@ var authSuccessHandler = function(req, res) {
   }
 };
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), authSuccessHandler);
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), authSuccessHandler);
 app.get('/auth/vkontakte', passport.authenticate('vkontakte', { scope: ['email'] }));
-app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/login' }), authSuccessHandler);
+app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/' }), authSuccessHandler);
 
 /**
  * error trigger(development mode only)
