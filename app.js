@@ -180,7 +180,8 @@ app.post('/upload/image', passportConf.isAuthenticated, upload);
 app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
-var meetuaEventsApi = require('./app/controllers/api/events');
+var eventQueries = require('./app/controllers/event/queries');
+var eventParticipation = require('./app/controllers/event/participation');
 
 // User
 app.get('/api/meetua/user/login', passportConf.isAuthenticated, userController.api.getLogin); // authenticates user through auth-modal
@@ -191,12 +192,12 @@ app.post('/api/meetua/user/updateProfile', passportConf.isAuthenticated, userCon
 
 // Event
 // TODO rename events -> event to keep routing consistency
-app.get('/api/meetua/events/find', meetuaEventsApi.get_find);
-app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
-app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
-app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
-app.get('/api/meetua/events/user/:userId/overview', meetuaEventsApi.getUserEventsOverview);
-app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
+app.get('/api/meetua/events/find', eventQueries.get_find);
+app.get('/api/meetua/events/findById', eventQueries.get_findById);
+app.get('/api/meetua/events/my', passportConf.isAuthenticated, eventQueries.get_my);
+app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, eventQueries.get_myOverview);
+app.get('/api/meetua/events/user/:userId/overview', eventQueries.getUserEventsOverview);
+app.post('/api/meetua/events/participation', passportConf.isAuthenticated, eventParticipation.post_participation);
 
 if (!appConfig.IS_PRODUCTION) {
 
