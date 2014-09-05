@@ -2,7 +2,7 @@
 /**
  * Created by oleksandr at 6/15/14 3:54 PM
  */
-var EventStore = require('../event/EventStore');
+var EventStore = require('../event/event-store');
 var notifyService = require('../util/notification-service');
 
 exports.postNotifyParticipantOnJoin = notify(function(user, event, cb) {

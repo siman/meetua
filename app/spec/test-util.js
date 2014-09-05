@@ -7,7 +7,7 @@ var tmp = require('tmp');
 var fs = require('fs-extra');
 var path = require('path');
 var util = require('../../app/controllers/utils');
-var eventStore = require('../../app/controllers/event/EventStore');
+var eventStore = require('../../app/controllers/event/event-store');
 var userController = require('../../app/controllers/user');
 var logger = require('../../app/controllers/util/logger')(__filename);
 

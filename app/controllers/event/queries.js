@@ -4,7 +4,7 @@ var _ = require('underscore');
 var async = require('async');
 var conf = require('../../../config/app-config');
 var Event = require('../../models/Event');
-var EventStore = require('./EventStore');
+var EventStore = require('./event-store');
 var logger = require('../util/logger')(__filename);
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile. issue #169

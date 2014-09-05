@@ -2,7 +2,7 @@
  * Created by oleksandr on 9/5/14.
  */
 
-var EventStore = require('./EventStore');
+var EventStore = require('./event-store');
 var Notifier = require('../util/notification-service');
 var logger = require('../util/logger')(__filename);
 var _ = require('underscore');

@@ -33,7 +33,7 @@ var upload = require('./app/controllers/upload').handleUpload;
 var myEvents = require('./app/controllers/profile/my-events');
 var rmEventImage = require('./app/controllers/event/rm-image');
 
-var eventStore = require('./app/controllers/event/EventStore');
+var eventStore = require('./app/controllers/event/event-store');
 
 var renderTpl = require('./app/controllers/render-tpl').renderTpl;
 

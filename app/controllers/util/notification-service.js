@@ -3,7 +3,7 @@
 var appConfig = require('../../../config/app-config.js');
 var path = require('path');
 var _ = require('underscore');
-var store = require('../event/EventStore');
+var store = require('../event/event-store');
 var logger = require('./logger')(__filename);
 var async = require('async');
 var moment = require('moment');
@@ -179,7 +179,7 @@ module.exports.startCronJobs = function() {
   logger.debug("Starting notification cron jobs...");
 
   var CronJob = require('cron').CronJob;
-  var eventStore = require('../event/EventStore');
+  var eventStore = require('../event/event-store');
 
   // Remind users about upcoming events.
   // Runs every day at 10:00:00 AM.

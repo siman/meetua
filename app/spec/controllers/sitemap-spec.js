@@ -3,7 +3,7 @@ var appConfig = require('../../../config/app-config');
 var request = require('supertest');
 var express = require('express');
 var sitemap = require('../../../app/controllers/sitemap');
-var EventStore = require('../../../app/controllers/event/EventStore');
+var EventStore = require('../../../app/controllers/event/event-store');
 var Event = require('../../../app/models/Event');
 var _ = require('underscore');
 
