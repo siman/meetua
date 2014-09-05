@@ -19,18 +19,17 @@ var errorHandler = require('./app/controllers/util/error-handler');
  */
 
 var appConfig = require('./config/app-config');
+var utils = require('./app/controllers/utils');
+var simpleRenders = require('./app/controllers/simple-renders');
 var sitemap = require('./app/controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
-var homeController = require('./app/controllers/home');
 var userController = require('./app/controllers/user');
 var apiController = require('./app/controllers/api');
-var createEventPage = require('./app/controllers/event/create-page');
 var saveEvent = require('./app/controllers/event/save-event').postSaveEvent;
 var viewEvent = require('./app/controllers/event/view');
 var editEvent = require('./app/controllers/event/edit');
 var cancelEvent = require('./app/controllers/event/cancel');
 var upload = require('./app/controllers/upload').handleUpload;
-var myEvents = require('./app/controllers/profile/my-events');
 var rmEventImage = require('./app/controllers/event/rm-image');
 
 var eventStore = require('./app/controllers/event/event-store');
@@ -148,28 +147,33 @@ function headersForLanguage(req, res, next) {
  * Application routes.
  */
 
+simpleRenders.forEach(function(render) {
+  if (render.pre) {
+    app.get(render.url, render.pre, renderMiddleware);
+  } else {
+    app.get(render.url, renderMiddleware);
+  }
+  function renderMiddleware(req, res) {
+    res.render(render.view, { title: render.title });
+  }
+});
+
 app.param('userId', userController.userById);
-app.get('/', homeController.index);
 app.get('/sitemap.xml', sitemap.getSitemap);
 app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
 app.post('/forgot', userController.postForgot);
 app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
-app.get('/signup', userController.getSignup);
+app.get('/signup', utils.isGuestMiddleware);
 app.post('/signup', userController.postSignup);
-app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/account/unsubscribe/:email/:token', userController.getUnsubscribe);
-app.get('/api', apiController.getApi);
 app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
 
-var feedback = require('./app/controllers/feedback');
 app.get('/tpl/*', renderTpl);
-app.get('/feedback', feedback.get_feedback);
-app.get('/event/create', createEventPage);
 app.post('/event/save', passportConf.isAuthenticated, saveEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
@@ -177,7 +181,6 @@ app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
 app.post('/event/:id/rm-image/:imageId', rmEventImage);
 app.get('/user/:userId', userController.getUserProfile);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
-app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
 var eventQueries = require('./app/controllers/event/queries');

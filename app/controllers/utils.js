@@ -78,6 +78,14 @@ exports.getUserIdOpt = function(req) {
   return req.user ? req.user._id : undefined;
 };
 
+exports.isGuestMiddleware = function(req, res, next) {
+  if (req.user) {
+    res.redirect('/');
+  } else {
+    next();
+  }
+};
+
 /**
  * Move file to specified directory generating unique name preserving file extension.
  * @param srcPath - source file path

@@ -8,17 +8,6 @@ var _ = require('underscore');
 var graph = require('fbgraph');
 
 /**
- * GET /api
- * List of API examples.
- */
-
-exports.getApi = function(req, res) {
-  res.render('api/index', {
-    title: 'API Browser'
-  });
-};
-
-/**
  * GET /api/facebook
  * Facebook API example.
  */

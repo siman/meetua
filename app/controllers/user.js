@@ -128,18 +128,6 @@ exports.logout = function(req, res) {
 };
 
 /**
- * GET /signup
- * Signup page.
- */
-
-exports.getSignup = function(req, res) {
-  if (req.user) return res.redirect('/');
-  res.render('account/signup', {
-    title: 'Создать аккаунт'
-  });
-};
-
-/**
  * POST /signup
  * Create a new local account.
  * @param email
@@ -174,17 +162,6 @@ exports.postSignup = function(req, res, next) {
       if (err) return next(err);
       res.redirect('/');
     });
-  });
-};
-
-/**
- * GET /account
- * Profile page.
- */
-
-exports.getAccount = function(req, res) {
-  res.render('account/profile', {
-    title: 'Личные данные'
   });
 };
 
