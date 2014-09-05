@@ -204,17 +204,17 @@ if (!appConfig.IS_PRODUCTION) {
   app.get('/dev/generator', passportConf.isAuthenticated, generator.view);
   app.post('/dev/generate', passportConf.isAuthenticated, generator.generate);
 
-  var devApi = require('./app/controllers/api/dev');
+  var devNotifications = require('./app/controllers/dev/notifications');
   app.get('/dev/api', function(req, res, next) {
     res.render('dev/api', { title: 'MeetUA API' });
   });
-  app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticated, devApi.postNotifyParticipantOnJoin);
-  app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticated, devApi.postNotifyParticipantOnEdit);
-  app.post('/api/meetua/notify/user-forgot-password', passportConf.isAuthenticated, devApi.postNotifyUserForgotPassword);
-  app.post('/api/meetua/notify/user-password-reset', passportConf.isAuthenticated, devApi.postNotifyUserPasswordReset);
-  app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticated, devApi.postNotifyAuthorOnCreate);
-  app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticated, devApi.postNotifyComingSoonEvent);
-  app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticated, devApi.postNotifyOnCancel);
+  app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticated, devNotifications.postNotifyParticipantOnJoin);
+  app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticated, devNotifications.postNotifyParticipantOnEdit);
+  app.post('/api/meetua/notify/user-forgot-password', passportConf.isAuthenticated, devNotifications.postNotifyUserForgotPassword);
+  app.post('/api/meetua/notify/user-password-reset', passportConf.isAuthenticated, devNotifications.postNotifyUserPasswordReset);
+  app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticated, devNotifications.postNotifyAuthorOnCreate);
+  app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticated, devNotifications.postNotifyComingSoonEvent);
+  app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticated, devNotifications.postNotifyOnCancel);
 }
 
 /**
