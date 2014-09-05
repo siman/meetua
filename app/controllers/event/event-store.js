@@ -2,7 +2,7 @@
 
 var _ = require("underscore");
 var async = require("async");
-var mockEvents = require("./MockEvents");
+var mockEvents = require("./mock-events");
 var Event = require('../../models/Event');
 var util = require('../utils');
 var moment = require('moment');

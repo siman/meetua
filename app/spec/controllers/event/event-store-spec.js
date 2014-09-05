@@ -1,6 +1,6 @@
 var testUtil = require('../../test-util');
 var dbPreload = require('../../../../app/controllers/event/event-store').dbPreload;
-var mockEvents = require('../../../../app/controllers/event/MockEvents');
+var mockEvents = require('../../../../app/controllers/event/mock-events');
 var Event = require('../../../../app/models/Event');
 var _ = require('underscore');
 
