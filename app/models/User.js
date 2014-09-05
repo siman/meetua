@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var logger = require('../controllers/util/logger')(__filename);
-var utils = require('../controllers/utils');
+var utils = require('../controllers/util/utils');
 var appConfig = require('../../config/app-config');
 
 var userSchema = new mongoose.Schema({

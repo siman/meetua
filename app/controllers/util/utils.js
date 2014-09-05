@@ -2,8 +2,8 @@
 
 var async = require('async');
 var path = require('path');
-var config = require('../../config/app-config');
-var logger = require('./util/logger.js')('util.js');
+var config = require('../../../config/app-config');
+var logger = require('./logger.js')('util.js');
 var crypto = require('crypto');
 var tmp = require('tmp');
 var fs = require('fs-extra');

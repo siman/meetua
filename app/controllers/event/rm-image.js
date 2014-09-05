@@ -3,7 +3,7 @@
 var Event = require('../../models/Event');
 var _ = require('underscore');
 var fs = require('fs-extra');
-var utils = require('../utils');
+var utils = require('../util/utils');
 var SharedEventService = require('../../../public/js/app/shared/services/event-service');
 var logger = require('../util/logger')(__filename);
 

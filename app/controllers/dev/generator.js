@@ -8,7 +8,7 @@ var _ = require('lodash');
 var moment = require('moment');
 
 var appConfig = require('../../../config/app-config');
-var utils = require('../utils');
+var utils = require('../util/utils');
 var Image = require('../../../app/models/Image');
 var Event = require('../../../app/models/Event');
 var saveEvent = require('../event/save-event')._saveEvent;

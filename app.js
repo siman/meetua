@@ -19,7 +19,7 @@ var errorHandler = require('./app/controllers/util/error-handler');
  */
 
 var appConfig = require('./config/app-config');
-var utils = require('./app/controllers/utils');
+var utils = require('./app/controllers/util/utils');
 var simpleRenders = require('./app/controllers/simple-renders');
 var sitemap = require('./app/controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
