@@ -3,10 +3,9 @@
 angular.module('myApp').controller('ViewEventCtrl',
   ['$rootScope', '$scope', '$http', 'util',
   function ($rootScope, $scope, $http, util) {
-    var event = _myInit.event;
-    console.log("Event", event);
+    $scope.event = _myInit.event;
 
-    $scope.event = event;
+    console.log("Event", $scope.event);
 
     $scope.isCurrentUserAnAuthor = function() {
       return $scope.app.UserService.isUserAuthorOfEvent($scope.currentUser, $scope.event);
@@ -19,7 +18,7 @@ angular.module('myApp').controller('ViewEventCtrl',
     $scope.isPart = function() {
       if ($scope.currentUser) {
         var curUserId = $scope.currentUser._id;
-        return _.find(event.participants, function(participant) {
+        return _.find($scope.event.participants, function(participant) {
           return participant.user._id === curUserId;
         });
       } else {
@@ -31,7 +30,7 @@ angular.module('myApp').controller('ViewEventCtrl',
       var $partBtn = $('#partBtn');
       $partBtn.attr('disabled', 'disabled');
 
-      var params = {eventId: event._id, act: $scope.isPart() ? 'remove' : 'add', guests: guestNumber};
+      var params = {eventId: $scope.event._id, act: $scope.isPart() ? 'remove' : 'add', guests: guestNumber};
       $http.post(util.apiUrl('/events/participation'), params).
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');  // FIXME: to Siman: controller shouldn't modify DOM. It's directive's responsibility
