@@ -167,7 +167,7 @@ function buildAndSaveEvent(args, cb) {
         }
 
         var onNotifyComplete = function(err, resp) {
-          logger.debug('Notification response: %s, error: %s', resp, err);
+          logger.debug('Notification response:', resp, 'error:', err);
         };
         if (isCreate) {
           notificationService.notifyAuthorOnCreate(event, onNotifyComplete)
