@@ -4,7 +4,6 @@
 var passportConf = require('../../config/passport');
 
 module.exports = [
-  { url: '/api', view: 'api/index', title: 'API Browser' },
   { url: '/feedback', view: 'feedback', title: 'Отзывы и предложения' },
   { url: '/', view: 'home' },
   { url: '/signup', view: 'account/signup', title: 'Создать аккаунт' },

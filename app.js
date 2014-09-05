@@ -171,7 +171,6 @@ app.post('/account/password', passportConf.isAuthenticated, userController.postU
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/account/unsubscribe/:email/:token', userController.getUnsubscribe);
-app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
 
 app.get('/tpl/*', renderTpl);
 app.post('/event/save', passportConf.isAuthenticated, saveEvent);
@@ -229,6 +228,7 @@ app.get('/auth/success', function(req, res) {
   res.render('after-auth');
 });
 var authSuccessHandler = function(req, res) {
+  apiController.updateUserFriends(req.user);
   var referer = req.headers.referer;
   if (referer && referer.indexOf('/account') !== -1) {
     res.redirect(referer); // link account request

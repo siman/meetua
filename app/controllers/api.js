@@ -6,33 +6,53 @@ var async = require('async');
 var request = require('request');
 var _ = require('underscore');
 var graph = require('fbgraph');
+var logger = require('./util/logger')(__filename);
 
-/**
- * GET /api/facebook
- * Facebook API example.
- */
-
-exports.getFacebook = function(req, res, next) {
-  var token = _.findWhere(req.user.tokens, { kind: 'facebook' });
-  graph.setAccessToken(token.accessToken);
-  async.parallel({
-    getMe: function(done) {
-      graph.get(req.user.facebook, function(err, me) {
-        done(err, me);
-      });
-    },
-    getMyFriends: function(done) {
-      graph.get(req.user.facebook + '/friends', function(err, friends) {
-        done(err, friends.data);
-      });
-    }
-  },
-  function(err, results) {
-    if (err) return next(err);
-    res.render('api/facebook', {
-      title: 'Facebook API',
-      me: results.getMe,
-      friends: results.getMyFriends
+function updateFriends(user) {
+  var errMsg = 'Failed to update friends of user ' + user.email;
+  loadFbFriends(user, function(err, friends) {
+    if (err) return logger.warn(errMsg, err);
+    user.profile.friends = friends;
+    user.save(function(err) {
+      if (err) return logger.warn(errMsg, err);
+      logger.info('Saved ', friends && friends.length || 0, 'friends of user', user.email);
     });
   });
-};
+}
+
+function loadFbFriends(user, cb) {
+  var userFbId = user.facebook;
+  var fbToken = _.findWhere(user.tokens, { kind: 'facebook' });
+  logger.debug('fbAccessToken', fbToken, 'userFbId', userFbId);
+  async.waterfall([
+    function loadGraph(cb) {
+      graph.setAccessToken(fbToken.accessToken);
+      graph.get(userFbId + '/friends', function(err, friends) {
+        if (err) return cb(err, friends);
+        if (!friends || !friends.data) return cb(err, friends);
+        logger.debug('Loaded fbgraph:/friends:', friends.data.length, 'userFacebookId', userFbId);
+        cb(err, friends.data);
+      });
+    },
+    function mapToUsers(friends, cb) {
+      if (!friends) return cb();
+      async.map(friends, function(friend, cbmap) {
+        User.findOne({'facebook': friend.id}).select('_id').exec(cbmap);
+      }, function(err, users) {
+        if (err) return cb(err, users);
+        if (!users) return cb(err, users);
+        users = _.filter(users, function(user) { return user });
+        logger.debug('Mapped', friends.length, 'fbfriends to', users.length, 'users');
+        cb(err, users);
+      });
+    }
+  ], function done(err, users) {
+    if (err) return cb(err);
+    var friends = users ? _.map(users, function(user) {
+      return { id: user._id, type: 'facebook' };
+    }) : [];
+    cb(null, friends);
+  });
+}
+
+exports.updateUserFriends = updateFriends;

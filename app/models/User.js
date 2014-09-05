@@ -1,12 +1,13 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 var logger = require('../controllers/util/logger')(__filename);
 var utils = require('../controllers/util/utils');
 var appConfig = require('../../config/app-config');
 
-var userSchema = new mongoose.Schema({
+var userSchema = new Schema({
   email: { type: String, unique: true, lowercase: true, sparse: true },
   password: String,
 
@@ -28,7 +29,13 @@ var userSchema = new mongoose.Schema({
       facebook: { type: String, default: '' },
       vkontakte: { type: String, default: '' }
     },
-    preferredActivities: [String] // activity names
+    preferredActivities: [String], // activity names
+    friends: [
+      {
+        id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        type: { type: String, enum: ['email', 'facebook'], required: true }
+      }
+    ]
   },
 
   // User could have other preferred ways of notifications: phone, twitter, fb, etc.
