@@ -230,7 +230,7 @@ app.get('/auth/success', function(req, res) {
 });
 var authSuccessHandler = function(req, res) {
   var referer = req.headers.referer;
-  if (referer.indexOf('/account') !== -1) {
+  if (referer && referer.indexOf('/account') !== -1) {
     res.redirect(referer); // link account request
   } else {
     res.redirect('/auth/success');
