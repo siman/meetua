@@ -23,6 +23,10 @@
     "angular-http-auth": "~1.2.1",
     "bootstrap-social": "~4.7.0",
     "font-awesome": "~4.2.0",
-    "bootstrap-additions": "~0.2.3"
+    "bootstrap-additions": "~0.2.3",
+    "angular-mocks": "~1.2.23"
+  },
+  "devDependencies": {
+    "should.js": "shouldjs/should.js#~4.0.4"
   }
 }

@@ -30,12 +30,7 @@ var userSchema = new Schema({
       vkontakte: { type: String, default: '' }
     },
     preferredActivities: [String], // activity names
-    friends: [
-      {
-        id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        type: { type: String, enum: ['email', 'facebook'], required: true }
-      }
-    ]
+    friends: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
   },
 
   // User could have other preferred ways of notifications: phone, twitter, fb, etc.

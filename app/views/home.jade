@@ -4,6 +4,25 @@ block content
   div(ng-controller='HomeCtrl')
     h1 MeetUA
 
+    .row.ng-cloak.preferred-events-block(ng-if='friendsStream.length', data-animation='am-fade')
+      .col-xs-12
+        h2 Ваши друзья идут на события
+          a.btn.btn-link.btn-mini(href="/account#preferred")
+      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(ng-click='goToEvent(event)',
+          ng-repeat='entry in friendsStream', ng-init='event = entry.event')
+        a.pull-left
+          dimensioned-img.img-rounded.media-object(src='event.logoUrl', height='180')
+        .media-body(ng-init='cityLength = event.name.length > 20 ? 20 : 40')
+          h4.media-heading: a(ng-href="{{event.url}}") {{event.name|truncate:30}}
+          .row
+            .col-xs-12 {{event.place.city|truncate:cityLength}}
+            .col-xs-12(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
+          .row(ng-if='entry.friends.length')
+            .col-xs-12 Ваши друзья идут
+            .col-xs-4
+              img(ng-repeat='friend in entry.friends', profile-picture-src='friend', size='40', width='40', height='40', ng-attr-title='{{friend.profile.name}}')
+            .col-xs-12 Участников: {{event.participants.length}}
+
     .row.ng-cloak.preferred-events-block(ng-if='subscription.events.length', data-animation='am-fade',
         ng-init='limitSmall = 8; limitBig = 20; data.eventsLimit = limitSmall;')
       .col-xs-12
@@ -20,7 +39,7 @@ block content
           h4.media-heading: a(ng-href="{{event.url}}") {{event.name|truncate:30}}
           .row
             .col-xs-12 {{event.place.city|truncate:cityLength}}
-            .col-xs-12 {{event.start.dateTime | prettyDateTime}}
+            .col-xs-12(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
             .col-xs-12 Участников: {{event.participants.length}}
       .col-xs-12.text-right(ng-if='subscription.events.length > limitSmall')
         button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitBig', ng-click='data.eventsLimit = limitBig;') Показать больше

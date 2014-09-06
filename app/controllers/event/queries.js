@@ -6,6 +6,7 @@ var conf = require('../../../config/app-config');
 var Event = require('../../models/Event');
 var EventStore = require('./event-store');
 var logger = require('../util/logger')(__filename);
+var ObjectId = require('mongoose').Types.ObjectId;
 
 // TODO: Limit to last 5 events if this is an overview of events in user's profile. issue #169
 
@@ -93,6 +94,7 @@ module.exports.get_findById = function(req, res, next) {
 
 module.exports.get_find = function(req, res, next) {
   var activity = req.query.act;
+  var participantId = req.query.participantId;
   logger.debug("act", activity);
   var filter = {
     'start.dateTime': {$gt:  Date.now()},
@@ -100,6 +102,9 @@ module.exports.get_find = function(req, res, next) {
   };
   if (activity) {
     filter.activity = activity;
+  }
+  if (participantId) {
+    filter.participants = {$elemMatch: {user:ObjectId(participantId)}};
   }
   return Event.find(filter).exec(function(err, events) {
     if (err) return next(err);

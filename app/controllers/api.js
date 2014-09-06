@@ -48,10 +48,7 @@ function loadFbFriends(user, cb) {
     }
   ], function done(err, users) {
     if (err) return cb(err);
-    var friends = users ? _.map(users, function(user) {
-      return { id: user._id, type: 'facebook' };
-    }) : [];
-    cb(null, friends);
+    cb(null, users);
   });
 }
 

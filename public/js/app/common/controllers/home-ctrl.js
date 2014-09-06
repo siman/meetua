@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('HomeCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q) {
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventService',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q, EventService) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = [];
@@ -22,6 +22,10 @@ angular.module('myApp').controller('HomeCtrl',
         };
       });
     }
+
+    EventService.loadFriendsStream($scope.currentUser).then(function(res) {
+      $scope.friendsStream = res;
+    }, function(err) { ErrorService.handleResponse(err); });
 
     $scope.goToEvent = function(event) {
       window.location.href = '/event/' + event._id;

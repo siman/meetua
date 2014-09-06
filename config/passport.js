@@ -12,12 +12,11 @@ passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
+passport.deserializeUser(deserializeUser);
 
+function deserializeUser(id, done) {
+  User.findById(id).populate('profile.friends').exec(done);
+}
 /**
  * Sign in using Email and Password.
  */
@@ -67,7 +66,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
       if (existingUser) {
         done('У вас уже есть Facebook аккаунт. Войдите через Facebook и удалите его, затем повторите попытку привязать аккаунт.');
       } else {
-        User.findById(req.user.id, function(err, user) {
+        deserializeUser(req.user.id, function(err, user) {
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken: accessToken });
           user.profile.name = user.profile.name || profile.displayName;
