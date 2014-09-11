@@ -15,8 +15,7 @@ angular.module('myApp', [
     'angular-md5',
     'summernote' /*wysiwyg*/
   ]).run(function () {
-    moment.lang('ru');
-    console.log('momentjs lang ', moment.lang());
+    moment.locale('ru');
   })
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
