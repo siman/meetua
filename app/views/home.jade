@@ -29,7 +29,7 @@ block content
         h2 Избранные события
           span.text-lowercase(ng-repeat='activity in subscription.activities')
             strong {{' ' +   activityByName(activity).textOver}}
-            {{$last ? '' : ','}}
+            | {{$last ? '' : ','}}
           a.btn.btn-link.btn-mini(href="/account#preferred") Изменить
       .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(ng-click='goToEvent(event)',
           ng-repeat='event in subscription.events | limitTo:data.eventsLimit')

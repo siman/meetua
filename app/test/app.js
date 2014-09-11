@@ -16,11 +16,3 @@ describe('GET /signup', function() {
       .expect(200, done);
   });
 });
-
-describe('GET /contact', function() {
-  it('should return 200 OK', function(done) {
-    request(app)
-      .get('/contact')
-      .expect(200, done);
-  });
-});
