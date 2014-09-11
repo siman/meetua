@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('myApp')
   .service('EventService', ['$http', '$window', '$q', 'util', function($http, $window, $q, util) {
     var errorHandler = function(err) {
@@ -18,6 +20,7 @@ angular.module('myApp')
         }
       }).error(errorHandler);
     };
+
     /**
      * @param opts
      * @param opts.eventId
@@ -39,27 +42,22 @@ angular.module('myApp')
             });
           });
           $q.all(fetchFriendsEvents).then(function(ress) {
-            // make {[events], friend} => {event: [friends]}
-            var r = _.map(ress, function(res) {
-              var r = _.map(res.events, function(event) {
-                var friends = _.filter(_.map(ress, function(res) {
-                  return _.contains(res.events, event) ? res.friend : undefined;
-                }), function(friend) { return friend; });
-                return {event: event, friends: friends};
+            // Transform structure: {[events], friend} => {event, [friends]}
+            var eventIds = [];
+            var eventIdToFriendsMap = {};
+            _.each(ress, function(res) {
+              _.each(res.events, function(event) {
+                var eid = event._id;
+                if (_.isUndefined(eventIdToFriendsMap[eid])) {
+                  eventIds.push(eid);
+                  eventIdToFriendsMap[eid] = { event: event, friends: [] };
+                }
+                eventIdToFriendsMap[eid].friends.push(res.friend);
               });
-              return r;
             });
-            r = _.reduce(_.flatten(r), function(memo, iter) {
-              var existing = _.find(memo, function (v) {
-                return v.event._id == iter.event._id
-              });
-              if (existing) {
-                existing.friends = existing.friends.concat(iter.friends);
-              } else {
-                memo.push(iter);
-              }
-              return memo;
-            }, []);
+            var r = _.map(eventIds, function(eid) {
+              return eventIdToFriendsMap[eid];
+            });
             deferred.resolve(r);
           }, function(err) { deferred.reject(err); });
         }
