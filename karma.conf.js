@@ -43,9 +43,8 @@ module.exports = function(config) {
       'public/js/test/**/*.js'],
 
     // Test results reporter to use
-    // Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    //reporters: ['progress'],
-    reporters: ['progress'],
+    // Possible values: 'mocha', 'dots', 'progress', 'junit', 'growl', 'coverage'
+    reporters: ['mocha'],
 
     // Web server port
     port: 9876,

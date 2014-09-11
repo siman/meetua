@@ -13,7 +13,7 @@
     "mocha-test": "export NODE_ENV=test;mocha --recursive app/test",
     "selenium-server": "./node_modules/protractor/bin/webdriver-manager start",
     "e2e-test": "./node_modules/protractor/bin/protractor spec-e2e/protractor_conf.js",
-    "postinstall": "sudo ./node_modules/.bin/bower install --allow-root"
+    "install-bower": "sudo ./node_modules/.bin/bower install --allow-root"
   },
   "engines": {
     "node": ">= 0.10.28",
@@ -69,6 +69,7 @@
     "karma": "^0.12.23",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.1.9",
+    "karma-mocha-reporter": "~0.3.1",
     "karma-phantomjs-launcher": "^0.1.4",
     "mocha": "~1.18.2",
     "mocha-mongoose": "1.0.1",
