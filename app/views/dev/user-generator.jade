@@ -8,42 +8,38 @@ block content
       h1 #{title}
 
     .row
-      .col-sm-2
-      .col-sm-10
-        form.form-horizontal(role='form', name='genForm', novalidate)
+      form.form-horizontal(role='form', name='genForm', novalidate)
 
-          .form-group(ng-class="{'has-error': false}")
-            label.col-sm-2.control-label(for='userCount') Users to generate
-            .col-sm-1: input.form-control(type='number', name='userCount', id='userCount', ng-model='gen.userCount')
+        .form-group(ng-class="{'has-error': false}")
+          label.col-sm-3.control-label(for='userCount') Users to generate
+          .col-sm-1: input.form-control(type='number', name='userCount', id='userCount', ng-model='gen.userCount')
 
-          .hide.form-group(ng-class="{'has-error': false}")
-            label.col-sm-2.control-label Random
-            .col-sm-6.btn-group
-              +radio('Yes', 'gen.isRandom', 'true')
-              +radio('No', 'gen.isRandom', 'false')
+        .hide.form-group(ng-class="{'has-error': false}")
+          label.col-sm-3.control-label Random
+          .col-sm-6.btn-group
+            +radio('Yes', 'gen.isRandom', 'true')
+            +radio('No', 'gen.isRandom', 'false')
 
-          .form-group(ng-class="{'has-error': false}")
-            label.col-sm-2.control-label Clean all generated users
-            .col-sm-6.btn-group
-              +checkbox('Clean database', 'gen.cleanDatabase')
+        .form-group(ng-class="{'has-error': false}")
+          label.col-sm-3.control-label Clean all generated users
+          .col-sm-6.btn-group
+            +checkbox('Clean database', 'gen.cleanDatabase')
 
-          .form-group
-            .col-sm-offset-2.col-sm-2
-              button.btn.btn-primary(type='button', ng-disabled='genForm.$invalid', ng-click='generateUsers()')
-                | Generate {{gen.userCount}} users!
+        .form-group
+          .col-sm-offset-3.col-sm-3
+            button.btn.btn-primary(type='button', ng-disabled='genForm.$invalid', ng-click='generateUsers()')
+              | Generate {{gen.userCount}} users!
 
     .row
-      .col-sm-12
-        div(ng-if="!generatedUsers")
-          .row
-            .col-sm-3
-            .col-sm-9
-              em No users gerated
-        div(ng-if="generatedUsers")
-          div(ng-repeat="user in generatedUsers")
-            .row
-              .col-sm-3
-                span {{$index + 1}}.
-                img.pull-right(profile-picture-src='user', size='200')
-              .col-sm-9
-                pre {{user | json}}
+      div(ng-if="!generatedUsers")
+        .row
+          .col-sm-3
+          .col-sm-9
+            em No users gerated
+      div(ng-if="generatedUsers", ng-repeat="user in generatedUsers")
+        .row
+          .col-sm-3
+            span {{$index + 1}}.
+            img.pull-right(profile-picture-src='user', size='200')
+          .col-sm-9
+            pre {{user | json}}

@@ -4,12 +4,11 @@ block content
   div(ng-controller='DevUsersCtrl')
     .page-header
       h1 #{title}
-
-    button.btn.btn-primary(type='button', ng-click='find()')
-      | Find users
-
-    a.btn(href='/dev/user-generator', role='button')
-      | Generate more users
+        .pull-right
+          button.btn.btn-primary(type='button', ng-click='find()')
+            | Find users
+          a.btn.btn-default(href='/dev/user-generator', role='button')
+            | Generate more users
 
     .row(ng-repeat="user in users")
       .col-sm-1
