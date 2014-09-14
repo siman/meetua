@@ -194,6 +194,7 @@ app.post('/api/meetua/user/updateProfile', passportConf.isAuthenticated, userCon
 // Event
 // TODO rename events -> event to keep routing consistency
 app.post('/api/meetua/events', passportConf.isAuthenticated, eventsCtrl.save);
+app.post('/api/meetua/events/:eventId', passportConf.isAuthenticated, eventsCtrl.save);
 app.get('/api/meetua/events/find', eventQueries.get_find);
 app.get('/api/meetua/events/findById', eventQueries.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, eventQueries.get_my);
