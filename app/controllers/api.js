@@ -11,13 +11,18 @@ var graph = require('fbgraph');
 var logger = require('./util/logger')(__filename);
 
 function _updateFbFriends(user) {
-  var errMsg = 'Failed to update friends of user ' + user.email;
-  loadFbFriends(user, function(err, friends) {
+  var errMsg = 'Failed to update FB friends of user ' + user.email;
+  loadFbFriends(user, function(err, fbFriends) {
     if (err) return logger.warn(errMsg, err);
-    user.profile.friends = friends;
+    // We want to update only FB friends here. So remove FB friends first.
+    user.profile.friends = _.reject(user.profile.friends, function(friend) {
+      return !_.isUndefined(friend.facebook);
+    });
+    // Then append all fresh FB friends found by FB-graph.
+    user.profile.friends = user.profile.friends.concat(fbFriends);
     user.save(function(err) {
       if (err) return logger.warn(errMsg, err);
-      logger.info('Saved ', friends && friends.length || 0, 'friends of user', user.email);
+      logger.info('Saved ', fbFriends && fbFriends.length || 0, 'friends of user', user.email);
     });
   });
 }
