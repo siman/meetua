@@ -214,6 +214,7 @@ if (!appConfig.IS_PRODUCTION) {
 
   var devUsers = require('./app/controllers/dev/users');
   app.get('/dev/users/list', passportConf.isAuthenticated, devUsers.list);
+  app.post('/dev/users/changeFriendship/:userId', passportConf.isAuthenticated, devUsers.changeFriendship);
 
   app.get('/dev/api', function(req, res, next) {
     res.render('dev/api', { title: 'MeetUA API' });

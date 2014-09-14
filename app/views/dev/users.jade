@@ -9,12 +9,10 @@ block content
           | Generate more users »
 
     .row(ng-repeat="user in users")
-      .col-sm-1
-        .top15
-          span.pull-right {{$index + 1}}.
-      .col-sm-1
-        .top15
-          span.pull-right.badge(ng-if="user.isGenerated") generated
+      .col-sm-1.top15
+        span.pull-right {{$index + 1}}.
+      .col-sm-1.top15
+        span.pull-right.badge(ng-if="user.isGenerated") generated
       .col-sm-5.media
         a.pull-left(ng-href="{{user.url}}")
           img.media-object.avatar-medium(profile-picture-src='user', size='50')
@@ -24,3 +22,10 @@ block content
           div
             span.user_label Gender
             span {{user.profile.ru.gender}}
+      .col-sm-5.top15
+        div(ng-if='!isUserMyFriend(user)')
+          button.btn.btn-success(type='button', ng-click='changeFriendship(user)')
+            | Follow
+        div(ng-if='isUserMyFriend(user)')
+          button.btn.btn-warning(type='button', ng-click='changeFriendship(user)')
+            | Unfollow

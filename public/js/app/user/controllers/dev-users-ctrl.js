@@ -27,5 +27,22 @@ angular.module('myApp').controller('DevUsersCtrl',
         });
     };
 
+    $scope.isUserMyFriend = function(user) {
+      // TODO: Copypasted: See view-event-ctrl.js
+      return _.find($scope.currentUser.profile.friends, function(friend) {
+        return friend._id === user._id;
+      });
+    };
+
+    $scope.changeFriendship = function(user) {
+      $http.post('/dev/users/changeFriendship/' + user._id, {}).
+        success(function(data, status, headers, config) {
+          $scope.currentUser = data.currentUser;
+        }).
+        error(function(data, status, headers, config) {
+          ErrorService.handleResponse(data);
+        });
+    };
+
     init();
   }]);

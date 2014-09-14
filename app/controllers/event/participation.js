@@ -43,7 +43,8 @@ module.exports.post_participation = function(req, res, next) {
     // TODO: Disallow to change participation if event is int the past? issue #168
 
     var alreadyParticipated = _.find(event.participants, function(part) {
-      return part.user.equals(curUser._id)});
+      return part.user.equals(curUser._id);
+    });
 
     if (act === 'remove' && alreadyParticipated) {
       event.participants = _.reject(event.participants, function(part) {
