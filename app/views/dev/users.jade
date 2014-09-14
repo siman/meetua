@@ -3,7 +3,7 @@ extends ../layout
 block middle_content
   div(ng-controller='DevUsersCtrl')
     .page-header: h1 #{title}
-      span.secondary_text(ng-if='users') &nbsp;({{users.length}})
+      span.ng-cloak.secondary_text(ng-if='users') &nbsp;({{users.length}})
       .pull-right
         h4: a(href='/dev/user-generator', role='button')
           | Generate more users »
