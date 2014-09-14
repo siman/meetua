@@ -51,6 +51,7 @@ angular.module('myApp', [
     ],
     disableDragAndDrop: true
   })
+  .constant('EVENT_LIMIT', 30)
   .config(['$alertProvider', function($alertProvider) {
     angular.extend($alertProvider.defaults, {
       animation: 'am-fade-and-slide-top',

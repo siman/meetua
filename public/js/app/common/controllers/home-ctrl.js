@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('HomeCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventService',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q, EventService) {
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventService', 'EVENT_LIMIT',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q, EventService, EVENT_LIMIT) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = [];
@@ -11,7 +11,7 @@ angular.module('myApp').controller('HomeCtrl',
       // load preferred activities, keep logic on the client, because it's not critical now and keeps our REST more generic
       var preferredActivities = $scope.currentUser.profile.preferredActivities;
       var fetchPrefEvents = _.map(preferredActivities, function(activity) {
-        return $http.get(util.apiUrl('/events/find'), {params:{act: activity}});
+        return $http.get(util.apiUrl('/events/find'), {params:{act: activity, limit: EVENT_LIMIT}});
       });
       $q.all(fetchPrefEvents).then(function(ress) {
         var events = _.flatten(_.map(ress, function(res) {return res.data}));
@@ -88,7 +88,10 @@ angular.module('myApp').controller('HomeCtrl',
     }
 
     function findEvents(actName) {
-      var params = _.isUndefined(actName) ? {} : {act: actName};
+      var params = { limit: EVENT_LIMIT };
+      if (actName) {
+        params.act = actName;
+      }
       $http({method: 'GET', url: util.apiUrl('/events/find'), params: params}).
         success(function (data) {
           $scope.foundEvents = data;

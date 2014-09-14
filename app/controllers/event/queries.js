@@ -35,38 +35,41 @@ module.exports.get_my = function(req, res, next) {
 };
 
 /** Returns short overview of all user's events: my + going + visited. */
-function getUserEventsOverview(userId, cb) {
+function getUserEventsOverview(userId, limit, cb) {
+  if (!cb && _.isUndefined(limit)) {
+    cb = limit;
+  }
   var filters = buildUserEventsFilters(userId);
   async.parallel(
     {
       my: function(cb) {
         // Created by me
-        findMyEvents(filters.my, cb);
+        findMyEvents(filters.my, limit, cb);
       },
       going: function(cb) {
-        findMyEvents(filters.going, cb);
+        findMyEvents(filters.going, limit, cb);
       },
       visited: function(cb) {
         // TODO: Check also end date that it is <= now. issue #171
-        findMyEvents(filters.visited, cb);
+        findMyEvents(filters.visited, limit, cb);
       },
       myCanceled: function(cb) {
         // Created by me
-        findMyEvents(filters.myCanceled, cb);
+        findMyEvents(filters.myCanceled, limit, cb);
       }
     }, cb);
 
-  function findMyEvents(filterQuery, cb) {
-    var fullQuery = Event.find(filterQuery).sort({'start.dateTime': 1});
-    if (conf.MAX_EVENTS_IN_OVERVIEW) {
-      fullQuery = fullQuery.limit(conf.MAX_EVENTS_IN_OVERVIEW);
+  function findMyEvents(filterQuery, limit, cb) {
+    var q = Event.find(filterQuery).sort({'start.dateTime': 1});
+    if (limit) {
+      q = q.limit(limit);
     }
-    fullQuery.exec(cb);
+    q.exec(cb);
   }
 }
 
 module.exports.get_myOverview = function(req, res, next) {
-  getUserEventsOverview(req.user._id, function(err, events) {
+  getUserEventsOverview(req.user._id, req.query.limit, function(err, events) {
     if (err) return res.json(500, new Error('Не удалось получить данные с сервера'));
     return res.json(events);
   });
@@ -100,13 +103,18 @@ module.exports.get_find = function(req, res, next) {
     'start.dateTime': {$gt:  Date.now()},
     canceledOn: {$exists: false}
   };
+  var limit = req.query.limit;
   if (activity) {
     filter.activity = activity;
   }
   if (participantId) {
     filter.participants = {$elemMatch: {user:ObjectId(participantId)}};
   }
-  return Event.find(filter).exec(function(err, events) {
+  var q = Event.find(filter);
+  if (limit) {
+    q = q.limit(limit);
+  }
+  return q.exec(function(err, events) {
     if (err) return next(err);
     res.json(events);
   });

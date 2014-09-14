@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('MyEventsCtrl',
-  ['$scope', '$http', 'util',
-  function ($scope, $http, util) {
+  ['$scope', '$http', 'util', 'EVENT_LIMIT',
+  function ($scope, $http, util, EVENT_LIMIT) {
     $scope.events = {
       my: [],
       visited: [],
@@ -20,7 +20,7 @@ angular.module('myApp').controller('MyEventsCtrl',
     };
 
     function findMyEvents() {
-      $http({method: 'GET', url: util.apiUrl('/events/myOverview'), params: {}}).
+      $http({method: 'GET', url: util.apiUrl('/events/myOverview'), params: {limit: EVENT_LIMIT}}).
         success(function (data) {
           $scope.events = data;
           console.log('Found my events', data);
