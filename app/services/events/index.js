@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var saveAction = require('./saveAction');
+var saveAction = require('./save-action');
 
 /**
  * Encapsulates internal implementation, so it's easy to refactor it. Also may keep common logic for event actions.
