@@ -9,5 +9,5 @@ var saveAction = require('./saveAction');
  * Encapsulates internal implementation, so it's easy to refactor it. Also may keep common logic for event actions.
  */
 module.exports = {
-  save: saveAction._saveEvent.bind(saveAction)
+  save: saveAction
 };

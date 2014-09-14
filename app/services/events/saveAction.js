@@ -28,11 +28,7 @@ maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
  * @returns {Function}
  */
 // Function is explicit here to have autocompletion in IDE
-module.exports._saveEvent = function(args, cb) {
-  _saveEvent(args, cb);
-};
-
-function _saveEvent(args, cb) {
+module.exports = function(args, cb) {
   var params = args.params;
   var isCreate = args.isCreate;
   var currentUser = args.currentUser;
@@ -89,7 +85,7 @@ function _saveEvent(args, cb) {
       async.map(newImages, copyImage, buildAndSaveEvent(saveEventParams, cb));
     };
   }
-}
+};
 
 function countLogoImages(acc, image, next) {
   image = image || {};
