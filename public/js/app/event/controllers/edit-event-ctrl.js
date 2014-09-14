@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('myApp')
-  .controller('EditEventCtrl', ['$scope', 'activities', 'EventImageService', 'EventService', 'WYSIWYG_OPTIONS',
-  function($scope, activities, EventImageService, EventService, WYSIWYG_OPTIONS) {
+  .controller('EditEventCtrl', ['$scope', 'activities', 'EventImageService', 'EventsResource', 'WYSIWYG_OPTIONS',
+    'ErrorService', '$window',
+  function($scope, activities, EventImageService, EventsResource, WYSIWYG_OPTIONS, ErrorService, $window) {
     $scope.event = _myInit.event;
     $scope.WYSIWYG_OPTIONS = WYSIWYG_OPTIONS;
     $scope.event.images = $scope.event.images || [];
@@ -10,7 +11,7 @@ angular.module('myApp')
     var imageService = $scope.imageService = EventImageService.create({
       scope: $scope,
       onAllUploaded: function submitAfterUpload(uploadedImages) {
-        EventService.postSave(buildReqData(uploadedImages));
+        postSave(buildReqData(uploadedImages));
       },
       event: $scope.event
     });
@@ -19,7 +20,7 @@ angular.module('myApp')
       if (uploader.getNotUploadedItems().length > 0) {
         uploader.uploadAll();
       } else {
-        EventService.postSave(buildReqData());
+        postSave(buildReqData());
       }
     };
     function buildReqData(uploadedImages) {
@@ -29,5 +30,10 @@ angular.module('myApp')
       });
       console.log('Request data ', reqData);
       return reqData;
+    }
+    function postSave(requestData) {
+      new EventsResource(requestData).$save().then(function(res) {
+        $window.location = res.event.url;
+      }, ErrorService.handleResponse);
     }
   }]);

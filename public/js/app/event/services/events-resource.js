@@ -5,5 +5,5 @@
 
 angular.module('myApp')
   .factory('EventsResource', ['$resource', 'util', function($resource, util) {
-    return $resource(util.apiUrl('/events/:eventId'), {eventId: '@_id'}, {update: {method: 'PUT'}});
+    return $resource(util.apiUrl('/events/:eventId'), {eventId: '@_id'});
   }]);
