@@ -3,9 +3,22 @@
 angular.module('myApp').controller('ViewEventCtrl',
   ['$rootScope', '$scope', '$http', 'util',
   function ($rootScope, $scope, $http, util) {
-    $scope.event = _myInit.event;
+    $scope.event = pickoutFriends(_myInit.event);
 
     console.log("Event", $scope.event);
+
+    function pickoutFriends(event) {
+      if ($scope.currentUser) {
+        var friendsAndOthers = _.partition(event.participants, function(participant) {
+          return _.find($scope.currentUser.profile.friends, function(friend) {
+            return friend._id === participant.user._id;
+          });
+        });
+        event.friendParticipants = friendsAndOthers[0];
+        event.otherParticipants = friendsAndOthers[1];
+      }
+      return event;
+    }
 
     $scope.isCurrentUserAnAuthor = function() {
       return $scope.app.UserService.isUserAuthorOfEvent($scope.currentUser, $scope.event);
@@ -37,7 +50,7 @@ angular.module('myApp').controller('ViewEventCtrl',
           var joinedEvent = data.status === 'added';
           $http({method: 'GET', url: util.apiUrl('/events/findById'), params: {id: $scope.event._id}}).
             success(function(res) {
-              $scope.event = res.event;
+              $scope.event = pickoutFriends(res.event);
               if (joinedEvent) {
                 $rootScope.$broadcast('event:user-joined-event', {event: $scope.event});
               }

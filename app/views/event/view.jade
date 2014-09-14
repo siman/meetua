@@ -110,13 +110,23 @@ block content
                 span.event_label
                   | Участники
                   span(ng-if="event.participantCount > 0") &nbsp;({{event.participantCount}})
-                ul.media-list
-                  li.media(ng-repeat="participant in event.participants")
-                    a.pull-left(ng-href="{{participant.user.url}}")
-                      img.media-object.avatar-medium(profile-picture-src='participant.user')
-                    .media-body
-                      a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
-                        span(class="badge pull-right", ng-if="participant.guests > 0") +{{participant.guests}}
+
+                mixin printParticipants(participantsObject)
+                  ul.media-list
+                    li.media(ng-repeat="participant in #{participantsObject}")
+                      a.pull-left(ng-href="{{participant.user.url}}")
+                        img.media-object.avatar-medium(profile-picture-src='participant.user')
+                      .media-body
+                        a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
+                          span(class="badge pull-right", ng-if="participant.guests > 0") +{{participant.guests}}
+
+                div(ng-if='event.friendParticipants > 0')
+                  .event_label Мои друзья
+                +printParticipants('event.friendParticipants')
+
+                div(ng-if='event.otherParticipants > 0')
+                  .event_label(ng-if='event.friendParticipants > 0') Остальные участники
+                +printParticipants('event.otherParticipants')
 
         #cancel_modal.modal.fade(tabindex='-1', role='dialog')
           .modal-dialog
