@@ -1,7 +1,10 @@
 'use strict';
+
 /**
  * Created by oleksandr at 6/9/14 3:32 PM
+ * See https://en.gravatar.com/site/implement/images/
  */
+
 angular.module('myApp')
   .factory('GravatarService', ['md5', function(md5) {
     /**
@@ -11,7 +14,7 @@ angular.module('myApp')
      */
     function gravatarLink(user, size) {
       size = size || 200;
-      var defaults = 'retro';
+      var defaults = 'monsterid';
 
       if (!user.email) {
         return 'https://gravatar.com/avatar/?s=' + size + '&d=' + defaults;

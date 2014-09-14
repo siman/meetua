@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp').controller('MockGeneratorCtrl',
+angular.module('myApp').controller('EventGeneratorCtrl',
   ['$rootScope', '$scope', '$http', '$alert', 'util', 'ErrorService',
   function($rootScope, $scope, $http, $alert, util, ErrorService) {
 
@@ -80,19 +80,19 @@ angular.module('myApp').controller('MockGeneratorCtrl',
 
     $scope.generateEvents = function() {
       console.log('Generating ' + $scope.gen.eventCount + ' events...');
-      console.log('UI state:\n', $scope.gen);
-
       // Reset UI state.
       $scope.generatedEvents = undefined;
 
       var genParams = getPreparedParams();
-      $http.post('/dev/generate', genParams).
+      console.log('Generator params:\n', genParams);
+
+      $http.post('/dev/event-generator', genParams).
         success(function(data, status, headers, config) {
-          $alert({content: 'События сгенерированы'});
           $scope.generatedEvents = data;
+          $alert({content: '' + data.length + ' events have been generated'});
         }).
         error(function(data, status, headers, config) {
-          ErrorService.handleResponse(res);
+          ErrorService.handleResponse(data);
         });
     };
 

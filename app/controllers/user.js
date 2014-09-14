@@ -88,9 +88,6 @@ var api = {
       user.profile.website = reqUser.profile.website || '';
       user.profile.preferredActivities = reqUser.profile.preferredActivities || [];
 
-      // TODO: Replace with new notifications widget
-      user.profile.receiveNotifications = reqUser.profile.receiveNotifications;
-
       user.save(function(err) {
         if (err) return res.json(500, errMsg);
         res.json(200);
@@ -386,7 +383,7 @@ exports.getUnsubscribe = function(req, res, next) {
         logger.debug('unsubscribe user', user.email);
 
         user.unsubscribeToken = undefined;
-        user.receiveNotifications = false;
+        user.emailNotifications.enabled = false;
 
         user.save(function(err) {
           if (err) {

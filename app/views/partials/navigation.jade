@@ -19,11 +19,15 @@
           a(href='/feedback') Отзывы
 
         if !appConfig.IS_PRODUCTION
-          li.alert-warning(class=title=='MeetUA API'?'active':undefined)
-            a(href='/dev/api') API
-
-          li.alert-warning(class=title=='Mock Generator'?'active':undefined)
-            a(href='/dev/generator') Generator
+          li.alert-warning.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              | Dev tools&nbsp;
+              i.caret
+            ul.dropdown-menu
+              li: a(href='/dev/event-generator') Event generator
+              li: a(href='/dev/user-generator') User generator
+              li: a(href='/dev/users') All users
+              li: a(href='/dev/api') MeetUA API
 
       ul.nav.navbar-nav.navbar-right
           - var hideWhenUser = user ? 'ng-hide' : undefined

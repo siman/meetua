@@ -1,0 +1,10 @@
+mixin radio(label, ngModel, ngValue)
+  label.btn.btn-default
+    input(type="radio", ng-value=ngValue, ng-model=ngModel)
+    | #{label}
+
+mixin checkbox(label, ngModel)
+  label.btn.btn-default
+    input(type="checkbox", ng-model=ngModel)
+    | #{label}
+

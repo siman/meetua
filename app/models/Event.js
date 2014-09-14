@@ -16,32 +16,33 @@ var activityNames = _.map(activities, function(activity) {
 });
 
 var eventSchema = new mongoose.Schema({
+  isGenerated: { type: Boolean, default: false },
 
-    // TODO: by Siman: Add fields: 'createdOn', 'updatedOn'
+  // TODO: by Siman: Add fields: 'createdOn', 'updatedOn'
 
-    name: { type: String, required: true },
-    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    participants: [{
-        user: { type: Schema.Types.ObjectId, ref: "User"},
-        guests: {type: Number, default: 0}
-      }],
-    description: { type: String, required: true, trim: true },
-    activity: { type: String, required: true, default: 'other', enum: activityNames },
-    place: {
-        name: { type: String, required: true, trim: true },
-        latitude: Number,
-        longitude: Number,
-        placeId: String,
-        city: String
-    },
-    start: {
-        dateTime: { type: Date, require: true }
-    },
-    end: {
-        dateTime: Date
-    },
-    canceledOn: { type: Date },
-    images: [Image.schema] // default order, logo first TODO
+  name: { type: String, required: true },
+  author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  participants: [{
+    user: { type: Schema.Types.ObjectId, ref: "User"},
+    guests: {type: Number, default: 0}
+  }],
+  description: { type: String, required: true, trim: true },
+  activity: { type: String, required: true, default: 'other', enum: activityNames },
+  place: {
+    name: { type: String, required: true, trim: true },
+    latitude: Number,
+    longitude: Number,
+    placeId: String,
+    city: String
+  },
+  start: {
+    dateTime: { type: Date, require: true }
+  },
+  end: {
+    dateTime: Date
+  },
+  canceledOn: { type: Date },
+  images: [Image.schema] // default order, logo first TODO
 });
 
 eventSchema.virtual('googleMapsUrl').get(function() {

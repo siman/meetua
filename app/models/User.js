@@ -8,6 +8,8 @@ var utils = require('../controllers/util/utils');
 var appConfig = require('../../config/app-config');
 
 var userSchema = new Schema({
+  isGenerated: { type: Boolean, default: false },
+
   email: { type: String, unique: true, lowercase: true, sparse: true },
   password: String,
 
@@ -21,9 +23,6 @@ var userSchema = new Schema({
     location: { type: String, default: '' },
     website: { type: String, default: '' },
     picture: { type: String, default: '' },
-
-    // TODO: Search/replace/delete.
-    receiveNotifications: { type: Boolean, default: true },
 
     links: {
       facebook: { type: String, default: '' },

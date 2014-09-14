@@ -9,6 +9,7 @@ var moment = require('moment');
 
 var appConfig = require('../../../config/app-config');
 var utils = require('../util/utils');
+var rand = require('../util/rand');
 var Image = require('../../../app/models/Image');
 var Event = require('../../../app/models/Event');
 var saveEvent = require('../event/save-event')._saveEvent;
@@ -16,7 +17,7 @@ var saveEvent = require('../event/save-event')._saveEvent;
 var sizes = ['small', 'medium', 'large'];
 
 module.exports.view = function(req, res, next) {
-  res.render('dev/generator', { title: 'Mock Generator' });
+  res.render('dev/event-generator', { title: 'Event generator' });
 };
 
 module.exports.generate = function(req, res, next) {
@@ -32,7 +33,7 @@ module.exports.generate = function(req, res, next) {
   async.waterfall(fns, end);
 
   function cleanDatabase(cb) {
-    Event.find({}, function(err, allEvents) {
+    Event.find({isGenerated: true}, function(err, allEvents) {
       if (err) return cb(err);
 
       allEvents.forEach(function(event) {
@@ -108,12 +109,12 @@ function generateEvent(args, cb) {
   var imageFiles = args.images;
 //    logger.debug('imageFiles', imageFiles);
 
-  var donor = randomArrItem(descFiles);
+  var donor = rand.randomArrItem(descFiles);
   var activityImages = _.filter(imageFiles, function(file) {
     return file.activity == donor.activity;
   });
 //    logger.debug('activityImages', activityImages);
-  var image = randomArrItem(activityImages);
+  var image = rand.randomArrItem(activityImages);
   async.waterfall([
     function uploadImage(cb) {
       if (image) {
@@ -128,21 +129,14 @@ function generateEvent(args, cb) {
     var hasLogo = !_.isUndefined(imagePath);
 
     // TODO: Random dates: past, current, future.
-    var startMoment = randomFutureMoment();
-    var endMoment = randomEndMoment(startMoment); // TODO: Fix! is the same as startMoment
+    var startMoment = rand.randomFutureMoment();
+    var endMoment = rand.randomEndMoment(startMoment); // TODO: Fix! is the same as startMoment
 
     var eventData = {
       activity: donor.activity,
-      name: donor.title[randomArrItem(sizes)],
-      description: donor.description[randomArrItem(sizes)],
-
-      place: { // TODO Generate random place?
-        name: 'Тараса Шевченка, Київ, місто Київ, Україна',
-        latitude: 50.474155,
-        longitude: 30.503491,
-        placeId: 'ChIJWYvumA3O1EARPB_NTwi1nMs',
-        city: 'Київ'
-      },
+      name: donor.title[rand.randomArrItem(sizes)],
+      description: donor.description[rand.randomArrItem(sizes)],
+      place: rand.randomPlace(),
       start: {
         dateTime: startMoment.toDate()
       },
@@ -150,7 +144,6 @@ function generateEvent(args, cb) {
         dateTime: endMoment.toDate()
       },
 //        canceledOn: undefined, // TODO
-
       participants: [], // TODO
       images: [] // No images at this point. We will add logo explicitly later
     };
@@ -164,6 +157,7 @@ function generateEvent(args, cb) {
         if (hasLogo) {
           var logoImage = Image.newLogoFromPath(imagePath);
           logger.debug('beforeSaveEventFn: logoImage', logoImage);
+          newEvent.isGenerated = true;
           newEvent.images.push(logoImage);
         }
       }
@@ -173,46 +167,6 @@ function generateEvent(args, cb) {
       cb(null, resData.event);
     });
   });
-}
-
-function randomPastMoments() {
-  // TODO
-}
-
-function randomCurrentMoments() {
-  // TODO
-}
-
-function randomFutureMoments() {
-  // TODO
-}
-
-function randomPastMoment() {
-  return moment().
-    subtract('y', utils.random(0, 2)).
-    subtract('M', utils.random(0, 12)).
-    subtract('d', utils.random(0, 30)).
-    subtract('h', utils.random(1, 24));
-}
-
-function randomFutureMoment() {
-  return moment().
-    add('y', utils.random(0, 2)).
-    add('M', utils.random(0, 12)).
-    add('d', utils.random(0, 30)).
-    add('h', utils.random(1, 24));
-}
-
-function randomEndMoment(startMoment) {
-  return startMoment.
-    add('d', utils.random(0, 7)).
-    add('h', utils.random(1, 24)).
-    add('m', utils.random(0, 3) * 15);
-}
-
-function randomArrItem(arr) {
-  var idx = utils.random(0, arr.length - 1);
-  return arr[idx];
 }
 
 /**

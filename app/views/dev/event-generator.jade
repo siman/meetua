@@ -1,25 +1,14 @@
 extends ../layout
 
-mixin radio(label, ngModel, ngValue)
-  label.btn.btn-default
-    input(type="radio", ng-value=ngValue, ng-model=ngModel)
-    | #{label}
-
-mixin checkbox(label, ngModel)
-  label.btn.btn-default
-    input(type="checkbox", ng-model=ngModel)
-    | #{label}
+include ./form-helpers
 
 block content
-  div(ng-controller='MockGeneratorCtrl')
+  div(ng-controller='EventGeneratorCtrl')
     .page-header
       h1 #{title}
 
     .row
       .col-sm-2
-        //pre
-          {{gen | json}}
-
       .col-sm-10
         form.form-horizontal(role='form', name='genForm', novalidate)
 
@@ -34,7 +23,7 @@ block content
               +radio('No', 'gen.isRandom', 'false')
 
           .form-group(ng-class="{'has-error': false}")
-            label.col-sm-2.control-label Clean database
+            label.col-sm-2.control-label Clean all generated events
             .col-sm-6.btn-group
               +checkbox('Clean database', 'gen.cleanDatabase')
 
