@@ -25,7 +25,7 @@ var sitemap = require('./app/controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
 var userController = require('./app/controllers/user');
 var apiController = require('./app/controllers/api');
-var saveEvent = require('./app/controllers/event/save-event').postSaveEvent;
+var eventsCtrl = require('./app/controllers/events-ctrl');
 var viewEvent = require('./app/controllers/event/view');
 var editEvent = require('./app/controllers/event/edit');
 var cancelEvent = require('./app/controllers/event/cancel');
@@ -173,7 +173,6 @@ app.get('/account/unlink/:provider', passportConf.isAuthenticated, userControlle
 app.get('/account/unsubscribe/:email/:token', userController.getUnsubscribe);
 
 app.get('/tpl/*', renderTpl);
-app.post('/event/save', passportConf.isAuthenticated, saveEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
 app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
@@ -194,6 +193,7 @@ app.post('/api/meetua/user/updateProfile', passportConf.isAuthenticated, userCon
 
 // Event
 // TODO rename events -> event to keep routing consistency
+app.post('/api/meetua/events', passportConf.isAuthenticated, eventsCtrl.save);
 app.get('/api/meetua/events/find', eventQueries.get_find);
 app.get('/api/meetua/events/findById', eventQueries.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, eventQueries.get_my);

@@ -1,24 +1,20 @@
 'use strict';
 
 angular.module('myApp')
-  .service('EventService', ['$http', '$window', '$q', 'util', function($http, $window, $q, util) {
+  .service('EventService', ['$http', '$window', '$q', 'util', 'EventsResource', function($http, $window, $q, util, EventsResource) {
     var errorHandler = function(err) {
       console.error('Failed to save event ', err);
     };
 
-    this.postSave = function(requestData, doRedirect) { // TODO redirect to different urls on edit and create
-      console.log("req data: ", requestData);
-      $http.post('/event/save', requestData).success(function(res){
-        console.log('Event is saved successfully ', res);
+    this.postSave = function(requestData, doRedirect) {
+      new EventsResource(requestData).$save().then(function(res) {
         if (_.isUndefined(doRedirect)) {
           doRedirect = true;
         }
         if (doRedirect === true) {
-          var redirectUrl = '/event/' + res.event._id;
-          console.log('Redirecting to ', redirectUrl);
-          $window.location = redirectUrl;
+          $window.location = res.event.url;
         }
-      }).error(errorHandler);
+      }, errorHandler);
     };
 
     /**

@@ -37,6 +37,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-karma');
 
+  grunt.registerTask('jasmine-only', ['env:test', 'jasmine_node']);
+  grunt.registerTask('mocha-only', ['env:test', 'mochaTest']);
+  grunt.registerTask('karma-only', ['env:test', 'karma:unit']);
   grunt.registerTask('test', ['env:test', 'jasmine_node', 'mochaTest', 'karma:unit']);
 
   grunt.registerTask('default', ['test']);

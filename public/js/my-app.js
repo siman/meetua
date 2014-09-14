@@ -6,6 +6,7 @@ angular.module('myApp', [
     'myApp.shared',
     'ngAutocomplete', /*google places autocomplete*/
     'ngAnimate',
+    'ngResource',
     'ngSanitize', // dependency of angular-motion
     'angularFileUpload',
     'google-maps',

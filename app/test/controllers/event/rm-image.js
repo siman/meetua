@@ -27,7 +27,7 @@ describe('[rm-image] ', function() {
       if (err) return done(err);
       var event = testUtil.buildTestEvent({images: [image]});
       user1Req
-        .post(appConfig.hostname + '/event/save')
+        .post(appConfig.hostname + '/api/meetua/events')
         .send(event)
         .end(function(err, res) {
           res.status.should.equal(200);

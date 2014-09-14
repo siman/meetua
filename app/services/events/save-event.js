@@ -7,22 +7,24 @@ var config = require('../../../config/app-config');
 var UPLOAD_DIR = config.UPLOAD_DIR;
 var EVENT_IMG_DIR = config.EVENT_IMG_DIR;
 var async = require('async');
-var Event = require('../../../app/models/Event');
-var Image = require('../../../app/models/Image');
-var notificationService = require('../util/notification-service');
-var logger = require('../util/logger')(__filename);
-var utils = require('../util/utils');
+var Event = require('../../models/Event');
+var Image = require('../../models/Image');
+var notificationService = require('../../controllers/util/notification-service');
+var logger = require('../../controllers/util/logger')(__filename);
+var utils = require('../../controllers/util/utils');
 
 maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
   if (err) throw err;
 });
 
+/*
 module.exports.postSaveEvent = function(req, res) {
   var args = { params: req.body, isCreate: _.isUndefined(req.body._id), currentUser: req.user, flashFn: req.flash.bind(req) };
   _saveEvent(args, function returnResp(respStatus, respData) {
     res.json(respStatus, respData);
   });
 };
+*/
 
 /**
  * @param args
@@ -126,7 +128,10 @@ function buildAndSaveEvent(args, cb) {
   var beforeSaveEventFn = args.beforeSaveEventFn || function() {};
 
   return function(err, images) {
-    if (err) return cb(400, err);
+    if (err) {
+      logger.warn('Failed to copy images and therefore cannot save event', err);
+      return cb(400, err);
+    }
 
     delete params.images;
 

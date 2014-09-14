@@ -12,7 +12,7 @@ var utils = require('../util/utils');
 var rand = require('../util/rand');
 var Image = require('../../../app/models/Image');
 var Event = require('../../../app/models/Event');
-var saveEvent = require('../event/save-event')._saveEvent;
+var saveEvent = require('../../services/events').save;
 
 var sizes = ['small', 'medium', 'large'];
 

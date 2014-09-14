@@ -17,6 +17,7 @@
 //= require ../lib/angular/angular.min
 //= require ../lib/angular-i18n/angular-locale_ru-ru
 //= require ../lib/angular-route/angular-route.min
+//= require ../lib/angular-resource/angular-resource.min
 //= require ../lib/angular-cookies/angular-cookies.min
 //= require ../lib/angular-animate/angular-animate.min
 //= require ../lib/angular-sanitize/angular-sanitize.min
