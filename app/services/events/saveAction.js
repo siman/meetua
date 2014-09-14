@@ -17,15 +17,6 @@ maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function(err) {
   if (err) throw err;
 });
 
-/*
-module.exports.postSaveEvent = function(req, res) {
-  var args = { params: req.body, isCreate: _.isUndefined(req.body._id), currentUser: req.user, flashFn: req.flash.bind(req) };
-  _saveEvent(args, function returnResp(respStatus, respData) {
-    res.json(respStatus, respData);
-  });
-};
-*/
-
 /**
  * @param args
  * @param {Object} args.params
