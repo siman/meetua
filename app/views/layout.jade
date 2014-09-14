@@ -25,14 +25,9 @@ html
   body(ng-app='myApp', ng-controller='AppCtrl', auth)
     #wrap
       include partials/navigation
-      .container-fluid
+      div(class="#{fluidContainer ? 'container-fluid' : 'container'}")
         include partials/flash
-        .row
-          .col-md-12
-            block content
-        .row
-          .col-md-offset-2.col-md-8
-            block middle_content
+        block content
     include partials/footer
     script.
       var _gaq = _gaq || [];

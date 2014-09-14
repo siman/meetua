@@ -24,6 +24,7 @@ module.exports = function(req, res, next) {
         tweet: tweet
       };
       res.render('event/view', {
+        fluidContainer: true,
         title: event.name,
         event: event,
         social: social

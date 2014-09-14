@@ -154,7 +154,7 @@ simpleRenders.forEach(function(render) {
     app.get(render.url, renderMiddleware);
   }
   function renderMiddleware(req, res) {
-    res.render(render.view, { title: render.title });
+    res.render(render.view, render.params);
   }
 });
 

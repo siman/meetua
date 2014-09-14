@@ -7,12 +7,12 @@
 var passportConf = require('../../config/passport');
 
 module.exports = [
-  { url: '/feedback', view: 'feedback', title: 'Отзывы и предложения' },
-  { url: '/', view: 'home' },
-  { url: '/signup', view: 'account/signup', title: 'Создать аккаунт' },
-  { url: '/account', view: 'account/profile', title: 'Личные данные', pre: passportConf.isAuthenticated },
-  { url: '/forgot', view: 'account/forgot', title: 'Восстановление пароля' },
-  { url: '/event/create', view: 'event/create', title: 'Создать событие' },
-  { url: '/profile/my-events', view: 'profile/my-events', title: 'Мои события', pre: passportConf.isAuthenticated },
-  { url: '/dev/users', view: 'dev/users', title: 'Users', pre: passportConf.isAuthenticated }
+  { url: '/', view: 'home', params: {fluidContainer: true} },
+  { url: '/feedback', view: 'feedback', params: {title: 'Отзывы и предложения'} },
+  { url: '/signup', view: 'account/signup', params: {title: 'Создать аккаунт'} },
+  { url: '/account', view: 'account/profile', pre: passportConf.isAuthenticated, params: {title: 'Личные данные'} },
+  { url: '/forgot', view: 'account/forgot', params: {title: 'Восстановление пароля'} },
+  { url: '/event/create', view: 'event/create', params: {title: 'Создать событие'} },
+  { url: '/profile/my-events', view: 'profile/my-events', pre: passportConf.isAuthenticated, params: {title: 'Мои события'} },
+  { url: '/dev/users', view: 'dev/users', pre: passportConf.isAuthenticated, params: {title: 'Users'} }
 ];

@@ -1,7 +1,7 @@
 extend ../layout
 include mixins
 
-block middle_content
+block content
   div(ng-controller='UserProfileCtrl')
     +jsVar("userProfile", userProfile)
     .row.top
