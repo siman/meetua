@@ -4,10 +4,8 @@ include event-fields
 include form-btns
 include form
 
-block content
-  .page-header
-    h3 Редактировать событие
-
+block middle_content
+  .page-header: h1 Редактировать событие
   +jsVar('event', event)
   +form(ng-controller='EditEventCtrl')
     +eventFields(false)

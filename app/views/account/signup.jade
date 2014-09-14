@@ -1,9 +1,9 @@
 extends ../layout
 
-block content
+block middle_content
+  .page-header: h1 #{title}
   form.form-horizontal(id='signup-form', method='POST', action='/signup')
     input(type='hidden', name='_csrf', value=_csrf)
-    legend Создать аккаунт
     .form-group
       label.col-sm-3.control-label(for='email') Email
       .col-sm-7

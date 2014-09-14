@@ -1,28 +1,27 @@
 extend ../layout
 include mixins
 
-block content
+block middle_content
   div(ng-controller='UserProfileCtrl')
     +jsVar("userProfile", userProfile)
     .row.top
-      .col-md-2
       .col-md-3
         img(profile-picture-src='userProfile', size='200')
         // TODO: picture from VK is too small
       .col-md-6
         .row
-          h2 Данные профиля
+          h1 #{userProfile.profile.name}
         .row(ng-if='userProfile.profile.location')
           .col-md-5
-            span.user_label Город
+            span.user_label Город:
             span #{userProfile.profile.location}
         .row(ng-if='userProfile.profile.ru.gender')
           .col-md-5
-            span.user_label Пол
+            span.user_label Пол:
             span #{userProfile.profile.ru.gender}
         .row(ng-if='userProfile.profile.website')
           .col-md-5
-            span.user_label Сайт
+            span.user_label Сайт:
             span #{userProfile.profile.website}
         .row.top
           .col-md-5
@@ -33,15 +32,8 @@ block content
               i.fa.fa-facebook
               | Профиль Facebook
 
-
-    .row
-      .col-md-2
-      // make profile col longer to fit long names
-      .col-md-5
-        h1 #{userProfile.profile.name}
     .row.top
-      .col-md-2
-      .col-md-9
+      .col-md-12
         .center-block
           h2 События пользователя
         h3

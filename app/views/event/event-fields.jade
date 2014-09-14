@@ -2,16 +2,16 @@ mixin eventFields(isCreate)
   input(type='hidden', name='_csrf', value=_csrf, ng-model='csrf')
   .form-group(ng-class="{'has-error' : eventForm.name.$invalid && submitted}")
     label.col-sm-2.control-label(for='name') Название *
-    .col-sm-8
+    .col-sm-10
       input.form-control(type='text', name='name', id='name', autofocus=true, ng-model='event.name', required)
   .form-group(ng-class="{'has-error' : eventForm.placeName.$invalid && submitted}")
     label.col-sm-2.control-label(for='placeName') Где *
-    .col-sm-8
+    .col-sm-10
       input#placeName.form-control(type='text', name='placeName', ng-autocomplete='ng-autocomplete',
       ng-model='event.place.name', options='placeOptions', details='place.details', required)
   .form-group(ng-if='place.details')
     label.col-sm-2.control-label
-    .col-sm-8
+    .col-sm-10
       place-map(details='place.details', lat='event.place.latitude', lng='event.place.longitude', place='event.place')
   .form-group
     label.col-sm-2.control-label(for='startDate')
@@ -23,10 +23,10 @@ mixin eventFields(isCreate)
     .col-sm-2: label.checkbox.pull-right(for='startTime')
       i.fa.fa-clock-o
       | Время
-    .col-sm-2
+    .col-sm-3
       input#startTime.form-control(type='text', name='startTime', ng-model='event.start.dateTime',
         data-time-format='HH:mm', bs-timepicker)
-    .col-sm-2
+    .col-sm-1
   .form-group
     - var endDateDisabled = (isCreate ? 'eventForm.startDate.$invalid || eventForm.startDate.$pristine' : 'eventForm.startDate.$invalid')
     label(class='col-sm-2 control-label', for='endDate', ng-disabled="disableMe")
@@ -40,24 +40,24 @@ mixin eventFields(isCreate)
       ng-disabled=endDateDisabled)
         i.fa.fa-clock-o
         | Время
-    .col-sm-2
+    .col-sm-3
       input#endTime.form-control(type='text', name='endTime', ng-model='event.end.dateTime', bs-timepicker,
         data-time-format='HH:mm', ng-disabled=endDateDisabled)
-    .col-sm-2
+    .col-sm-1
   .form-group(ng-class="{'has-error' : eventForm.description.$invalid && submitted}")
     label(class='col-sm-2 control-label', for='description') Описание *
-    .col-sm-8
+    .col-sm-10
       summernote#description.form-control(name='description', ng-model='event.description', height='150', config='WYSIWYG_OPTIONS', required)
   .form-group
     label.col-sm-2.control-label(style='margin-top:70px') Тип события
-    .col-sm-8: div.act_bar
+    .col-sm-10: div.act_bar
       act-icon(ng-model='event.activity', activity='activity', ng-repeat='activity in activities')
       div.clearfix
   .form-group
     label(class='col-sm-2 control-label', for='description') Лого/изображение
-    .col-sm-8
+    .col-sm-10
       input(ng-show='uploader.queue.length == 0', nv-file-select='nv-file-select', type='file', uploader='uploader', filters='onlyImages')
-      .col-sm-3(ng-repeat="item in uploader.queue", ng-click="imageService.setAsLogo(item)", ng-show="uploader.isHTML5")
+      .img-thumbnail(ng-repeat="item in uploader.queue", ng-click="imageService.setAsLogo(item)", ng-show="uploader.isHTML5")
         .event_img(ng-class="{ 'pointer': !item.isLogo }")
           i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-if='!item.isUploaded', ng-click='imageService.removeItem(item)')
           i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-if='item.isUploaded', confirmed-click='imageService.removeItem(item)',

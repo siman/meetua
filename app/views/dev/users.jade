@@ -1,14 +1,12 @@
 extends ../layout
 
-block content
+block middle_content
   div(ng-controller='DevUsersCtrl')
-    .page-header
-      h1 #{title}
-        .pull-right
-          button.btn.btn-primary(type='button', ng-click='find()')
-            | Find users
-          a.btn.btn-default(href='/dev/user-generator', role='button')
-            | Generate more users
+    .page-header: h1 #{title}
+      span.secondary_text(ng-if='users') &nbsp;({{users.length}})
+      .pull-right
+        h4: a(href='/dev/user-generator', role='button')
+          | Generate more users »
 
     .row(ng-repeat="user in users")
       .col-sm-1
@@ -17,7 +15,7 @@ block content
       .col-sm-1
         .top15
           span.pull-right.badge(ng-if="user.isGenerated") generated
-      .col-sm-4.media
+      .col-sm-5.media
         a.pull-left(ng-href="{{user.url}}")
           img.media-object.avatar-medium(profile-picture-src='user', size='50')
         .media-body(class="{{'dev_bgcolor_' + user.profile.gender}}")

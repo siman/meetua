@@ -1,9 +1,9 @@
 extends ../layout
 
-block content
+block middle_content
+  .page-header: h1 #{title}
   .col-sm-8.col-sm-offset-2
     form(method='POST', action='/reset/'+token)
-      legend Изменение пароля
       input(type='hidden', name='_csrf', value=_csrf)
       .form-group
         label(for='password') Новый пароль

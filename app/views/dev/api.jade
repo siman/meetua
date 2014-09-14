@@ -1,10 +1,7 @@
 extends ../layout
 
-block content
-
-  .page-header
-    h1 #{title}
-
+block middle_content
+  .page-header: h1 #{title}
   ul
     li: a(href='/api/meetua/events/find', target='_blank') events/find
     li: a(href='/api/meetua/events/myOverview', target='_blank') events/myOverview

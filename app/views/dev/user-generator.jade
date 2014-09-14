@@ -2,11 +2,9 @@ extends ../layout
 
 include ./form-helpers
 
-block content
+block middle_content
   div(ng-controller='UserGeneratorCtrl')
-    .page-header
-      h1 #{title}
-
+    .page-header: h1 #{title}
     .row
       form.form-horizontal(role='form', name='genForm', novalidate)
 
