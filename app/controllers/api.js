@@ -1,3 +1,5 @@
+'use strict';
+
 var secrets = require('../../config/app-config').secrets;
 var User = require('../models/User');
 var querystring = require('querystring');
@@ -8,7 +10,7 @@ var _ = require('underscore');
 var graph = require('fbgraph');
 var logger = require('./util/logger')(__filename);
 
-function updateFriends(user) {
+function _updateFbFriends(user) {
   var errMsg = 'Failed to update friends of user ' + user.email;
   loadFbFriends(user, function(err, friends) {
     if (err) return logger.warn(errMsg, err);
@@ -52,4 +54,4 @@ function loadFbFriends(user, cb) {
   });
 }
 
-exports.updateUserFriends = updateFriends;
+exports.updateFbFriends = _updateFbFriends;

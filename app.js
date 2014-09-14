@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -237,8 +239,11 @@ if (!appConfig.IS_PRODUCTION) {
 app.get('/auth/success', function(req, res) {
   res.render('after-auth');
 });
-var authSuccessHandler = function(req, res) {
-  apiController.updateUserFriends(req.user);
+var fbAuthSuccessHandler = function(req, res) {
+  apiController.updateFbFriends(req.user);
+  commonAuthSuccessHandler(req, res);
+};
+var commonAuthSuccessHandler = function(req, res) {
   var referer = req.headers.referer;
   if (referer && referer.indexOf('/account') !== -1) {
     res.redirect(referer); // link account request
@@ -247,9 +252,9 @@ var authSuccessHandler = function(req, res) {
   }
 };
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), authSuccessHandler);
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), fbAuthSuccessHandler);
 app.get('/auth/vkontakte', passport.authenticate('vkontakte', { scope: ['email'] }));
-app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/' }), authSuccessHandler);
+app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/' }), commonAuthSuccessHandler);
 
 /**
  * error trigger(development mode only)

@@ -16,6 +16,9 @@ angular.module('myApp').controller('ViewEventCtrl',
         });
         event.friendParticipants = friendsAndOthers[0];
         event.otherParticipants = friendsAndOthers[1];
+      } else {
+        // If current user is a guest then all participants are not friends.
+        event.otherParticipants = event.participants;
       }
       return event;
     }
