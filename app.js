@@ -30,7 +30,6 @@ var apiController = require('./app/controllers/social-api');
 var eventsCtrl = require('./app/controllers/events-ctrl');
 var viewEvent = require('./app/controllers/event/view');
 var editEvent = require('./app/controllers/event/edit');
-var cancelEvent = require('./app/controllers/event/cancel');
 var upload = require('./app/controllers/upload').handleUpload;
 var rmEventImage = require('./app/controllers/event/rm-image');
 
@@ -177,7 +176,6 @@ app.get('/account/unsubscribe/:email/:token', userController.getUnsubscribe);
 app.get('/tpl/*', renderTpl);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
-app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
 app.post('/event/:id/rm-image/:imageId', rmEventImage);
 app.get('/user/:userId', userController.getUserProfile);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
@@ -194,8 +192,9 @@ app.post('/api/meetua/user/notifications', passportConf.isAuthenticated, userCon
 app.post('/api/meetua/user/updateProfile', passportConf.isAuthenticated, userController.api.postUpdateProfile);
 
 // Event
-// TODO rename events -> event to keep routing consistency
+app.param('eventId', eventsCtrl.eventById);
 app.post('/api/meetua/events', passportConf.isAuthenticated, eventsCtrl.save);
+app.post('/api/meetua/events/:eventId/cancel', passportConf.isAuthenticated, eventsCtrl.cancel);
 app.get('/api/meetua/events/find', eventQueries.get_find);
 app.get('/api/meetua/events/findById', eventQueries.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, eventQueries.get_my);

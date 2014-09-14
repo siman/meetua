@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('ViewEventCtrl',
-  ['$rootScope', '$scope', '$http', 'util',
-  function ($rootScope, $scope, $http, util) {
+  ['$rootScope', '$scope', '$http', 'util', 'EventsResource', '$alert',
+  function ($rootScope, $scope, $http, util, EventsResource, $alert) {
     $scope.event = pickoutFriends(_myInit.event);
 
     console.log("Event", $scope.event);
@@ -40,6 +40,14 @@ angular.module('myApp').controller('ViewEventCtrl',
       } else {
         return false;
       }
+    };
+
+    $scope.cancelEvent = function() {
+      console.log('cancelEvent');
+      new EventsResource($scope.event).$cancel().then(function(res) {
+        $alert({content: res.msg});
+        $scope.event = res.event;
+      }, $scope.app.ErrorService.handleResponse);
     };
 
     $scope.participate = function(guestNumber) {

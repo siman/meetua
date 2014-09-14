@@ -19,7 +19,9 @@ block content
         a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
           i.fa.fa-edit
           | Редактировать
-        a.btn.btn-default.btn-sm(ng-if='!event.canceledOn', data-toggle="modal", data-target="#cancel_modal", role="button")
+        button.btn.btn-default.btn-sm(ng-if='!event.canceledOn', confirmed-click="cancelEvent()",
+          confirmation="Вы уверены, что хотите отменить событие? Все участники будут уведомлены об отмене.",
+          yes-text='Да, отменить событие', no-text='Не отменять')
           i.fa.fa-times
           | Отменить событие
 
@@ -127,18 +129,6 @@ block content
                 div(ng-if='event.otherParticipants.length > 0')
                   .event_label(ng-if='event.friendParticipants.length > 0') Остальные участники
                 +printParticipants('event.otherParticipants')
-
-        #cancel_modal.modal.fade(tabindex='-1', role='dialog')
-          .modal-dialog
-            .modal-content
-              .modal-header
-                h4.modal-title Отмена события
-              .modal-body
-                p Вы уверены, что хотите отменить событие?
-                p Все участники будут уведомлены об отмене.
-              .modal-footer
-                a.button.btn.btn-primary(href="/event/#{event._id}/cancel", type='button') Да, отменить событие
-                button.btn.btn-default(type='button', data-dismiss='modal') Не отменять
 
         .modal.share-created-event(ng-if='messages.showFirstTime && isCurrentUserAnAuthor()', open-modal modal-name='share-created-event' tabindex='-1', role='dialog', aria-hidden='true')
           .modal-dialog.modal-sm

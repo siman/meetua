@@ -61,7 +61,7 @@ mixin eventFields(isCreate)
         .event_img(ng-class="{ 'pointer': !item.isLogo }")
           i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-if='!item.isUploaded', ng-click='imageService.removeItem(item)')
           i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-if='item.isUploaded', confirmed-click='imageService.removeItem(item)',
-            ng-confirm-click='Вы уверены, что хотите удалить изображение ? Это действие не может быть отменено ')
+            confirmation='Вы уверены, что хотите удалить изображение ? Это действие не может быть отменено ')
           div(ng-thumb="{ file: item._file, width: 250}", ng-class="{ 'selected': item.isLogo}")
           h2.text_over_container(ng-if='item.isLogo')
             span.text_over Лого
