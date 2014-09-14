@@ -107,9 +107,9 @@ block content
               div(ng-if="!event.participantCount")
                 span.event_label Еще нет участников
               div(ng-if="event.participantCount")
-                span.event_label
+                h4.event_label
                   | Участники
-                  span(ng-if="event.participantCount > 0") &nbsp;({{event.participantCount}})
+                  span(ng-if="event.participantCount > 1") &nbsp;({{event.participantCount}})
 
                 mixin printParticipants(participantsObject)
                   ul.media-list
