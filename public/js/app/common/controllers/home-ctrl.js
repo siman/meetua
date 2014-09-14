@@ -5,7 +5,7 @@ angular.module('myApp').controller('HomeCtrl',
   function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q, EventService, EVENT_LIMIT) {
     $scope.data = {};
     $scope.activities = activities;
-    $scope.foundEvents = [];
+    $scope.foundEvents = undefined; // []. undefined is for proper UI state on page load.
 
     if ($scope.currentUser) {
       // load preferred activities, keep logic on the client, because it's not critical now and keeps our REST more generic
