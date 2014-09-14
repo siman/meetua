@@ -32,6 +32,7 @@ block content
             .col-sm-6.btn-group
               +radio('Yes', 'gen.isRandom', 'true')
               +radio('No', 'gen.isRandom', 'false')
+
           .form-group(ng-class="{'has-error': false}")
             label.col-sm-2.control-label Clean database
             .col-sm-6.btn-group
@@ -40,68 +41,70 @@ block content
           div(ng-show='!gen.isRandom')
             .form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Activities
-              .col-sm-1: input.form-control(type='text', name='activities', id='activities', ng-model='gen.activities')
+              .col-sm-6.btn-group
+                +checkbox('Cycling', 'ui.activities.cycling')
+                +checkbox('IT', 'ui.activities.it')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Title size
               .col-sm-6.btn-group
                 +checkbox('Small', 'gen.titleSizes.small')
                 +checkbox('Medium', 'gen.titleSizes.medium')
                 +checkbox('Large', 'gen.titleSizes.large')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Description size
               .col-sm-6.btn-group
                 +checkbox('Small', 'gen.descSizes.small')
                 +checkbox('Medium', 'gen.descSizes.medium')
                 +checkbox('Large', 'gen.descSizes.large')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Description has HTML
               .col-sm-6.btn-group
                 +radio('Yes', 'gen.hasHtmlDesc', 'true')
                 +radio('No', 'gen.hasHtmlDesc', 'false')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Has logo
               .col-sm-6.btn-group
                 +radio('Yes', 'gen.hasLogo', 'true')
                 +radio('No', 'gen.hasLogo', 'false')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Logo size
               .col-sm-6.btn-group
                 +checkbox('Small', 'gen.logoSizes.small')
                 +checkbox('Medium', 'gen.logoSizes.medium')
                 +checkbox('Large', 'gen.logoSizes.large')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Date
               .col-sm-6.btn-group
                 +checkbox('Past', 'gen.dateTypes.past')
                 +checkbox('Current', 'gen.dateTypes.current')
                 +checkbox('Future', 'gen.dateTypes.future')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label(for='durationAmount') Duration
               .col-sm-1: input.form-control(type='number', name='durationAmount', id='durationAmount', ng-model='gen.durationAmount')
               .col-sm-6.btn-group
                 +radio('Hours', 'gen.durationUnit', '"h"')
                 +radio('Days', 'gen.durationUnit', '"d"')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label Event is canceled
               .col-sm-6.btn-group
                 +radio('Yes', 'gen.isCanceled', 'true')
                 +radio('No', 'gen.isCanceled', 'false')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label I am an author
               .col-sm-6.btn-group
                 +radio('Yes', 'gen.isAuthor', 'true')
                 +radio('No', 'gen.isAuthor', 'false')
 
-            .form-group(ng-class="{'has-error': false}")
+            .hide.form-group(ng-class="{'has-error': false}")
               label.col-sm-2.control-label(for='participantCount') Participants
               .col-sm-1: input.form-control(type='number', name='participantCount', id='participantCount', ng-model='gen.participantCount')
 
@@ -112,9 +115,16 @@ block content
 
     .row
       .col-sm-12
-        div(ng-repeat="event in generatedEvents")
+        div(ng-if="!generatedEvents")
           .row
             .col-sm-3
-              dimensioned-img.pull-right(src='event.logoUrl', width='300')
             .col-sm-9
-              pre {{event | json}}
+              em No events gerated
+        div(ng-if="generatedEvents")
+          div(ng-repeat="event in generatedEvents")
+            .row
+              .col-sm-3
+                span {{$index + 1}}.
+                dimensioned-img.pull-right(src='event.logoUrl', width='300')
+              .col-sm-9
+                pre {{event | json}}

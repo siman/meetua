@@ -1,14 +1,24 @@
 'use strict';
 
 angular.module('myApp').controller('MockGeneratorCtrl',
-  ['$rootScope', '$scope', '$http', 'util', 'ErrorService',
-  function($rootScope, $scope, $http, util, ErrorService) {
+  ['$rootScope', '$scope', '$http', '$alert', 'util', 'ErrorService',
+  function($rootScope, $scope, $http, $alert, util, ErrorService) {
 
+    // Generated events returned from server.
+    $scope.generatedEvents = undefined; // []
+
+    // UI specific structures.
+    $scope.ui = {
+      activities: {
+        cycling: true,
+        it: true
+      }
+    };
+
+    // This structure will be sent to server controller.
     $scope.gen = {
       eventCount: 1,
       isRandom: true,
-
-      activities: 'TODO', // [] TODO Get from consts.
 
       titleSizes: {
         small: false,
@@ -58,15 +68,31 @@ angular.module('myApp').controller('MockGeneratorCtrl',
       return sizes;
     }
 
+    function getPreparedParams() {
+      var genParams = _.extend({}, $scope.gen);
+      var ui = $scope.ui;
+      var allActNames = _.keys(ui.activities);
+      genParams.activities = _.filter(allActNames, function(act) {
+        return ui.activities[act] == true;
+      });
+      return genParams;
+    }
+
     $scope.generateEvents = function() {
       console.log('Generating ' + $scope.gen.eventCount + ' events...');
       console.log('UI state:\n', $scope.gen);
-      $http.post('/dev/generate', $scope.gen).
+
+      // Reset UI state.
+      $scope.generatedEvents = undefined;
+
+      var genParams = getPreparedParams();
+      $http.post('/dev/generate', genParams).
         success(function(data, status, headers, config) {
+          $alert({content: 'События сгенерированы'});
           $scope.generatedEvents = data;
         }).
         error(function(data, status, headers, config) {
-          // TODO Notify
+          ErrorService.handleResponse(res);
         });
     };
 

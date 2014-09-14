@@ -30,6 +30,7 @@ module.exports.generate = function(req, res, next) {
   }
   fns.push(callGenerate);
   async.waterfall(fns, end);
+
   function cleanDatabase(cb) {
     Event.find({}, function(err, allEvents) {
       if (err) return cb(err);
@@ -43,7 +44,7 @@ module.exports.generate = function(req, res, next) {
       cb();
     });
   }
-  // TODO Impl
+
   function callGenerate(cb) {
     generateEvents({params: params, currentUser: req.user}, function(err, events) {
       if (err) {
@@ -53,16 +54,24 @@ module.exports.generate = function(req, res, next) {
       cb(null, events);
     });
   }
+
   function end(err, events) {
     if (err) return res.json(500, err);
     res.json(200, events);
   }
 };
 
+/**
+ * @param args
+ * @param args.params
+ * @param {Function} cb
+ */
 function generateEvents(args, cb) {
-  var arr = [];
+  var allIsRandom = args.params.isRandom;
+  var actFilter = allIsRandom ? undefined : args.params.activities;
+  var eventCountArr = []; // Size of array is a count of events to generate.
   for (var i = 0; i < args.params.eventCount; i++) {
-    arr.push(i);
+    eventCountArr.push(i);
   }
   function readDescriptionFile(fileItem, cb) {
     fs.readJson(fileItem.path, cb);
@@ -72,13 +81,13 @@ function generateEvents(args, cb) {
   }
   async.parallel({
     images: function(cb) {
-      findFiles('images', readImageFile, cb);
+      findFiles('images', actFilter, readImageFile, cb);
     },
     descriptions: function(cb) {
-      findFiles('descriptions', readDescriptionFile, cb);
+      findFiles('descriptions', actFilter, readDescriptionFile, cb);
     }
   }, function(err, results) {
-    async.reduce(arr, [], function(memo, item, cb) {
+    async.reduce(eventCountArr, [], function(memo, item, cb) {
       generateEvent(_.extend({}, args, results), function(err, event) {
         memo.push(event);
         cb(err, memo);
@@ -97,75 +106,73 @@ function generateEvents(args, cb) {
 function generateEvent(args, cb) {
   var descFiles = args.descriptions;
   var imageFiles = args.images;
+//    logger.debug('imageFiles', imageFiles);
 
-  if (args.params.isRandom) {
-    var donor = randomArrItem(descFiles);
-    logger.debug('imageFiles', imageFiles);
-    var activityImages = _.filter(imageFiles, function(file) {
-      return file.activity == donor.activity;
-    });
-    logger.debug('activityImages', activityImages);
-    var image = randomArrItem(activityImages);
-    async.waterfall([
-      function uploadImage(cb) {
-        if (image) {
-          utils.copyFile(image.path, appConfig.EVENT_IMG_DIR, cb);
-        } else {
-          cb();
-        }
+  var donor = randomArrItem(descFiles);
+  var activityImages = _.filter(imageFiles, function(file) {
+    return file.activity == donor.activity;
+  });
+//    logger.debug('activityImages', activityImages);
+  var image = randomArrItem(activityImages);
+  async.waterfall([
+    function uploadImage(cb) {
+      if (image) {
+        utils.copyFile(image.path, appConfig.EVENT_IMG_DIR, cb);
+      } else {
+        cb();
       }
-    ], function(err, imagePath) {
-      if (err) return cb(err);
+    }
+  ], function(err, imagePath) {
+    if (err) return cb(err);
 
-      var hasLogo = !_.isUndefined(imagePath);
+    var hasLogo = !_.isUndefined(imagePath);
 
-      // TODO: Random dates: past, current, future.
-      var startMoment = randomFutureMoment();
-      var endMoment = randomEndMoment(startMoment); // TODO: Fix! is the same as startMoment
+    // TODO: Random dates: past, current, future.
+    var startMoment = randomFutureMoment();
+    var endMoment = randomEndMoment(startMoment); // TODO: Fix! is the same as startMoment
 
-      var eventData = {
-        activity: donor.activity,
-        name: donor.title[randomArrItem(sizes)],
-        description: donor.description[randomArrItem(sizes)],
+    var eventData = {
+      activity: donor.activity,
+      name: donor.title[randomArrItem(sizes)],
+      description: donor.description[randomArrItem(sizes)],
 
-        place: { // TODO Generate random place?
-          name: 'Тараса Шевченка, Київ, місто Київ, Україна',
-          latitude: 50.474155,
-          longitude: 30.503491,
-          placeId: 'ChIJWYvumA3O1EARPB_NTwi1nMs',
-          city: 'Київ'
-        },
-        start: {
-          dateTime: startMoment.toDate()
-        },
-        end: {
-          dateTime: endMoment.toDate()
-        },
+      place: { // TODO Generate random place?
+        name: 'Тараса Шевченка, Київ, місто Київ, Україна',
+        latitude: 50.474155,
+        longitude: 30.503491,
+        placeId: 'ChIJWYvumA3O1EARPB_NTwi1nMs',
+        city: 'Київ'
+      },
+      start: {
+        dateTime: startMoment.toDate()
+      },
+      end: {
+        dateTime: endMoment.toDate()
+      },
 //        canceledOn: undefined, // TODO
 
-        participants: [], // TODO
-        images: [] // No images at this point. We will add logo explicitly later
-      };
+      participants: [], // TODO
+      images: [] // No images at this point. We will add logo explicitly later
+    };
 
-      var saveArgs = { params: eventData, isCreate: true, currentUser: args.currentUser,
-        flashFn: function(flashKey, flashValue) {
-          logger.debug('Flash ', flashKey + '=' + flashValue);
-        },
-        beforeSaveEventFn: function(newEvent) {
-          logger.debug('beforeSaveEventFn: hasLogo', hasLogo);
-          if (hasLogo) {
-            var logoImage = Image.newLogoFromPath(imagePath);
-            logger.debug('beforeSaveEventFn: logoImage', logoImage);
-            newEvent.images.push(logoImage);
-          }
+    var saveArgs = { params: eventData, isCreate: true, currentUser: args.currentUser,
+      flashFn: function(flashKey, flashValue) {
+        logger.debug('Flash ', flashKey + '=' + flashValue);
+      },
+      beforeSaveEventFn: function(newEvent) {
+        logger.debug('beforeSaveEventFn: hasLogo', hasLogo);
+        if (hasLogo) {
+          var logoImage = Image.newLogoFromPath(imagePath);
+          logger.debug('beforeSaveEventFn: logoImage', logoImage);
+          newEvent.images.push(logoImage);
         }
-      };
-      saveEvent(saveArgs, function(resCode, resData) {
-        logger.debug('Response code for save event:', resCode);
-        cb(null, resData.event);
-      });
+      }
+    };
+    saveEvent(saveArgs, function(resCode, resData) {
+      logger.debug('Response code for save event:', resCode);
+      cb(null, resData.event);
     });
-  }
+  });
 }
 
 function randomPastMoments() {
@@ -209,18 +216,25 @@ function randomArrItem(arr) {
 }
 
 /**
- * @param {String} typeOfFiles possible values: ['descriptions', 'images']
- * @param {Function} readFile function({activity: '', path: ''}, cb)
- * @param cb
+ * @param {String} typeOfFiles Possible values: descriptions, images.
+ * @param {Array} filterActsArr List of activities to generate. Example: ['cycling', 'it', 'langs']
+ * @param {Function} readFileFn function({activity: '', path: ''}, cb)
+ * @param {Function} cb
  */
-function findFiles(typeOfFiles, readFile, cb) {
+function findFiles(typeOfFiles, filterActsArr, readFileFn, cb) {
   var staticDir = path.join(process.cwd(), 'app/generator/static');
   async.waterfall([
     function readActDirs(cb) {
-      fs.readdir(staticDir, cb);
+      fs.readdir(staticDir, function(err, allFoundActDirs) {
+        var filteredActDirs = _.isUndefined(filterActsArr) ? allFoundActDirs :
+          _.filter(allFoundActDirs, function(actName) {
+            return filterActsArr.indexOf(actName) >= 0;
+          });
+        cb(err, filteredActDirs);
+      });
     },
     function readFiles(actDirs, cb) {
-      logger.debug('actDirs', actDirs);
+      logger.debug("Filtered activity dirs of " + typeOfFiles + ":", actDirs);
       async.reduce(actDirs, [], function(memo, actDir, cb) {
         var pathPrefix = staticDir + '/' + actDir + '/' + typeOfFiles;
         fs.readdir(pathPrefix, function(err, files) {
@@ -236,10 +250,10 @@ function findFiles(typeOfFiles, readFile, cb) {
       }, cb);
     },
     function readContents(files, cb) {
-      async.map(files, readFile, cb);
+      async.map(files, readFileFn, cb);
     }
   ], function(err, files) {
-    logger.debug('Found ' + typeOfFiles + ' files', files.length);
+    logger.debug('Found ' + typeOfFiles + ' files:', files.length);
     return cb(err, files);
   });
 }
