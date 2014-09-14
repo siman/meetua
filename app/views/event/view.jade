@@ -120,12 +120,12 @@ block content
                         a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
                           span(class="badge pull-right", ng-if="participant.guests > 0") +{{participant.guests}}
 
-                div(ng-if='event.friendParticipants > 0')
+                div(ng-if='event.friendParticipants.length > 0')
                   .event_label Мои друзья
                 +printParticipants('event.friendParticipants')
 
-                div(ng-if='event.otherParticipants > 0')
-                  .event_label(ng-if='event.friendParticipants > 0') Остальные участники
+                div(ng-if='event.otherParticipants.length > 0')
+                  .event_label(ng-if='event.friendParticipants.length > 0') Остальные участники
                 +printParticipants('event.otherParticipants')
 
         #cancel_modal.modal.fade(tabindex='-1', role='dialog')
