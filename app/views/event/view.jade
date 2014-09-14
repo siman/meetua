@@ -112,7 +112,8 @@ block content
                   span(ng-if="event.participantCount > 0") &nbsp;({{event.participantCount}})
                 ul.media-list
                   li.media(ng-repeat="participant in event.participants")
-                    img.media-object.pull-left.avatar-medium(profile-picture-src='participant.user')
+                    a.pull-left(ng-href="{{participant.user.url}}")
+                      img.media-object.avatar-medium(profile-picture-src='participant.user')
                     .media-body
                       a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
                         span(class="badge pull-right", ng-if="participant.guests > 0") +{{participant.guests}}
