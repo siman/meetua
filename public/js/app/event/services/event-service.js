@@ -6,6 +6,9 @@ angular.module('myApp')
       console.error('Failed to save event ', err);
     };
 
+    this.goToEvent = function(event) {
+      window.location.href = event.url;
+    };
     /**
      * @param opts
      * @param opts.eventId

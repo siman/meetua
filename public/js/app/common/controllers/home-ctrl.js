@@ -27,10 +27,6 @@ angular.module('myApp').controller('HomeCtrl',
       $scope.friendsStream = res;
     }, function(err) { ErrorService.handleResponse(err); });
 
-    $scope.goToEvent = function(event) {
-      window.location.href = event.url;
-    };
-
     // Zoom map on Kiev.
     $scope.map = _.extend(BASE_MAP, KIEV_MAP);
 

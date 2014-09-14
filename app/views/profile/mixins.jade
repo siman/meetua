@@ -2,7 +2,7 @@ mixin listMyEvents(groupType)
   div(ng-show="!events.#{groupType}.length")
     em Нет событий
   div(ng-show="events.#{groupType}.length")
-    div.row.preview_event(ng-repeat="event in events.#{groupType}", on-left-click="viewEvent(event)")
+    div.row.preview_event(ng-repeat="event in events.#{groupType}", on-left-click="app.EventService.goToEvent(event)")
       .col-sm-10
         include ../partials/preview-event
       .col-sm-2

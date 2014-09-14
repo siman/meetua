@@ -14,10 +14,6 @@ angular.module('myApp').controller('MyEventsCtrl',
       findMyEvents();
     }
 
-    $scope.viewEvent = function (event) {
-      window.location = event.url;
-    };
-
     function findMyEvents() {
       $http({method: 'GET', url: util.apiUrl('/events/myOverview'), params: {limit: EVENT_LIMIT}}).
         success(function (data) {
