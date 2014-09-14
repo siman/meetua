@@ -44,5 +44,23 @@ angular.module('myApp').controller('DevUsersCtrl',
         });
     };
 
+    $scope.isGeneratedUser = function(user) {
+      return user.isGenerated;
+    };
+
+    $scope.loginAsGeneratedUser = function(user) {
+      if (user.isGenerated) {
+        $http.post(util.apiUrl('/user/login'), { email: user.email, password: user.generatedPassword }).
+          success(function(data, status, headers, config) {
+            window.location = '/';
+          }).
+          error(function(data, status, headers, config) {
+            ErrorService.handleResponse(data);
+          });
+      } else {
+        ErrorService.alert('You can login only on behalf of generated users.');
+      }
+    };
+
     init();
   }]);

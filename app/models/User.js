@@ -118,6 +118,16 @@ userSchema.virtual('receivingEmails').get(function() {
   return this.emailNotifications.enabled && this.emailNotifications.email;
 });
 
+/** Email and password of generated user are both based on the same UUID. */
+userSchema.virtual('generatedPassword').get(function() {
+  if (this.isGenerated) {
+    var e = this.email;
+    return e.substring(0, e.indexOf('@'));
+  } else {
+    return undefined;
+  }
+});
+
 userSchema.set('toJSON', {virtuals: true });
 
 module.exports = mongoose.model('User', userSchema);
