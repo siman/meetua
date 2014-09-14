@@ -26,7 +26,7 @@ var simpleRenders = require('./app/controllers/simple-renders');
 var sitemap = require('./app/controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
 var userController = require('./app/controllers/user');
-var apiController = require('./app/controllers/api');
+var apiController = require('./app/controllers/social-api');
 var eventsCtrl = require('./app/controllers/events-ctrl');
 var viewEvent = require('./app/controllers/event/view');
 var editEvent = require('./app/controllers/event/edit');
