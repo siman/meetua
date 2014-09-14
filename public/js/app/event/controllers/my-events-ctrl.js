@@ -14,9 +14,8 @@ angular.module('myApp').controller('MyEventsCtrl',
       findMyEvents();
     }
 
-    // TODO Copypaste: Extract to common utils.
     $scope.viewEvent = function (event) {
-      window.location = "/event/" + event._id;
+      window.location = event.url;
     };
 
     function findMyEvents() {

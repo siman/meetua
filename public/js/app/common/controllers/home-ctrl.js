@@ -28,7 +28,7 @@ angular.module('myApp').controller('HomeCtrl',
     }, function(err) { ErrorService.handleResponse(err); });
 
     $scope.goToEvent = function(event) {
-      window.location.href = '/event/' + event._id;
+      window.location.href = event.url;
     };
 
     // Zoom map on Kiev.
@@ -45,11 +45,6 @@ angular.module('myApp').controller('HomeCtrl',
         // TODO think: how to show event without lat & lng on home page ??
         return ev.place
       });
-    };
-
-    // TODO Copypaste: Extract to common utils.
-    $scope.viewEvent = function (event) {
-      window.location = "/event/" + event._id;
     };
 
     $scope.activityByName = function(actName) {

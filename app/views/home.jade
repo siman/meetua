@@ -8,7 +8,7 @@ block content
       .col-xs-12
         h2 Ваши друзья идут на события
           a.btn.btn-link.btn-mini(href="/account#preferred")
-      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(ng-click='goToEvent(event)',
+      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(on-left-click='goToEvent(event)',
           ng-repeat='entry in friendsStream', ng-init='event = entry.event')
         a.pull-left
           dimensioned-img.img-rounded.media-object(src='event.logoUrl', height='180')
@@ -31,7 +31,7 @@ block content
             strong {{' ' +   activityByName(activity).textOver}}
             | {{$last ? '' : ','}}
           a.btn.btn-link.btn-mini(href="/account#preferred") Изменить
-      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(ng-click='goToEvent(event)',
+      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(on-left-click='goToEvent(event)',
           ng-repeat='event in subscription.events | limitTo:data.eventsLimit')
         a.pull-left
           dimensioned-img.img-rounded.media-object(src='event.logoUrl', height='180')
@@ -60,7 +60,7 @@ block content
         div.events_view(ng-show="foundEvents.length > 0")
           div.preview_event(
               ng-repeat="event in foundEvents"
-              ng-click="viewEvent(event)"
+              on-left-click="goToEvent(event)"
               ng-mouseenter="onEventOver(event)"
               ng-mouseleave="onEventOut()"
             )
