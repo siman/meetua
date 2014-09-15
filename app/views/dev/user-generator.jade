@@ -38,6 +38,7 @@ block content
         .row
           .col-sm-3
             span {{$index + 1}}.
-            img.pull-right(profile-picture-src='user', size='200')
+            a(ng-href="{{user.url}}")
+              img.dev_img.pull-right(profile-picture-src='user', size='200', style='')
           .col-sm-9
             pre {{user | json}}

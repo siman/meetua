@@ -108,6 +108,7 @@ block content
         .row
           .col-sm-3
             span {{$index + 1}}.
-            dimensioned-img.pull-right(src='event.logoUrl', width='200')
+            a(ng-href='{{event.url}}')
+              dimensioned-img.dev_img.pull-right(src='event.logoUrl', width='200')
           .col-sm-9
             pre {{event | json}}
