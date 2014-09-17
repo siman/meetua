@@ -11,8 +11,8 @@ var logger = require('./util/logger')(__filename);
 function _updateFbFriends(user) {
   var errMsg = 'Failed to update FB friends of user ' + user.email;
   loadFbFriendsThatAreMeetUaUsers(user, function(err, fbFriends) {
-
     if (err) return logger.warn(errMsg, err);
+    var newFbFriendCount = 0;
     _.each(fbFriends, function(fbFriend) {
       var foundId = _.find(user.profile.friends, function(userFriendId) {
         return userFriendId.equals(fbFriend._id);
@@ -20,12 +20,15 @@ function _updateFbFriends(user) {
       if (!foundId) {
         // Found new FB friend on MeetUA
         user.profile.friends.push(fbFriend._id);
+        newFbFriendCount++;
       }
     });
-    user.save(function(err) {
-      if (err) return logger.warn(errMsg, err);
-      logger.info('Saved new', fbFriends && fbFriends.length || 0, 'FB friends to user', user.email);
-    });
+    if (newFbFriendCount > 0) {
+      user.save(function(err) {
+        if (err) return logger.warn(errMsg, err);
+        logger.info('Saved new', newFbFriendCount, 'FB friends to user', user.email);
+      });
+    }
   });
 }
 
