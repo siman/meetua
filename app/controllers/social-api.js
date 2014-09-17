@@ -11,15 +11,17 @@ var logger = require('./util/logger')(__filename);
 function _updateFbFriends(user) {
   var errMsg = 'Failed to update FB friends of user ' + user.email;
   loadFbFriendsThatAreMeetUaUsers(user, function(err, fbFriendIds) {
+
     if (err) return logger.warn(errMsg, err);
-    // Remove all FB friends that current user already has in friends.
-    var onlyNewFbFriendIds = _.reject(fbFriendIds, function(fbFriendId) {
-      return _.find(user.profile.friends, function(userFriendId) {
+    _.each(fbFriendIds, function(fbFriendId) {
+      var found = _.find(user.profile.friends, function(userFriendId) {
         return userFriendId.equals(fbFriendId);
       });
+      if (!found) {
+        // Found new FB friend on MeetUA
+        user.profile.friends.push(fbFriendId);
+      }
     });
-    // Then append all new FB friends found with FB-graph.
-    user.profile.friends = user.profile.friends.concat(onlyNewFbFriendIds);
     user.save(function(err) {
       if (err) return logger.warn(errMsg, err);
       logger.info('Saved new', fbFriendIds && fbFriendIds.length || 0, 'FB friends to user', user.email);
@@ -50,7 +52,7 @@ function loadFbFriendsThatAreMeetUaUsers(user, cb) {
         if (!userIds) return cb(err, userIds);
         userIds = _.filter(userIds, function(user) { return user; });
         logger.debug('Mapped', friends.length, 'FB friends of current user to',
-          userIds.length, 'MeetUA existing users'
+          userIds.length, 'MeetUA existing users. IDs:', userIds
         );
         cb(err, userIds);
       });
