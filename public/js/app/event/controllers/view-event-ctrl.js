@@ -3,9 +3,14 @@
 angular.module('myApp').controller('ViewEventCtrl',
   ['$rootScope', '$scope', '$http', 'util', 'EventsResource', '$alert',
   function ($rootScope, $scope, $http, util, EventsResource, $alert) {
-    $scope.event = pickoutFriends(_myInit.event);
-
+    setCurrentEvent(_myInit.event);
     console.log("Event", $scope.event);
+
+    function setCurrentEvent(event) {
+      pickoutFriends(event);
+      calculateDuration(event);
+      $scope.event = event;
+    }
 
     function pickoutFriends(event) {
       if ($scope.currentUser) {
@@ -19,6 +24,22 @@ angular.module('myApp').controller('ViewEventCtrl',
       } else {
         // If current user is a guest then all participants are not friends.
         event.otherParticipants = event.participants;
+      }
+      return event;
+    }
+
+    function calculateDuration(event) {
+      if (event.end) {
+        var e = moment(event.end.dateTime);
+        var s = moment(event.start.dateTime);
+        var d = moment.duration({
+          years: s.years() - e.years(),
+          months: s.months() - e.months(),
+          days: s.days() - e.days(),
+          hours: s.hours() - e.hours(),
+          minutes: s.minutes() - e.minutes()
+        });
+        event.duration = d.humanize();
       }
       return event;
     }
@@ -61,7 +82,7 @@ angular.module('myApp').controller('ViewEventCtrl',
           var joinedEvent = data.status === 'added';
           $http({method: 'GET', url: util.apiUrl('/events/findById'), params: {id: $scope.event._id}}).
             success(function(res) {
-              $scope.event = pickoutFriends(res.event);
+              setCurrentEvent(res.event);
               if (joinedEvent) {
                 $rootScope.$broadcast('event:user-joined-event', {event: $scope.event});
               }

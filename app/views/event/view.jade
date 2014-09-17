@@ -44,8 +44,17 @@ block content
         .col-md-7
           div: h1 #{event.name}
           div.view_event
-            span.event_label Когда
-            span {{event.start.dateTime | prettyDateTime}}
+            div
+              span.event_label Начало:
+              span {{event.start.dateTime | prettyDateTime}}
+
+            div(ng-if='event.end')
+              div
+                span.event_label Конец:
+                span {{event.end.dateTime | prettyDateTime}}
+              div
+                span.event_label Длительность:
+                span {{event.duration}}
 
             div
               span.event_label Где:
