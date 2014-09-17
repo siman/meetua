@@ -130,7 +130,7 @@ function generateEvent(args, cb) {
 
     // TODO: Random dates: past, current, future.
     var startMoment = rand.randomFutureMoment();
-    var endMoment = rand.randomEndMoment(startMoment); // TODO: Fix! is the same as startMoment
+    var endMoment = rand.randomEndMoment(startMoment);
 
     var eventData = {
       activity: donor.activity,

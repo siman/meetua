@@ -49,7 +49,7 @@ exports.randomFutureMoment = function() {
 };
 
 exports.randomEndMoment = function(startMoment) {
-  return startMoment.
+  return moment(startMoment).
     add('d', randomInt(0, 7)).
     add('h', randomInt(1, 24)).
     add('m', randomInt(0, 3) * 15);
