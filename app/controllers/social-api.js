@@ -2,8 +2,6 @@
 
 var secrets = require('../../config/app-config').secrets;
 var User = require('../models/User');
-var querystring = require('querystring');
-var validator = require('validator');
 var async = require('async');
 var request = require('request');
 var _ = require('underscore');
@@ -12,22 +10,24 @@ var logger = require('./util/logger')(__filename);
 
 function _updateFbFriends(user) {
   var errMsg = 'Failed to update FB friends of user ' + user.email;
-  loadFbFriends(user, function(err, fbFriends) {
+  loadFbFriends(user, function(err, fbFriendIds) {
     if (err) return logger.warn(errMsg, err);
-    // We want to update only FB friends here. So remove FB friends first.
-    user.profile.friends = _.reject(user.profile.friends, function(friend) {
-      return !_.isUndefined(friend.facebook);
+    // Remove all FB friends that current user already has in friends.
+    var onlyNewFbFriendIds = _.reject(fbFriendIds, function(fbFriendId) {
+      return _.find(user.profile.friends, function(userFriendId) {
+        return userFriendId.equals(fbFriendId);
+      });
     });
-    // Then append all fresh FB friends found by FB-graph.
-    user.profile.friends = user.profile.friends.concat(fbFriends);
+    // Then append all new FB friends found with FB-graph.
+    user.profile.friends = user.profile.friends.concat(onlyNewFbFriendIds);
     user.save(function(err) {
       if (err) return logger.warn(errMsg, err);
-      logger.info('Saved ', fbFriends && fbFriends.length || 0, 'friends of user', user.email);
+      logger.info('Saved new', fbFriendIds && fbFriendIds.length || 0, 'FB friends to user', user.email);
     });
   });
 }
 
-function loadFbFriends(user, cb) {
+function loadFbFriendsThatAreMeetUaUsers(user, cb) {
   var userFbId = user.facebook;
   var fbToken = _.findWhere(user.tokens, { kind: 'facebook' });
   logger.debug('fbAccessToken', fbToken, 'userFbId', userFbId);
@@ -45,12 +45,14 @@ function loadFbFriends(user, cb) {
       if (!friends) return cb();
       async.map(friends, function(friend, cbmap) {
         User.findOne({'facebook': friend.id}).select('_id').exec(cbmap);
-      }, function(err, users) {
-        if (err) return cb(err, users);
-        if (!users) return cb(err, users);
-        users = _.filter(users, function(user) { return user });
-        logger.debug('Mapped', friends.length, 'fbfriends to', users.length, 'users');
-        cb(err, users);
+      }, function(err, userIds) {
+        if (err) return cb(err, userIds);
+        if (!userIds) return cb(err, userIds);
+        userIds = _.filter(userIds, function(user) { return user; });
+        logger.debug('Mapped', friends.length, 'FB friends of current user to',
+          userIds.length, 'MeetUA existing users'
+        );
+        cb(err, userIds);
       });
     }
   ], function done(err, users) {
