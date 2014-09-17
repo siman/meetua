@@ -10,7 +10,7 @@ var logger = require('./util/logger')(__filename);
 
 function _updateFbFriends(user) {
   var errMsg = 'Failed to update FB friends of user ' + user.email;
-  loadFbFriends(user, function(err, fbFriendIds) {
+  loadFbFriendsThatAreMeetUaUsers(user, function(err, fbFriendIds) {
     if (err) return logger.warn(errMsg, err);
     // Remove all FB friends that current user already has in friends.
     var onlyNewFbFriendIds = _.reject(fbFriendIds, function(fbFriendId) {
