@@ -10,21 +10,21 @@ var logger = require('./util/logger')(__filename);
 
 function _updateFbFriends(user) {
   var errMsg = 'Failed to update FB friends of user ' + user.email;
-  loadFbFriendsThatAreMeetUaUsers(user, function(err, fbFriendIds) {
+  loadFbFriendsThatAreMeetUaUsers(user, function(err, fbFriends) {
 
     if (err) return logger.warn(errMsg, err);
-    _.each(fbFriendIds, function(fbFriendId) {
-      var found = _.find(user.profile.friends, function(userFriendId) {
-        return userFriendId.equals(fbFriendId);
+    _.each(fbFriends, function(fbFriend) {
+      var foundId = _.find(user.profile.friends, function(userFriendId) {
+        return userFriendId.equals(fbFriend._id);
       });
-      if (!found) {
+      if (!foundId) {
         // Found new FB friend on MeetUA
-        user.profile.friends.push(fbFriendId);
+        user.profile.friends.push(fbFriend._id);
       }
     });
     user.save(function(err) {
       if (err) return logger.warn(errMsg, err);
-      logger.info('Saved new', fbFriendIds && fbFriendIds.length || 0, 'FB friends to user', user.email);
+      logger.info('Saved new', fbFriends && fbFriends.length || 0, 'FB friends to user', user.email);
     });
   });
 }
@@ -47,14 +47,14 @@ function loadFbFriendsThatAreMeetUaUsers(user, cb) {
       if (!friends) return cb();
       async.map(friends, function(friend, cbmap) {
         User.findOne({'facebook': friend.id}).select('_id').exec(cbmap);
-      }, function(err, userIds) {
-        if (err) return cb(err, userIds);
-        if (!userIds) return cb(err, userIds);
-        userIds = _.filter(userIds, function(user) { return user; });
+      }, function(err, users) {
+        if (err) return cb(err, users);
+        if (!users) return cb(err, users);
+        users = _.filter(users, function(user) { return user; });
         logger.debug('Mapped', friends.length, 'FB friends of current user to',
-          userIds.length, 'MeetUA existing users. IDs:', userIds
+          users.length, 'MeetUA existing users'
         );
-        cb(err, userIds);
+        cb(err, users);
       });
     }
   ], function done(err, users) {
