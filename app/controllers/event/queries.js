@@ -83,16 +83,7 @@ module.exports.getUserEventsOverview = function(req, res, next) {
 };
 
 module.exports.get_findById = function(req, res, next) {
-  var id = req.query.id;
-  logger.debug("id", id);
-  if (id) {
-    EventStore.findById(id, ["participants.user"], function(err, event) {
-      if (err) return next(err);
-      res.json({event: event});
-    });
-  } else {
-    res.send(404);
-  }
+  res.json({event: req.eventById});
 };
 
 module.exports.get_find = function(req, res, next) {

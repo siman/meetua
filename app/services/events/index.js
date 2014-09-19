@@ -14,7 +14,7 @@ module.exports = {
   save: saveAction,
   cancel: cancelAction,
   eventById: function(req, eventId, next) {
-    Event.findById(eventId, function(err, event) {
+    Event.findById(eventId).populate("participants.user").exec(function(err, event) {
       if (err) return next(err);
       if (!event) return next(new Error('Не удалось найти событие'));
       req.eventById = event;

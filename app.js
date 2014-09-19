@@ -196,7 +196,7 @@ app.param('eventId', eventsCtrl.eventById);
 app.post('/api/meetua/events', passportConf.isAuthenticated, eventsCtrl.save);
 app.post('/api/meetua/events/:eventId/cancel', passportConf.isAuthenticated, eventsCtrl.cancel);
 app.get('/api/meetua/events/find', eventQueries.get_find);
-app.get('/api/meetua/events/findById', eventQueries.get_findById);
+app.get('/api/meetua/events/:eventId', eventQueries.get_findById);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, eventQueries.get_my);
 app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, eventQueries.get_myOverview);
 app.get('/api/meetua/events/user/:userId/overview', eventQueries.getUserEventsOverview);
