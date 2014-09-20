@@ -18,6 +18,21 @@ angular.module('myApp', [
   ]).run(function () {
     moment.locale('ru');
   })
+  .config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push(['$q', '$injector', function($q, $injector) {
+      return {
+        responseError: function(response) {
+          if (response.status !== 401) {
+            // use $injector to delay injection of ErrorService to avoid circular dependency
+            $injector.get('ErrorService').handleResponse(response);
+          }
+          //Be sure to return a reject if you cannot recover from the error somehow.
+          //This way, the consumer of the $http request will know its an error as well
+          return $q.reject(response);
+        }
+      };
+    }]);
+  }])
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
     $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});

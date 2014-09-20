@@ -64,8 +64,6 @@ angular.module('myApp').controller('HomeCtrl',
       $http.post(util.apiUrl('/user/updateProfile'), $scope.currentUser).success(function(res) {
         var msg = wasSubscribed ? 'Вы отписаны от событий ' + selected : 'Вы подписаны на события ' + selected;
         $alert({content: msg});
-      }).error(function(err) {
-        ErrorService.handleResponse(err);
       });
     };
 

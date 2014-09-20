@@ -83,12 +83,8 @@ angular.module('myApp').controller('ViewEventCtrl',
             setCurrentEvent(res.event);
           });
         }).
-        error(function(data, status, headers, config) {
+        error(function() {
           $partBtn.removeAttr('disabled');
-          var err = (data.error ? data.error : data);
-          var msg = 'Не удалось принять участие.  ' + _.isObject(err) ? JSON.stringify(err) : err;
-          console.error(msg, data);
-          $scope.app.ErrorService.alert(msg);
         });
     };
   }]);

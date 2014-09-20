@@ -7,7 +7,5 @@ angular.module('myApp')
     $scope.userProfile = _myInit.userProfile;
     $http.get('/api/meetua/events/user/' + $scope.userProfile._id + '/overview').success(function(resp) {
       $scope.events = resp;
-    }).error(function(resp) {
-        ErrorService.alert(resp);
     });
   }]);

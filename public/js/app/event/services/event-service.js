@@ -2,9 +2,6 @@
 
 angular.module('myApp')
   .service('EventService', ['$http', '$window', '$q', 'util', 'EventsResource', function($http, $window, $q, util, EventsResource) {
-    var errorHandler = function(err) {
-      console.error('Failed to save event ', err);
-    };
 
     this.goToEvent = function(event) {
       window.location.href = event.url;
@@ -16,7 +13,7 @@ angular.module('myApp')
      * @param cb
      */
     this.postRemoveImage = function(opts, cb) {
-      $http.post('/event/' + opts.eventId + '/rm-image/' + opts.imageId).success(cb).error(errorHandler);
+      $http.post('/event/' + opts.eventId + '/rm-image/' + opts.imageId).success(cb);
     };
 
     this.loadFriendsStream = function(currentUser, cb) {

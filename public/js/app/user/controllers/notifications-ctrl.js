@@ -73,11 +73,6 @@ angular.module('myApp').controller('NotificationsCtrl',
             console.log('OK: Notification settings saved');
             // We want to re-read current user because it's notification preferences were updated.
             $rootScope.$broadcast('event:reload-current-user', {});
-          }).
-          error(function(data, status, headers, config) {
-            console.error('Failed to save notification settings', data);
-            ErrorService.alert('Не удалось сохранить настройки уведомлений.' +
-              ' Попробуйте перезагрузить страницу и повторить действие.');
           });
       }
     };

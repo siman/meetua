@@ -10,8 +10,6 @@ angular.module('myApp')
     $scope.updateProfile = function() {
       $http.post(util.apiUrl('/user/updateProfile'), $scope.currentUser).success(function(res) {
         $alert({content: 'Изменения сохранены.'});
-      }).error(function(res) {
-        ErrorService.handleResponse(res);
       });
     };
   }]);

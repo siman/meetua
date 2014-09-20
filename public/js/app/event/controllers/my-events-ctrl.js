@@ -19,9 +19,6 @@ angular.module('myApp').controller('MyEventsCtrl',
         success(function (data) {
           $scope.events = data;
           console.log('Found my events', data);
-        }).
-        error(function (data) {
-          console.error('Failed to find my events', data);
         });
     }
 
