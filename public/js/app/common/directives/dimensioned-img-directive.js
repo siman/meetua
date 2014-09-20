@@ -5,25 +5,26 @@
 angular.module('myApp')
   .directive('dimensionedImg', ['util', '$parse',function(util, $parse) {
     function link($scope, element, attrs) {
-      var image = new Image();
-      if (!$scope.src) {
-        console.log('skip dimensionedImg because src is undefined');
-        return;
-      }
+      $scope.$watch('src', function(src) {
+        console.log(src);
+        var image = new Image();
+        if (!src) {
+          return;
+        }
+        image.src = src;
+        image.onload = onLoad;
 
-      image.src = $scope.src;
-      image.onload = onLoad;
+        element.removeAttr('src');
+        element.removeAttr('width');
+        element.removeAttr('height');
 
-      element.removeAttr('src');
-      element.removeAttr('width');
-      element.removeAttr('height');
-
-      function onLoad() {
-        var dimensions = util.calculateImgDimensions(this, {width: attrs.width, height: attrs.height});
-        element.css('width', dimensions.width);
-        element.css('height', dimensions.height);
-        element.attr('src', $scope.src); // show image when dimensions have been calculated
-      }
+        function onLoad() {
+          var dimensions = util.calculateImgDimensions(this, {width: attrs.width, height: attrs.height});
+          element.css('width', dimensions.width);
+          element.css('height', dimensions.height);
+          element.attr('src', src); // show image when dimensions have been calculated
+        }
+      });
     }
     return {
       replace: true,
