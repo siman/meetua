@@ -13,17 +13,35 @@ var Event = require('../models/Event');
  */
 module.exports = {
   eventById: function(req, res, next, eventId) {
-    eventsService.eventById(req, eventId, next);
-  },
-  save: function(req, res, next) {
-    var args = { params: req.body, isCreate: _.isUndefined(req.body._id), currentUser: req.user, flashFn: req.flash.bind(req) };
-    eventsService.save(args, function returnResp(respStatus, respData) {
-      res.json(respStatus, respData);
+    eventsService.eventById(eventId, function(err, event) {
+      if (err) return next(err);
+      req.eventById = event;
+      next();
     });
   },
-  cancel: function(req, res, next) {
-    eventsService.cancel(req.user, req.eventById, function(status, data) {
-      res.json(status, data);
-    });
+  save: function(req, res) {
+    var args = {
+      params: req.body,
+      isCreate: _.isUndefined(req.body._id),
+      currentUser: req.user,
+      flashFn: req.flash.bind(req) };
+    eventsService.save(args, returnJson(res));
+  },
+  cancel: function(req, res) {
+    eventsService.cancel(req.user, req.eventById, returnJson(res));
+  },
+  find: function(req, res) {
+    var args = {
+      eventById: req.eventById,
+      act: req.query.act,
+      participantId: req.query.participantId,
+      limit: req.query.limit};
+    eventsService.find(args, returnJson(res));
   }
 };
+
+function returnJson(res) {
+  return function doReturn(status, data) {
+    res.json(status, data);
+  }
+}

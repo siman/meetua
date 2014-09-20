@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp')
-  .service('EventService', ['$http', '$window', '$q', 'util', function($http, $window, $q, util) {
+  .service('EventService', ['$http', '$window', '$q', 'util', 'EventsResource', function($http, $window, $q, util, EventsResource) {
     var errorHandler = function(err) {
       console.error('Failed to save event ', err);
     };
@@ -25,8 +25,8 @@ angular.module('myApp')
         var friends = currentUser.profile.friends;
         if (friends) {
           var fetchFriendsEvents = _.map(friends, function(friend) {
-            return $http.get(util.apiUrl('/events/find'), {params: {participantId: friend._id}}).then(function(res) {
-              return {events: res.data, friend: friend};
+            return EventsResource.query({participantId: friend._id}).$promise.then(function(res) {
+              return {events: res, friend: friend};
             });
           });
           $q.all(fetchFriendsEvents).then(function(ress) {

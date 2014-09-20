@@ -5,6 +5,7 @@
 
 var saveAction = require('./save-action');
 var cancelAction = require('./cancel-action');
+var findAction = require('./find-action');
 var Event = require('../../models/Event');
 
 /**
@@ -13,12 +14,12 @@ var Event = require('../../models/Event');
 module.exports = {
   save: saveAction,
   cancel: cancelAction,
-  eventById: function(req, eventId, next) {
+  find: findAction,
+  eventById: function(eventId, cb) {
     Event.findById(eventId).populate("participants.user").exec(function(err, event) {
-      if (err) return next(err);
-      if (!event) return next(new Error('Не удалось найти событие'));
-      req.eventById = event;
-      next();
+      if (err) return cb(err);
+      if (!event) return cb(new Error('Не удалось найти событие'));
+      cb(null, event);
     })
   }
 };

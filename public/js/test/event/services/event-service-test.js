@@ -37,8 +37,8 @@ describe('EventService', function() {
   beforeEach(inject(function($injector) {
     EventService = $injector.get('EventService');
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend.whenGET('/api/meetua/events/find?participantId=AA').respond([event1, event2]);
-    $httpBackend.whenGET('/api/meetua/events/find?participantId=BB').respond([event1]);
+    $httpBackend.whenGET('/api/meetua/events?participantId=AA').respond([event1, event2]);
+    $httpBackend.whenGET('/api/meetua/events?participantId=BB').respond([event1]);
   }));
   afterEach(function() {
     $httpBackend.verifyNoOutstandingExpectation();
@@ -46,8 +46,8 @@ describe('EventService', function() {
   });
   describe('$scope.loadFriendsStream()', function() {
     beforeEach(function() {
-      $httpBackend.expectGET('/api/meetua/events/find?participantId=AA');
-      $httpBackend.expectGET('/api/meetua/events/find?participantId=BB');
+      $httpBackend.expectGET('/api/meetua/events?participantId=AA');
+      $httpBackend.expectGET('/api/meetua/events?participantId=BB');
     });
     it('should load events by participant id', function() {
       EventService.loadFriendsStream(currentUser);

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('HomeCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventService', 'EVENT_LIMIT',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q, EventService, EVENT_LIMIT) {
+  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventService', 'EVENT_LIMIT', 'EventsResource',
+  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q, EventService, EVENT_LIMIT, EventsResource) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = undefined; // []. undefined is for proper UI state on page load.
@@ -11,7 +11,7 @@ angular.module('myApp').controller('HomeCtrl',
       // load preferred activities, keep logic on the client, because it's not critical now and keeps our REST more generic
       var preferredActivities = $scope.currentUser.profile.preferredActivities;
       var fetchPrefEvents = _.map(preferredActivities, function(activity) {
-        return $http.get(util.apiUrl('/events/find'), {params:{act: activity, limit: EVENT_LIMIT}});
+        return EventsResource.query({act: activity, limit: EVENT_LIMIT}).$promise;
       });
       $q.all(fetchPrefEvents).then(function(ress) {
         var events = _.flatten(_.map(ress, function(res) {return res.data}));
@@ -83,16 +83,12 @@ angular.module('myApp').controller('HomeCtrl',
       if (actName) {
         params.act = actName;
       }
-      $http({method: 'GET', url: util.apiUrl('/events/find'), params: params}).
-        success(function (data) {
-          $scope.foundEvents = data;
-          $scope.mapEvents = _.map(data, function (ev) {
-            return ev.place
-          });
-        }).
-        error(function (data) {
-          console.error('Failed to find events by ' + actName, data);
+      EventsResource.query(params, function(data) {
+        $scope.foundEvents = data;
+        $scope.mapEvents = _.map(data, function (ev) {
+          return ev.place
         });
+      });
     }
 
     init();

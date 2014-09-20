@@ -82,10 +82,6 @@ module.exports.getUserEventsOverview = function(req, res, next) {
   });
 };
 
-module.exports.get_findById = function(req, res, next) {
-  res.json({event: req.eventById});
-};
-
 module.exports.get_find = function(req, res, next) {
   var activity = req.query.act;
   var participantId = req.query.participantId;
