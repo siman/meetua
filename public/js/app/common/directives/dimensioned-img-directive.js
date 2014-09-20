@@ -11,7 +11,6 @@ angular.module('myApp')
         return;
       }
 
-      console.log($scope.src);
       image.src = $scope.src;
       image.onload = onLoad;
 
