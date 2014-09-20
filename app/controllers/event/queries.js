@@ -2,9 +2,7 @@
 
 var _ = require('underscore');
 var async = require('async');
-var conf = require('../../../config/app-config');
 var Event = require('../../models/Event');
-var EventStore = require('./event-store');
 var logger = require('../util/logger')(__filename);
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -81,29 +79,3 @@ module.exports.getUserEventsOverview = function(req, res, next) {
     return res.json(events);
   });
 };
-
-module.exports.get_find = function(req, res, next) {
-  var activity = req.query.act;
-  var participantId = req.query.participantId;
-  logger.debug("act", activity);
-  var filter = {
-    'start.dateTime': {$gt:  Date.now()},
-    canceledOn: {$exists: false}
-  };
-  var limit = req.query.limit;
-  if (activity) {
-    filter.activity = activity;
-  }
-  if (participantId) {
-    filter.participants = {$elemMatch: {user:ObjectId(participantId)}};
-  }
-  var q = Event.find(filter);
-  if (limit) {
-    q = q.limit(limit);
-  }
-  return q.exec(function(err, events) {
-    if (err) return next(err);
-    res.json(events);
-  });
-};
-
