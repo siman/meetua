@@ -6,6 +6,12 @@ angular.module('myApp')
   .directive('dimensionedImg', ['util', '$parse',function(util, $parse) {
     function link($scope, element, attrs) {
       var image = new Image();
+      if (!$scope.src) {
+        console.log('skip dimensionedImg because src is undefined');
+        return;
+      }
+
+      console.log($scope.src);
       image.src = $scope.src;
       image.onload = onLoad;
 
@@ -24,7 +30,7 @@ angular.module('myApp')
       replace: true,
       template: '<img/>',
       scope: {
-        src: '=',
+        src: '=ngSrc',
         width: '=',
         height: '='
       },

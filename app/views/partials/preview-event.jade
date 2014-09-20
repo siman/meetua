@@ -1,9 +1,9 @@
 .row.preview_event_row
   div.event_logo_box
-    div(ng-show="!event.logoUrl")
+    div(ng-if="!event.logoUrl")
       div.no_image
-    div(ng-show="event.logoUrl")
-      dimensioned-img(src='event.logoUrl', width='120')
+    div(ng-if="event.logoUrl")
+      dimensioned-img(ng-src='event.logoUrl', width='120')
 
   div
     a.event_title(ng-href="/event/{{event._id}}") {{event.name}}

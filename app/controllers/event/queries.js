@@ -36,7 +36,7 @@ module.exports.get_my = function(req, res, next) {
 
 /** Returns short overview of all user's events: my + going + visited. */
 function getUserEventsOverview(userId, limit, cb) {
-  if (!cb && _.isUndefined(limit)) {
+  if (!cb && !_.isUndefined(limit)) {
     cb = limit;
   }
   var filters = buildUserEventsFilters(userId);
