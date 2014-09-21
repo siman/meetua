@@ -181,7 +181,6 @@ app.get('/user/:userId', userController.getUserProfile);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
 
 // MeetUA API
-var eventQueries = require('./app/controllers/event/queries');
 var eventParticipation = require('./app/controllers/event/participation');
 
 // User
@@ -197,7 +196,6 @@ app.post('/api/meetua/events', passportConf.isAuthenticated, eventsCtrl.save);
 app.post('/api/meetua/events/:eventId/cancel', passportConf.isAuthenticated, eventsCtrl.cancel);
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, eventParticipation.post_participation);
 app.post('/api/meetua/events/:eventId', passportConf.isAuthenticated, eventsCtrl.save);
-app.get('/api/meetua/events/my', passportConf.isAuthenticated, eventQueries.get_my);
 app.get('/api/meetua/events/:eventId', eventsCtrl.getEvent);
 app.get('/api/meetua/events', eventsCtrl.find);
 

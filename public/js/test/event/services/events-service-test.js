@@ -4,8 +4,8 @@
 /**
  * Created by oleksandr on 9/5/14.
  */
-describe('EventService', function() {
-  var $httpBackend, EventService;
+describe('EventsService', function() {
+  var $httpBackend, EventsService;
   var should = chai.should();
   var friend1 = {_id: 'AA'};
   var friend2 = {_id: 'BB'};
@@ -35,7 +35,7 @@ describe('EventService', function() {
   };
   beforeEach(module('myApp'));
   beforeEach(inject(function($injector) {
-    EventService = $injector.get('EventService');
+    EventsService = $injector.get('EventsService');
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET('/api/meetua/events?participantId=AA').respond([event1, event2]);
     $httpBackend.whenGET('/api/meetua/events?participantId=BB').respond([event1]);
@@ -50,11 +50,11 @@ describe('EventService', function() {
       $httpBackend.expectGET('/api/meetua/events?participantId=BB');
     });
     it('should load events by participant id', function() {
-      EventService.loadFriendsStream(currentUser);
+      EventsService.loadFriendsStream(currentUser);
       $httpBackend.flush();
     });
     it('should group by event', function() {
-      EventService.loadFriendsStream(currentUser).then(function(res) {
+      EventsService.loadFriendsStream(currentUser).then(function(res) {
         res.should.have.a.deep.property('0.event._id', 'event-1');
         res.should.deep.property('0.friends').contain(friend1);
         res.should.deep.property('0.friends').contain(friend2);
