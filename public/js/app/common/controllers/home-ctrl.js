@@ -7,25 +7,28 @@ angular.module('myApp').controller('HomeCtrl',
     $scope.activities = activities;
     $scope.foundEvents = undefined; // []. undefined is for proper UI state on page load.
 
-    if ($scope.currentUser) {
+    $scope.$watch('currentUser', function(currentUser) {
+      if (!currentUser) {
+        return;
+      }
       // load preferred activities, keep logic on the client, because it's not critical now and keeps our REST more generic
-      var preferredActivities = $scope.currentUser.profile.preferredActivities;
+      var preferredActivities = currentUser.profile.preferredActivities;
       var fetchPrefEvents = _.map(preferredActivities, function(activity) {
         return EventsResource.query({act: activity, limit: EVENT_LIMIT}).$promise;
       });
       $q.all(fetchPrefEvents).then(function(ress) {
-        var events = _.flatten(_.map(ress, function(res) {return res.data}));
+        var events = _.flatten(_.map(ress, function(res) {return res}));
         var imgEvents = _.filter(events, function (event) { return event.images.length > 0; });
         $scope.subscription = {
           events: imgEvents,
           activities: preferredActivities
         };
       });
-    }
+      EventsService.loadFriendsStream(currentUser).then(function(res) {
+        $scope.friendsStream = res;
+      }, function(err) { ErrorService.handleResponse(err); });
+    });
 
-    EventsService.loadFriendsStream($scope.currentUser).then(function(res) {
-      $scope.friendsStream = res;
-    }, function(err) { ErrorService.handleResponse(err); });
 
     // Zoom map on Kiev.
     $scope.map = _.extend(BASE_MAP, KIEV_MAP);
