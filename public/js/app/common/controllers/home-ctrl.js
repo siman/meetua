@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp').controller('HomeCtrl',
-  ['$scope', '$http', 'KIEV_MAP', 'BASE_MAP', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventsService', 'EVENT_LIMIT', 'EventsResource',
-  function ($scope, $http, KIEV_MAP, BASE_MAP, util, activities, ErrorService, $alert, $q, EventsService, EVENT_LIMIT, EventsResource) {
+  ['$scope', '$http', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventsService', 'EVENT_LIMIT', 'EventsResource',
+  function ($scope, $http, util, activities, ErrorService, $alert, $q, EventsService, EVENT_LIMIT, EventsResource) {
     $scope.data = {};
     $scope.activities = activities;
     $scope.foundEvents = undefined; // []. undefined is for proper UI state on page load.
@@ -29,22 +29,6 @@ angular.module('myApp').controller('HomeCtrl',
       }, function(err) { ErrorService.handleResponse(err); });
     });
 
-
-    // Zoom map on Kiev.
-    $scope.map = _.extend(BASE_MAP, KIEV_MAP);
-
-    $scope.mapEvents = [];
-
-    $scope.onEventOver = function (event) {
-      $scope.mapEvents = [event.place];
-    };
-
-    $scope.onEventOut = function (event) {
-      $scope.mapEvents = _.map($scope.foundEvents, function (ev) {
-        // TODO think: how to show event without lat & lng on home page ??
-        return ev.place
-      });
-    };
 
     $scope.activityByName = function(actName) {
       return _.findWhere(activities, {name: actName});
@@ -86,9 +70,6 @@ angular.module('myApp').controller('HomeCtrl',
       }
       EventsResource.query(params, function(data) {
         $scope.foundEvents = data;
-        $scope.mapEvents = _.map(data, function (ev) {
-          return ev.place
-        });
       });
     }
 

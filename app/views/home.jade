@@ -4,26 +4,16 @@ block content
   div(ng-controller='HomeCtrl')
     h1 MeetUA
 
+    - var previewEventClasses = ['col-md-4', 'col-xs-12', 'top15', 'hover-bg-info', 'preview_event']
     .row.ng-cloak.preferred-events-block(ng-if='friendsStream.length', data-animation='am-fade')
       .col-xs-12
         h2 Ваши друзья идут на события
           a.btn.btn-link.btn-mini(href="/account#preferred")
-      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(on-left-click='app.EventsService.goToEvent(event)',
+      div(class=previewEventClasses, on-left-click='app.EventsService.goToEvent(event)',
           ng-repeat='entry in friendsStream', ng-init='event = entry.event')
-        a.pull-left
-          dimensioned-img.img-rounded.media-object(ng-src='event.logoUrl', height='180')
-        .media-body(ng-init='cityLength = event.name.length > 20 ? 20 : 40')
-          h4.media-heading: a(ng-href="{{event.url}}") {{event.name|truncate:30}}
-          .row
-            .col-xs-12 {{event.place.city|truncate:cityLength}}
-            .col-xs-12(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
-          .row(ng-if='entry.friends.length')
-            .col-xs-12 Ваши друзья идут
-            .col-xs-4
-              img(ng-repeat='friend in entry.friends', profile-picture-src='friend', size='40', width='40', height='40', ng-attr-title='{{friend.profile.name}}')
-            .col-xs-12 Участников: {{event.participants.length}}
+        include partials/preview-event
 
-    .row.ng-cloak.preferred-events-block(ng-if='subscription.events.length', data-animation='am-fade',
+    .row.ng-cloak.preferred-events-block.top30(ng-if='subscription.events.length', data-animation='am-fade',
         ng-init='limitSmall = 8; limitBig = 20; data.eventsLimit = limitSmall;')
       .col-xs-12
         h2 Избранные события
@@ -31,32 +21,27 @@ block content
             strong {{' ' +   activityByName(activity).textOver}}
             | {{$last ? '' : ','}}
           a.btn.btn-link.btn-mini(href="/account#preferred") Изменить
-      .col-md-3.col-sm-6.col-xs-12.top15.media.hover-bg-info(on-left-click='app.EventsService.goToEvent(event)',
+      .div(class=previewEventClasses, on-left-click='app.EventsService.goToEvent(event)',
           ng-repeat='event in subscription.events | limitTo:data.eventsLimit')
-        a.pull-left
-          dimensioned-img.img-rounded.media-object(ng-src='event.logoUrl', height='180')
-        .media-body(ng-init='cityLength = event.name.length > 20 ? 20 : 40')
-          h4.media-heading: a(ng-href="{{event.url}}") {{event.name|truncate:30}}
-          .row
-            .col-xs-12 {{event.place.city|truncate:cityLength}}
-            .col-xs-12(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
-            .col-xs-12 Участников: {{event.participants.length}}
+        include partials/preview-event
       .col-xs-12.text-right(ng-if='subscription.events.length > limitSmall')
         button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitBig', ng-click='data.eventsLimit = limitBig;') Показать больше
         button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitSmall', ng-click='data.eventsLimit = limitSmall;') Показать меньше
 
     .row.top30
-      h2 События на карте
-      div.act_bar
-        act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
-        div.clearfix
+      .col-xs-12
+        h2 Искать события
+      .col-xs-12
+        div.act_bar
+          act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
+          div.clearfix
 
     .row.fade-in.text-center(ng-if='data.selectedAct'): .col-md-4
       .checkbox-inline: label
         input(type='checkbox', ng-checked='isSubscribedOnSelectedActivity()', ng-click="toggleSubscriptionOnSelectedActivity()")
         | Подписаться на {{activityByName(data.selectedAct).textOver}}
     .row
-      .col-md-4.preview_events_box
+      .col-md-12
         div.ng-cloak.text-center(ng-show="foundEvents && foundEvents.length == 0")
           h3.no-event-msg Нет событий в списке
           a.button.btn.btn-primary(role='button' ng-href='/event/create')
@@ -64,14 +49,8 @@ block content
             | Создайте новое событие
 
         div.events_view(ng-show="foundEvents && foundEvents.length > 0")
-          div.preview_event(
+          div(class=previewEventClasses,
               ng-repeat="event in foundEvents"
               on-left-click="app.EventsService.goToEvent(event)"
-              ng-mouseenter="onEventOver(event)"
-              ng-mouseleave="onEventOut()"
             )
             include partials/preview-event
-
-      .col-md-8
-        google-map(center="map.center", zoom="map.zoom", draggable="true", options="map.opts")
-          markers(models="mapEvents", coords="'self'")

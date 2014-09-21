@@ -1,4 +1,4 @@
-.row.preview_event_row
+.row.preview_event_row(ng-init='cityLength = event.name.length > 20 ? 20 : 40')
   div.event_logo_box
     div(ng-if="!event.logoUrl")
       div.no_image
@@ -6,12 +6,15 @@
       dimensioned-img(ng-src='event.logoUrl', width='120')
 
   div
-    a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
+    a.event_title(ng-href='{{event.url}}') {{event.name|truncate:30}}
     div.event_date(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
-    div.event_address {{event.place.name}}
+    div.text-muted {{event.place.city|truncate:cityLength}}
     div(style="margin-bottom: 10px;")
 
-  div.event_statistics
+  div.event_statistics(ng-if='entry.friends.length')
+    .text-muted Друзья идут:
+    img(ng-repeat='friend in entry.friends', profile-picture-src='friend', size='40', width='40', height='40', ng-attr-title='{{friend.profile.name}}')
+  div.event_statistics2
     div(ng-show="event.participantCount")
       span.event_label Участников:
       span {{event.participantCount}}

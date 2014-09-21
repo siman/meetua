@@ -7,7 +7,7 @@
 var passportConf = require('../../config/passport');
 
 module.exports = [
-  { url: '/', view: 'home', params: {fluidContainer: true} },
+  { url: '/', view: 'home', params: {} },
   { url: '/feedback', view: 'feedback', params: {title: 'Отзывы и предложения'} },
   { url: '/signup', view: 'account/signup', params: {title: 'Создать аккаунт'} },
   { url: '/account', view: 'account/profile', pre: passportConf.isAuthenticated, params: {title: 'Личные данные'} },
