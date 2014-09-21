@@ -65,11 +65,6 @@ block content
             div.event_desc
               !=event.description
 
-          hr
-          h2 Комментарии
-          #comments
-            include ../partials/disqus
-
         .col-md-3(style="padding-top: 30px; padding-bottom: 20px")
           #share_event_box
             .btn-group.share_label Поделиться
@@ -149,6 +144,12 @@ block content
                 div(ng-if='event.otherParticipants.length > 0')
                   .event_label(ng-if='event.friendParticipants.length > 0') Остальные участники
                 +printParticipants('event.otherParticipants')
+
+        .col-xs-12
+          hr
+          h2 Комментарии
+          #comments
+            include ../partials/disqus
 
         .modal.share-created-event(ng-if='messages.showFirstTime && isCurrentUserAnAuthor()', open-modal modal-name='share-created-event' tabindex='-1', role='dialog', aria-hidden='true')
           .modal-dialog.modal-sm
