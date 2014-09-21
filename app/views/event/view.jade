@@ -90,9 +90,7 @@ block content
               div(ng-if="!event.isPassed")
                 button#partBtn.btn.btn-lg(ng-class="{'btn-default': isPart(), 'btn-success': !isPart()}",
                     ng-disabled="event.canceledOn",
-                    data-toggle="modal", data-target=".guest-number-modal"
-                    ng-click="isPart() && participate(0)"
-                  )
+                    ng-click="participate(0)")
                   span(ng-if="!isPart()")
                     i.fa.fa-check
                     | Принять участие
@@ -133,8 +131,16 @@ block content
                       a.pull-left(ng-href="{{participant.user.url}}")
                         img.media-object.avatar-medium(profile-picture-src='participant.user')
                       .media-body
-                        a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
-                          span(class="badge pull-right", ng-if="participant.guests > 0") +{{participant.guests}}
+                        .row
+                          .col-xs-12
+                            a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
+                              span(class="badge pull-right", ng-if="participant.guests > 0") +{{participant.guests}}
+                          .col-xs-12
+                            // hello gavnocode, first participate to 'unparticipate', and second to 'participate' and to add some friends
+                            a.pointer(ng-if='participant.user._id == currentUser._id', ng-class='{"text-muted": participant.guests > 0}',
+                              data-toggle='modal', data-target='.guest-number-modal',
+                              ng-click='isPart() && participate(0)')
+                              Возьму с собой друзей
 
                 div(ng-if='event.friendParticipants.length > 0')
                   .event_label Мои друзья
