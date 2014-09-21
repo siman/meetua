@@ -39,7 +39,7 @@ block content
             if (!event.logoUrl)
               div.no_image
             else
-              dimensioned-img(src='"#{event.logoUrl}"', width='240')
+              dimensioned-img(ng-src='event.logoUrl', width='240')
 
         .col-md-7
           div: h1 #{event.name}

@@ -14,7 +14,8 @@ var Event = require('../../models/Event');
 module.exports = {
   save: saveAction,
   cancel: cancelAction,
-  find: findAction,
+  find: findAction.find,
+  findQuery: findAction.findQuery,
   eventById: function(eventId, cb) {
     Event.findById(eventId).populate("participants.user").exec(function(err, event) {
       if (err) return cb(err);

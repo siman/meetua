@@ -2,7 +2,7 @@
 var chai = require('chai');
 var should = chai.should();
 var testUtil = require('../../../spec/test-util');
-testUtil.initDb();
+testUtil.initDb(true);
 var app = require('../../app.js');
 var appConfig = require('../../../../config/app-config');
 var mockUsers = require('../../../../app/controllers/user-mock-store');

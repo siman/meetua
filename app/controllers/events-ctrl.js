@@ -30,11 +30,16 @@ module.exports = {
   cancel: function(req, res) {
     eventsService.cancel(req.user, req.eventById, returnJson(res));
   },
+  getEvent: function(req, res) {
+    res.json({event: req.eventById});
+  },
   find: function(req, res) {
     var args = {
-      eventById: req.eventById,
       act: req.query.act,
       participantId: req.query.participantId,
+      authorId: req.query.authorId,
+      canceled: req.query.canceled,
+      passed: req.query.passed,
       limit: req.query.limit};
     eventsService.find(args, returnJson(res));
   }

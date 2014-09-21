@@ -92,7 +92,10 @@ exports.createLogoImage = function(next) {
 };
 
 
-exports.initDb = function() {
+/**
+ * @param doPreload
+ */
+exports.initDb = function(doPreload) {
   var clearDb = require('mocha-mongoose')(appConfig.secrets.db, {noClear: true});
 
   // new preloaded db state before each test
@@ -100,7 +103,9 @@ exports.initDb = function() {
   if (!beforeEachRegistered) {
     if ('function' == typeof beforeEach && beforeEach.length > 0) {
       // we're in a test suite that hopefully supports async operations
-      beforeEach(clearDbAndPreload);
+      if (doPreload) {
+        beforeEach(clearDbAndPreload);
+      }
       beforeEachRegistered = true;
     }
   }

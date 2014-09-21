@@ -75,6 +75,7 @@
     "mocha-mongoose": "1.0.1",
     "protractor": "~0.22.0",
     "superagent": "0.18.2",
-    "supertest": "~0.10.0"
+    "supertest": "~0.10.0",
+    "timekeeper": "0.0.4"
   }
 }
