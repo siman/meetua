@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp')
-  .service('EventService', ['$http', '$window', '$q', 'util', 'EventsResource', function($http, $window, $q, util, EventsResource) {
+  .service('EventsService', ['$http', '$window', '$q', 'util', 'EventsResource', function($http, $window, $q, util, EventsResource) {
 
     this.goToEvent = function(event) {
       window.location.href = event.url;
@@ -14,6 +14,19 @@ angular.module('myApp')
      */
     this.postRemoveImage = function(opts, cb) {
       $http.post('/event/' + opts.eventId + '/rm-image/' + opts.imageId).success(cb);
+    };
+
+    this.getEventsOverview = function(userId, cb) {
+      var reqs = {
+        my: EventsResource.query({authorId: userId, canceled: false}).$promise,
+        myCanceled: EventsResource.query({authorId: userId, canceled: true}).$promise,
+        going: EventsResource.query({participantId: userId, passed: false}).$promise,
+        // TODO: Check also end date that it is <= now. issue #171
+        visited: EventsResource.query({participantId: userId, passed: true}).$promise
+      };
+      $q.all(reqs).then(function(res) {
+        cb(res);
+      });
     };
 
     this.loadFriendsStream = function(currentUser, cb) {

@@ -7,7 +7,7 @@
 
   div
     a.event_title(ng-href="/event/{{event._id}}") {{event.name}}
-    div.event_date {{event.start.dateTime | prettyDateTime}}
+    div.event_date(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
     div.event_address {{event.place.name}}
     div(style="margin-bottom: 10px;")
 

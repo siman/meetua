@@ -5,7 +5,7 @@
 angular.module('myApp')
   .controller('UserProfileCtrl', ['$scope', 'ErrorService', '$http', function($scope, ErrorService, $http) {
     $scope.userProfile = _myInit.userProfile;
-    $http.get('/api/meetua/events/user/' + $scope.userProfile._id + '/overview').success(function(resp) {
-      $scope.events = resp;
+    $scope.app.EventsService.getEventsOverview($scope.userProfile._id, function(res) {
+      $scope.events = res;
     });
   }]);

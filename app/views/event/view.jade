@@ -46,12 +46,12 @@ block content
           div.view_event
             div
               span.event_label Начало:
-              span {{event.start.dateTime | prettyDateTime}}
+              span(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
 
             div(ng-if='event.end')
               div
                 span.event_label Конец:
-                span {{event.end.dateTime | prettyDateTime}}
+                span(ng-attr-title='{{event.end.dateTime | prettyDateTime}}') {{event.end.dateTime | comingDateTime}}
               div
                 span.event_label Длительность:
                 span {{event.duration}}

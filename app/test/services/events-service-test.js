@@ -3,18 +3,7 @@
  */
 'use strict';
 var ObjectId = require('mongoose').Types.ObjectId;
-var chai = require('chai');
-chai.use(function(_chai, utils) {
-  chai.Assertion.addMethod('objectId', function(propName, expectedId) {
-    var obj = utils.flag(this, 'object');
-    var actualId = utils.getPathValue(propName, obj);
-    this.assert(actualId.equals(expectedId),
-      'expected #{this} to equal #{exp}',
-      'expected #{this} to not equal #{exp}',
-      expectedId.toString(), actualId.toString(), true);
-  });
-});
-var should = chai.should();
+var should = require('chai').should();
 var eventsService = require('../../services/events');
 var moment = require('moment');
 var tk = require('timekeeper');
@@ -33,20 +22,26 @@ describe('events-service', function() {
       it('passed', function() {
         var now = moment('2014-09-20');
         tk.freeze(now.toDate());
-        mapAndExpect({passed: true}, {filter: {start: {dateTime: {$gt: now.valueOf()}}}});
-        mapAndExpect({passed: false}, {filter: {start: {dateTime: {$lte: now.valueOf()}}}});
+        mapAndExpect({passed: true}, {filter: {'start.dateTime': {$lte: now.valueOf()}}});
+        mapAndExpect({passed: false}, {filter: {'start.dateTime': {$gt: now.valueOf()}}});
+        mapAndExpect({passed: 'true'}, {filter: {'start.dateTime': {$lte: now.valueOf()}}});
+        mapAndExpect({passed: 'false'}, {filter: {'start.dateTime': {$gt: now.valueOf()}}});
       });
       it('canceled', function() {
         mapAndExpect({canceled: true}, {filter: {canceledOn: {$exists: true}}});
         mapAndExpect({canceled: false}, {filter: {canceledOn: {$exists: false}}});
+        mapAndExpect({canceled: "true"}, {filter: {canceledOn: {$exists: true}}});
+        mapAndExpect({canceled: "false"}, {filter: {canceledOn: {$exists: false}}});
       });
       it('participant', function() {
-        eventsService.findQuery({participantId: "5355443a9e965c7c19f33c43"}).should.
-          have.objectId('filter.participants.$elemMatch.user', ObjectId("5355443a9e965c7c19f33c43"));
+        var res = eventsService.findQuery({participantId: "5355443a9e965c7c19f33c43"});
+        should.exist(res, 'filter.participants.user');
+        res.filter['participants.user'].should.satisfy(function(actId) {return actId.equals(ObjectId("5355443a9e965c7c19f33c43"))});
       });
       it('author', function() {
-        eventsService.findQuery({authorId: "5355443a9e965c7c19f33c43"}).should.
-          have.objectId('filter.author', ObjectId("5355443a9e965c7c19f33c43"));
+        var res = eventsService.findQuery({authorId: "5355443a9e965c7c19f33c43"});
+        should.exist(res, 'filter.author');
+        res.filter.author.should.satisfy(function(actId) {return actId.equals(ObjectId("5355443a9e965c7c19f33c43"))});
       });
       it('limit', function() {
         mapAndExpect({limit: 1}, {filter:{}, limit:1});
@@ -76,7 +71,9 @@ describe('events-service', function() {
     });
   });
   function mapAndExpect(args, expectedRes) {
-    eventsService.findQuery(args).should.be.deep.equal(expectedRes);
+    var res = eventsService.findQuery(args);
+    delete res.sort; // we are not interested in sort
+    res.should.be.deep.equal(expectedRes);
   }
   function isStatus(done, expectedStatus) {
     return function(status, data) {

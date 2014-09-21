@@ -65,17 +65,3 @@ function getUserEventsOverview(userId, limit, cb) {
     q.exec(cb);
   }
 }
-
-module.exports.get_myOverview = function(req, res, next) {
-  getUserEventsOverview(req.user._id, req.query.limit, function(err, events) {
-    if (err) return res.json(500, new Error('Не удалось получить данные с сервера'));
-    return res.json(events);
-  });
-};
-
-module.exports.getUserEventsOverview = function(req, res, next) {
-  getUserEventsOverview(req.userById._id, function(err, events) {
-    if (err) return res.json(500, new Error('Не удалось получить данные с сервера'));
-    return res.json(events);
-  });
-};

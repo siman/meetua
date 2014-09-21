@@ -19,31 +19,36 @@ var _ = require('lodash');
 exports.findQuery = function(args) {
   var activity = args.act;
   var participantId = args.participantId;
-  var startDateTime = !_.isUndefined(args.passed) ? args.passed ? {$gt: Date.now()} : {$lte: Date.now()} : undefined;
   var filter = {};
+  var startDateTime = undefined;
+  var now = Date.now();
+  if (!_.isUndefined(args.passed)) {
+    // TODO: Check also end date that it is <= now. issue #171
+    startDateTime = args.passed === true || args.passed === 'true' ? {$lte: now} : {$gt: now}
+  }
   if (startDateTime) {
-    filter.start = {};
-    filter.start.dateTime = startDateTime;
+    filter['start.dateTime'] = startDateTime;
   }
   if (!_.isUndefined(args.canceled)) {
-    filter.canceledOn = {$exists: !!args.canceled}
+    filter.canceledOn = {$exists: args.canceled === true || args.canceled === 'true'}
   }
   if (activity) {
     filter.activity = activity;
   }
   if (participantId) {
-    filter.participants = {$elemMatch: {user: ObjectId(participantId)}};
+    filter['participants.user'] = ObjectId(participantId);
   }
   if (args.authorId) {
     filter.author = ObjectId(args.authorId);
   }
-  var res = {filter: filter};
+  var res = {filter: filter, sort: {'start.dateTime': 1}};
   if (args.limit) {
     res.limit = args.limit;
   }
   return  res;
 };
 
+// TODO: Add pagination. issue #170
 exports.find = function(args, cb) {
   try {
     var findQuery = exports.findQuery(args, function() {});
@@ -51,11 +56,16 @@ exports.find = function(args, cb) {
     if (findQuery.limit) {
       q.limit(findQuery.limit);
     }
+    if (findQuery.sort) {
+      q.sort(findQuery.sort);
+    }
     return q.exec(function(err, events) {
+      logger.debug(args, '->', findQuery, '->', events && events.length || 0);
       if (err) return cb(err);
       cb(200, events);
     });
   } catch(e) {
+    logger.error('Failure during find-action', e.stack);
     cb(500, e);
   }
 };

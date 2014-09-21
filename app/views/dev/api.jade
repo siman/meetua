@@ -4,8 +4,6 @@ block content
   .page-header: h1 #{title}
   ul
     li: a(href='/api/meetua/events', target='_blank') events
-    li: a(href='/api/meetua/events/myOverview', target='_blank') events/myOverview
-    li: a(href='/api/meetua/events/my', target='_blank') events/my
     li
       form(action='/api/meetua/notify/participant-on-join', method='POST', target='_blank')
         input(type='hidden', name='_csrf', value=_csrf)

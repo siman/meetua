@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('myApp')
-    .factory('EventImageService', ['FileUploader', 'EventService', 'SharedEventService', '$cookies', '$window',
+    .factory('EventImageService', ['FileUploader', 'EventsService', 'SharedEventService', '$cookies', '$window',
     'ErrorService',
-    function(FileUploader, EventService, SharedEventService, $cookies, $window, ErrorService) {
+    function(FileUploader, EventsService, SharedEventService, $cookies, $window, ErrorService) {
         /**
          *
          * @param {Object} params
@@ -51,7 +51,7 @@ angular.module('myApp')
           function removeItem(item) {
             if (helper.isUploadedImage(item)) {
               console.log('Removing server image ', item);
-              EventService.postRemoveImage({eventId: self.event._id, imageId: item._id}, function() {
+              EventsService.postRemoveImage({eventId: self.event._id, imageId: item._id}, function() {
                 removeFromEvent(item);
                 SharedEventService.maybeChangeLogo(item, helper.allImages());
                 $window.location.reload(); // refresh so user understand that form changes are not kept

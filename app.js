@@ -198,10 +198,8 @@ app.post('/api/meetua/events/:eventId/cancel', passportConf.isAuthenticated, eve
 app.post('/api/meetua/events/participation', passportConf.isAuthenticated, eventParticipation.post_participation);
 app.post('/api/meetua/events/:eventId', passportConf.isAuthenticated, eventsCtrl.save);
 app.get('/api/meetua/events/my', passportConf.isAuthenticated, eventQueries.get_my);
-app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, eventQueries.get_myOverview);
 app.get('/api/meetua/events/:eventId', eventsCtrl.getEvent);
 app.get('/api/meetua/events', eventsCtrl.find);
-app.get('/api/meetua/events/user/:userId/overview', eventQueries.getUserEventsOverview);
 
 if (!appConfig.IS_PRODUCTION) {
 
