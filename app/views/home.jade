@@ -1,17 +1,20 @@
 extends layout
 
 block content
+  != css('home')
+
   div(ng-controller='HomeCtrl')
     h1 MeetUA
 
-    - var previewEventClasses = ['col-md-4', 'col-xs-12', 'top15', 'hover-bg-info', 'preview_event']
+    - var previewEventClasses = ['col-md-4', 'col-xs-12']
     .row.ng-cloak.preferred-events-block(ng-if='friendsStream.length', data-animation='am-fade')
       .col-xs-12
         h2 Ваши друзья идут на события
           a.btn.btn-link.btn-mini(href="/account#preferred")
       div(class=previewEventClasses, on-left-click='app.EventsService.goToEvent(event)',
           ng-repeat='entry in friendsStream', ng-init='event = entry.event')
-        include partials/preview-event
+        .preview_event
+          include partials/preview-event
 
     .row.ng-cloak.preferred-events-block.top30(ng-if='subscription.events.length', data-animation='am-fade',
         ng-init='limitSmall = 8; limitBig = 20; data.eventsLimit = limitSmall;')
@@ -23,7 +26,8 @@ block content
           a.btn.btn-link.btn-mini(href="/account#preferred") Изменить
       .div(class=previewEventClasses, on-left-click='app.EventsService.goToEvent(event)',
           ng-repeat='event in subscription.events | limitTo:data.eventsLimit')
-        include partials/preview-event
+        .preview_event
+          include partials/preview-event
       .col-xs-12.text-right(ng-if='subscription.events.length > limitSmall')
         button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitBig', ng-click='data.eventsLimit = limitBig;') Показать больше
         button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitSmall', ng-click='data.eventsLimit = limitSmall;') Показать меньше
@@ -53,4 +57,5 @@ block content
               ng-repeat="event in foundEvents"
               on-left-click="app.EventsService.goToEvent(event)"
             )
-            include partials/preview-event
+            .preview_event
+              include partials/preview-event

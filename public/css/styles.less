@@ -7,9 +7,6 @@
 @import "../lib/summernote/src/less/summernote";
 @import "angular-strap-override";
 
-h1 {
-  font-size: 20px;
-}
 // Scaffolding
 // -------------------------
 
@@ -252,27 +249,6 @@ html, body {
   height: @map_height;
 }
 
-.preview_events_box {
-  height: @map_height;
-  max-height: @map_height;
-  overflow: auto;
-}
-
-.preview_event_row {
-  position: relative;
-
-  .event_statistics {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-  }
-  .event_statistics2 {
-    position: absolute;
-    bottom: 0;
-    right: 20px;
-  }
-}
-
 .label_margin() {
   margin-right: 5px;
 }
@@ -296,17 +272,39 @@ html, body {
 }
 
 .preview_event {
-  border-bottom: 1px solid #ccc;
   padding: 10px;
-  cursor: pointer;
+  margin-left: -15px;
+  margin-bottom: 15px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background-color: #FFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background-color: @color_highlight_bg;
+    background-color: #E8F3FF;
+    border: 1px solid #A1CEFF;
+    box-shadow: 0 1px 3px rgba(117, 170, 255, 0.7);
+    .pointer();
   }
 
-  .event_title {
-    font-size: 20px;
+  h4.event_title {
+    margin-top: 0;
     font-weight: bold;
+  }
+}
+
+.preview_event_row {
+  position: relative;
+
+  .event_statistics {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+  }
+  .event_statistics2 {
+    position: absolute;
+    bottom: 0;
+    right: 20px;
   }
 }
 
@@ -362,15 +360,6 @@ html, body {
 
 .preferred-events-block {
   border-bottom: @gray-lighter 1px solid;
-}
-
-.hover-bg-info {
-  padding: 7px;
-}
-
-.hover-bg-info:hover {
-  .bg-variant(@state-info-bg);
-  .pointer();
 }
 
 label[disabled] {

@@ -6,9 +6,9 @@
       dimensioned-img(ng-src='event.logoUrl', width='120')
 
   div
-    a.event_title(ng-href='{{event.url}}') {{event.name|truncate:30}}
+    h4.event_title: a(ng-href='{{event.url}}', title='{{event.name}}') {{event.name|truncate:30}}
     div.event_date(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
-    div.text-muted {{event.place.city|truncate:cityLength}}
+    div.text-muted(title='{{event.place.city}}') {{event.place.city|truncate:cityLength}}
     div(style="margin-bottom: 10px;")
 
   div.event_statistics(ng-if='entry.friends.length')
