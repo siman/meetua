@@ -43,7 +43,7 @@ block content
 
         .col-md-7
           div: h1 #{event.name}
-          div.view_event
+          div.view_event(ng-cloak)
             div
               span.event_label Начало:
               span(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
