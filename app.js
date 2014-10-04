@@ -278,7 +278,6 @@ mongoose.connection.on('error', function() {
 });
 
 // DB preloading
-eventStore.dbPreload();
 userController.dbPreload();
 
 notifyService.startCronJobs();
