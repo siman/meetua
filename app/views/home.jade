@@ -40,7 +40,7 @@ block content
           act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
           div.clearfix
 
-    .row.fade-in.text-center(ng-if='data.selectedAct'): .col-md-4
+    .row.fade-in.text-center(ng-if='data.selectedAct && currentUser'): .col-md-4
       .checkbox-inline: label
         input(type='checkbox', ng-checked='isSubscribedOnSelectedActivity()', ng-click="toggleSubscriptionOnSelectedActivity()")
         | Подписаться на {{activityByName(data.selectedAct).textOver}}
