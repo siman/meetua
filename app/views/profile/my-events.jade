@@ -1,0 +1,27 @@
+extends ../layout
+include mixins
+
+block content
+  .page-header: h1 Мои cобытия
+
+  div(ng-controller='MyEventsCtrl')
+
+    h2
+      i.fa.fa-edit
+      span Созданные мной
+    +listMyEvents('my')
+
+    h2
+      i.fa.fa-chevron-right
+      span Собираюсь пойти
+    +listMyEvents('going')
+
+    h2
+      i.fa.fa-chevron-left
+      span Посещенные
+    +listMyEvents('visited')
+
+    h2
+      i.fa.fa-times-circle
+      span Отмененные
+    +listMyEvents('myCanceled')

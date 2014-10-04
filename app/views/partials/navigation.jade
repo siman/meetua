@@ -1,0 +1,49 @@
+.navbar.navbar-default.navbar-nomargin(ng-controller='NavigationCtrl', role='navigation')
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/') MeetUA
+    .collapse.navbar-collapse
+      ul.nav.navbar-nav
+        li(class=title=='Создать событие'?'active':undefined)
+          a(href='/event/create') Создать событие
+
+        li(ng-if="currentUser", class=title=='Мои события'?'active':undefined)
+          a(href='/profile/my-events') Мои события
+
+        li(class=title=='Отзывы и предложения'?'active':undefined)
+          a(href='/feedback') Отзывы
+
+        if !appConfig.IS_PRODUCTION
+          li.alert-warning.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              | Dev tools&nbsp;
+              i.caret
+            ul.dropdown-menu
+              li: a(href='/dev/event-generator') Event generator
+              li: a(href='/dev/user-generator') User generator
+              li: a(href='/dev/users') All users
+              li: a(href='/dev/api') MeetUA API
+
+      ul.nav.navbar-nav.navbar-right
+          - var hideWhenUser = user ? 'ng-hide' : undefined
+          - var showWhenUser = user ? undefined : 'ng-hide'
+          li(class=title=='Login'?'active':undefined + ' ' + hideWhenUser, ng-hide='currentUser')
+            a.pointer(ng-click='login()') Войти
+          if secrets.localAuth
+            li(class=title=='Create Account'?'active':undefined + ' ' + hideWhenUser, ng-hide='currentUser')
+              a(href='/signup') Создать аккаунт
+          li.dropdown(class=title=='Account Management'?'active':undefined + ' ' + showWhenUser, ng-show='currentUser', ng-cloak)
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              img.profile-image(profile-picture-src='currentUser')
+              | {{currentUser.profile.name || currentUser.email || currentUser.id}}&nbsp;
+              i.caret
+            ul.dropdown-menu
+              li: a(href='/user/{{currentUser._id}}') Моя страница
+              li: a(href='/account') Настройки профиля
+              li.divider
+              li: a(href='/logout') Выйти

@@ -1,0 +1,61 @@
+extends layout
+
+block content
+  != css('home')
+
+  div(ng-controller='HomeCtrl')
+    h1 MeetUA
+
+    - var previewEventClasses = ['col-md-4', 'col-xs-12']
+    .row.ng-cloak.preferred-events-block(ng-if='friendsStream.length', data-animation='am-fade')
+      .col-xs-12
+        h2 Ваши друзья идут на события
+          a.btn.btn-link.btn-mini(href="/account#preferred")
+      div(class=previewEventClasses, on-left-click='app.EventsService.goToEvent(event)',
+          ng-repeat='entry in friendsStream', ng-init='event = entry.event')
+        .preview_event
+          include partials/preview-event
+
+    .row.ng-cloak.preferred-events-block.top30(ng-if='subscription.events.length', data-animation='am-fade',
+        ng-init='limitSmall = 8; limitBig = 20; data.eventsLimit = limitSmall;')
+      .col-xs-12
+        h2 Избранные события
+          span.text-lowercase(ng-repeat='activity in subscription.activities')
+            strong {{' ' +   activityByName(activity).textOver}}
+            | {{$last ? '' : ','}}
+          a.btn.btn-link.btn-mini(href="/account#preferred") Изменить
+      .div(class=previewEventClasses, on-left-click='app.EventsService.goToEvent(event)',
+          ng-repeat='event in subscription.events | limitTo:data.eventsLimit')
+        .preview_event
+          include partials/preview-event
+      .col-xs-12.text-right(ng-if='subscription.events.length > limitSmall')
+        button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitBig', ng-click='data.eventsLimit = limitBig;') Показать больше
+        button.btn.btn-link.btn-lg(ng-hide='data.eventsLimit == limitSmall', ng-click='data.eventsLimit = limitSmall;') Показать меньше
+
+    .row.top30
+      .col-xs-12
+        h2 Искать события
+      .col-xs-12
+        div.act_bar
+          act-icon(ng-model='data.selectedAct', activity='activity', ng-repeat='activity in activities')
+          div.clearfix
+
+    .row.fade-in.text-center(ng-if='data.selectedAct'): .col-md-4
+      .checkbox-inline: label
+        input(type='checkbox', ng-checked='isSubscribedOnSelectedActivity()', ng-click="toggleSubscriptionOnSelectedActivity()")
+        | Подписаться на {{activityByName(data.selectedAct).textOver}}
+    .row
+      .col-md-12
+        div.ng-cloak.text-center(ng-show="foundEvents && foundEvents.length == 0")
+          h3.no-event-msg Нет событий в списке
+          a.button.btn.btn-primary(role='button' ng-href='/event/create')
+            i.fa.fa-hand-o-right
+            | Создайте новое событие
+    .row
+      div.events_view(ng-show="foundEvents && foundEvents.length > 0")
+        div(class=previewEventClasses,
+          ng-repeat="event in foundEvents"
+          on-left-click="app.EventsService.goToEvent(event)"
+        )
+          .preview_event
+            include partials/preview-event

@@ -1,0 +1,54 @@
+extend ../layout
+include mixins
+
+block content
+  div(ng-controller='UserProfileCtrl')
+    +jsVar("userProfile", userProfile)
+    .row.top
+      .col-md-3
+        img(profile-picture-src='userProfile', size='200')
+        // TODO: picture from VK is too small
+      .col-md-6
+        .row
+          h1 #{userProfile.profile.name}
+        .row(ng-if='userProfile.profile.location')
+          .col-md-5
+            span.user_label Город:
+            span #{userProfile.profile.location}
+        .row(ng-if='userProfile.profile.ru.gender')
+          .col-md-5
+            span.user_label Пол:
+            span #{userProfile.profile.ru.gender}
+        .row(ng-if='userProfile.profile.website')
+          .col-md-5
+            span.user_label Сайт:
+            span #{userProfile.profile.website}
+        .row.top
+          .col-md-5
+            a.btn.btn-block.btn-social.btn-sm.btn-vk(ng-if='userProfile.profile.links.vkontakte', ng-href='{{userProfile.profile.links.vkontakte}}', target='_blank')
+              i.fa.fa-vk
+              | Профиль VK
+            a.btn.btn-block.btn-social.btn-sm.btn-facebook(ng-if='userProfile.profile.links.facebook', ng-href='{{userProfile.profile.links.facebook}}', target='_blank')
+              i.fa.fa-facebook
+              | Профиль Facebook
+
+    .row.top
+      .col-md-12
+        .center-block
+          h2 События пользователя
+        h3
+          i.fa.fa-edit
+          span Созданные пользователем
+        +listMyEvents('my')
+        h3
+          i.fa.fa-chevron-right
+          span Собирается пойти
+        +listMyEvents('going')
+        h3
+          i.fa.fa-chevron-left
+          span Посещенные
+        +listMyEvents('visited')
+        h3
+          i.fa.fa-times-circle
+          span Отмененные
+        +listMyEvents('myCanceled')

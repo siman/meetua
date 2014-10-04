@@ -1,0 +1,169 @@
+extends ../layout
+
+mixin eventField(label, data, href)
+  div
+    span.event_label #{label}:
+    if href
+      a(href=href) #{data}
+    else
+      span #{data}
+
+block content
+  div(ng-controller='ViewEventCtrl')
+    #on_my_event_panel.alert-warning(ng-if='event.isPassed', ng-cloak)
+      div.event_edit_panel
+      | Событие уже прошло
+
+    #on_my_event_panel.alert-warning(ng-if='isCurrentUserAnAuthor() && !event.isPassed', ng-cloak)
+      div.event_edit_panel
+        a.btn.btn-default.btn-sm(href="/event/#{event._id}/edit", role="button")
+          i.fa.fa-edit
+          | Редактировать
+        button.btn.btn-default.btn-sm(ng-if='!event.canceledOn', confirmed-click="cancelEvent()",
+          confirmation="Вы уверены, что хотите отменить событие? Все участники будут уведомлены об отмене.",
+          yes-text='Да, отменить событие', no-text='Не отменять')
+          i.fa.fa-times
+          | Отменить событие
+
+    #on_my_event_panel.alert-warning(ng-if='event.canceledOn && !event.isPassed', ng-cloak)
+      div.event_edit_panel
+        | Автор отменил это событие
+
+    if (!event)
+      h1 Событие не найдено
+    else
+      +jsVar("event", event)
+      div#view_event_page
+        .col-md-2
+          div#view_event_logo_box.pull-right(style="text-align: right")
+            if (!event.logoUrl)
+              div.no_image
+            else
+              dimensioned-img(ng-src='event.logoUrl', width='240')
+
+        .col-md-7
+          div: h1 #{event.name}
+          div.view_event(ng-cloak)
+            div
+              span.event_label Начало:
+              span(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
+
+            div(ng-if='event.end')
+              div
+                span.event_label Конец:
+                span(ng-attr-title='{{event.end.dateTime | prettyDateTime}}') {{event.end.dateTime | comingDateTime}}
+              div
+                span.event_label Длительность:
+                span {{event.duration}}
+
+            div
+              span.event_label Где:
+              a(href=event.googleMapsUrl, target="_blank") #{event.place.name}
+
+            if event.author
+              +eventField("Организатор", event.author.profile.name, event.author.url)
+            div.event_desc
+              !=event.description
+
+        .col-md-3(style="padding-top: 30px; padding-bottom: 20px")
+          #share_event_box
+            .btn-group.share_label Поделиться
+            include ../partials/share-event
+
+          #partBox.ng-cloak
+
+            // TODO: #196: Replace server user (jade's #{}) related logic with Angular
+            // So Angular will trigger changes on UI after user logged in after viewing like a guest
+
+            #partStatus(ng-if='isCurrentUserAnAuthor()') Вы &mdash; автор события
+
+            div(ng-if='!isCurrentUserAnAuthor()')
+              div(ng-if="event.isPassed")
+                div Событие уже прошло
+              div(ng-if="event.canceledOn")
+                div Событие отменено
+              div(ng-if="!event.isPassed")
+                button#partBtn.btn.btn-lg(ng-class="{'btn-default': isPart(), 'btn-success': !isPart()}",
+                    ng-disabled="event.canceledOn",
+                    ng-click="participate(0)")
+                  span(ng-if="!isPart()")
+                    i.fa.fa-check
+                    | Принять участие
+                  span(ng-if="isPart()")
+                    i.fa.fa-times
+                    | Отказаться от участия
+
+            div(ng-if="currentUser && isPart()")
+              #part_notif_settings
+                a.pointer(ng-click="showNotificationSettings()")
+                  i.fa.fa-envelope-o
+                  span(ng-if="currentUser.receivingEmails")
+                    | Отписаться от уведомлений
+                  span(ng-if="!currentUser.receivingEmails")
+                    | Подписаться на уведомления
+
+            .modal.fade.guest-number-modal(tabindex='-1', role='dialog', aria-hidden='true')
+              .modal-dialog.modal-sm
+                .modal-content
+                  .modal-header
+                    h4.modal-title Возьмете с собой друзей?
+                  .modal-body
+                    .btn-toolbar(role='toolbar')
+                      .btn-group
+                        div(bring-guests max-guests="4")
+
+            #participants
+              div(ng-if="!event.participantCount")
+                span.event_label Еще нет участников
+              div(ng-if="event.participantCount")
+                h4.event_label
+                  | Участники
+                  span(ng-if="event.participantCount > 1") &nbsp;({{event.participantCount}})
+
+                mixin printParticipants(participantsObject)
+                  ul.media-list
+                    li.media(ng-repeat="participant in #{participantsObject}")
+                      a.pull-left(ng-href="{{participant.user.url}}")
+                        img.media-object.avatar-medium(profile-picture-src='participant.user')
+                      .media-body
+                        .row(ng-init='isMe = participant.user._id == currentUser._id')
+                          .col-xs-12(ng-class='{"highlight": isMe}')
+                            a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
+                            span &nbsp;
+                            span(ng-if='!isMe && participant.guests > 0', class="badge") +{{participant.guests}}
+                          .col-xs-12(ng-if='isMe')
+                            // hello gavnocode, first participate to 'unparticipate', and second to 'participate' and to add some friends
+                            a.text-muted.pointer(data-toggle='modal', data-target='.guest-number-modal',
+                              ng-click='isPart() && participate(0)')
+                              |Возьму с собой друзей &nbsp;
+                              span(class="badge", ng-if='participant.guests > 0') +{{participant.guests}}
+
+                div(ng-if='event.friendParticipants.length > 0')
+                  .event_label Мои друзья
+                +printParticipants('event.friendParticipants')
+
+                div(ng-if='event.otherParticipants.length > 0')
+                  .event_label(ng-if='event.friendParticipants.length > 0') Остальные участники
+                +printParticipants('event.otherParticipants')
+
+        .col-md-offset-2.col-md-7.col-xs-12
+          hr
+          h2 Комментарии
+          #comments
+            include ../partials/disqus
+
+        .modal.share-created-event(ng-if='messages.showFirstTime && isCurrentUserAnAuthor()', open-modal modal-name='share-created-event' tabindex='-1', role='dialog', aria-hidden='true')
+          .modal-dialog.modal-sm
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal')
+                  span(aria-hidden='true') ×
+                h4.modal-title Поделиться ссылкой в:
+              .modal-body
+                #modal_share_event_box
+                  include ../partials/share-event
+              .modal-footer
+                button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
+
+        // TODO: Load with Angular $modal
+        include ../partials/notifications-modal

@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+  div(ng-controller='DevUsersCtrl')
+    .page-header: h1 #{title}
+      span.ng-cloak.secondary_text(ng-if='users') &nbsp;({{users.length}})
+      .pull-right
+        h4: a(href='/dev/user-generator', role='button')
+          | Generate more users »
+
+    .row(ng-repeat="user in users")
+      .col-sm-1.top15
+        span.pull-right {{$index + 1}}.
+
+      .col-sm-1.top15
+        span.pull-right.badge(ng-if="user.isGenerated") generated
+
+      .col-sm-5.media
+        a.pull-left(ng-href="{{user.url}}")
+          img.media-object.avatar-medium(profile-picture-src='user', size='50')
+        .media-body(class="{{'dev_bgcolor_' + user.profile.gender}}")
+          h4.media-heading
+            a(ng-href="{{user.url}}") {{user.profile.name}}
+          div
+            span.user_label Gender
+            span {{user.profile.ru.gender}}
+
+      .col-sm-1.top15
+        span(ng-if='!isUserMyFriend(user)')
+          button.btn.btn-success(type='button', ng-click='changeFriendship(user)')
+            | Follow
+        span(ng-if='isUserMyFriend(user)')
+          button.btn.btn-warning(type='button', ng-click='changeFriendship(user)')
+            | Unfollow
+
+      .col-sm-1.top15
+        span(ng-if='isGeneratedUser(user)')
+          button.btn.btn-default(type='button', ng-click='loginAsGeneratedUser(user)')
+            | Login as this guy

@@ -9,22 +9,25 @@
  * at the bottom of the compiled file.
  */
 
-//= require lib/jquery-2.1.0.min
-//= require lib/moment-2.6.0.min
-//= require lib/moment-langs.min
-//= require lib/daterangepicker-1.3.5
-//= require lib/bootstrap.min
-//= require lib/underscore-1.6.0.min
-//= require lib/md5.min
-//= require lib/angular-1.2.16
-//= require lib/angular-locale_ru-ru
-//= require lib/angular-route-1.2.16
-//= require lib/angular-cookies-1.2.16
-//= require lib/http-auth-interceptor
-//= require lib/angular-file-upload-0.5.5
-//= require lib/angular-google-maps-1.0.18
-//= require lib/angular-strap-2.0.1
-//= require lib/angular-strap-tpl-2.0.1
+//= require ../lib/jquery/dist/jquery.min
+//= require ../lib/moment/min/moment.min
+//= require ../lib/moment/locale/ru
+//= require ../lib/bootstrap/dist/js/bootstrap.min
+//= require ../lib/underscore/underscore-min
+//= require ../lib/angular/angular.min
+//= require ../lib/angular-i18n/angular-locale_ru-ru
+//= require ../lib/angular-route/angular-route.min
+//= require ../lib/angular-resource/angular-resource.min
+//= require ../lib/angular-cookies/angular-cookies.min
+//= require ../lib/angular-animate/angular-animate.min
+//= require ../lib/angular-sanitize/angular-sanitize.min
+//= require ../lib/angular-http-auth/src/http-auth-interceptor
+//= require ../lib/angular-file-upload/angular-file-upload.min
+//= require ../lib/angular-google-maps/dist/angular-google-maps.min
+//= require ../lib/angular-strap/dist/angular-strap.min
+//= require ../lib/angular-strap/dist/angular-strap.tpl.min.js
+//= require ../lib/summernote/dist/summernote.min
+//= require ../lib/angular-summernote/dist/angular-summernote.min
+//= require ../lib/angular-md5/angular-md5.min
 //= require my-app
 //= require_tree app
-//= require lib/ng-directives

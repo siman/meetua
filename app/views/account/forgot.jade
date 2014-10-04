@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+  .page-header: h1 #{title}
+  .col-sm-offset-2.col-sm-8
+    form(method='POST', action='/forgot')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        p Введите ваш email ниже и Вам будет выслано письмо с инструкциями по восстановлению пароля.
+        label.control-label(for='email') Email
+        input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus=true)
+      .form-group
+        button.btn.btn-primary(type='submit')
+          i.fa.fa-key
+          | Восстановить пароль

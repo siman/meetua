@@ -1,0 +1,12 @@
+extends ../layout
+
+include event-fields
+include form-btns
+include form
+
+block content
+  .page-header: h1 Редактировать событие
+  +jsVar('event', event)
+  +form(ng-controller='EditEventCtrl')
+    +eventFields(false)
+    +formBtns()

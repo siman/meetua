@@ -1,0 +1,23 @@
+#flash.row
+  .col-sm-offset-2.col-sm-8
+
+    mixin closeAlert
+      a(href="#", class="close", data-dismiss="alert") &times;
+
+    if messages.errors
+      .alert.alert-danger.animated.fadeIn
+        +closeAlert
+        for error in messages.errors
+          div= error.msg
+
+    if messages.info
+      .alert.alert-info.animated.fadeIn
+        +closeAlert
+        for info in messages.info
+          div= info.msg
+
+    if messages.success
+      .alert.alert-success.animated.fadeIn
+        +closeAlert
+        for success in messages.success
+          div= success.msg

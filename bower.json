@@ -1,0 +1,37 @@
+{
+  "name": "meetua",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.2.24",
+    "angular-animate": "~1.2.24",
+    "angular-cookies": "~1.2.24",
+    "angular-route": "~1.2.24",
+    "angular-resource": "~1.2.24",
+    "angular-sanitize": "~1.2.24",
+    "angular-i18n": "~1.2.24",
+    "angular-file-upload": "~1.1.1",
+    "angular-google-maps": "1.0.18",
+    "angular-md5": "~0.1.7",
+    "angular-motion": "~0.3.3",
+    "angular-strap": "~2.0.5",
+    "angular-summernote": "~0.2.3",
+    "summernote": "~0.5.8",
+    "jquery": "2.1.0",
+    "moment": "~2.8.2",
+    "bootstrap": "~3.2.0",
+    "underscore": "~1.7.0",
+    "angular-http-auth": "~1.2.1",
+    "bootstrap-social": "~4.7.0",
+    "font-awesome": "~4.2.0",
+    "bootstrap-additions": "~0.2.3",
+    "angular-mocks": "~1.2.24"
+  },
+  "devDependencies": {
+    "should.js": "shouldjs/should.js#~4.0.4"
+  },
+  "resolutions": {
+    "underscore": "~1.7.0",
+    "angular": "~1.2.24"
+  }
+}

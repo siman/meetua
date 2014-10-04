@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  +jsVar("event", event)
+  .page-header: h1 Вы успешно отменили событие #{event.name}
+
+  #canceld_event
+    h4
+      span Все участники были оповещены
+      a.btn.btn-default.btn-sm(href="/", role="button")
+        i.fa.fa-reply
+          | вернуться на главную

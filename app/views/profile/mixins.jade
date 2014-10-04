@@ -1,0 +1,21 @@
+mixin listMyEvents(groupType)
+  div(ng-show="!events.#{groupType}.length")
+    em Нет событий
+  div(ng-show="events.#{groupType}.length")
+    div.row.preview_event(ng-repeat="event in events.#{groupType}", on-left-click="app.EventsService.goToEvent(event)")
+      .col-sm-10
+        include ../partials/preview-event
+      .col-sm-2
+        .pull-right
+          if groupType == 'my'
+            .btn-group
+              a.btn.btn-default(
+                role="button",
+                ng-if='app.UserService.isUserAuthorOfEvent(currentUser, event)',
+                ng-hide="event.isPassed",
+                ng-href="/event/{{event._id}}/edit"
+              ) Редактировать
+            //a.btn.btn-default(href="#", role="button") Удалить // TODO
+          if groupType == 'going'
+            .btn-group
+              a.btn.btn-default(role="button") TODO: Отказаться

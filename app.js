@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -11,49 +13,38 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 var _ = require('underscore');
-var notifyService = require('./controllers/util/notification-service');
-var OpenShiftApp = require('./openshift');
-var errorHandler = require('./controllers/util/error-handler');
+var notifyService = require('./app/controllers/util/notification-service');
+var errorHandler = require('./app/controllers/util/error-handler');
 
 /**
  * Load controllers.
  */
 
 var appConfig = require('./config/app-config');
-var sitemap = require('./controllers/sitemap');
+var utils = require('./app/controllers/util/utils');
+var simpleRenders = require('./app/controllers/simple-renders');
+var sitemap = require('./app/controllers/sitemap');
 sitemap.scheduleSitemapRebuild(1000 * 60 * 60 * 24); // 1 day
-var homeController = require('./controllers/home');
-var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
-var createEventPage = require('./controllers/event/create-page');
-var saveEvent = require('./controllers/event/save-event');
-var viewEvent = require('./controllers/event/view');
-var editEvent = require('./controllers/event/edit');
-var cancelEvent = require('./controllers/event/cancel');
-var upload = require('./controllers/upload').handleUpload;
-var myEvents = require('./controllers/profile/my-events');
-var rmEventImage = require('./controllers/event/rm-image');
+var userController = require('./app/controllers/user');
+var apiController = require('./app/controllers/social-api');
+var eventsCtrl = require('./app/controllers/events-ctrl');
+var viewEvent = require('./app/controllers/event/view');
+var editEvent = require('./app/controllers/event/edit');
+var upload = require('./app/controllers/upload').handleUpload;
+var rmEventImage = require('./app/controllers/event/rm-image');
 
-var eventStore = require('./controllers/event/EventStore');
+var eventStore = require('./app/controllers/event/event-store');
 
-var renderTpl = require('./controllers/render-tpl').renderTpl;
+var renderTpl = require('./app/controllers/render-tpl').renderTpl;
 
 /**
  * API keys + Passport configuration.
  */
 
-var secrets = require('./config/secrets');
+var secrets = appConfig.secrets;
 var passportConf = require('./config/passport');
 
 var app = express();
-
-app.set('port', appConfig.IS_PRODUCTION ? 80 : 3000); // TODO refactor to use appConfig instead of plain strings
-app.set('mongodb-url', secrets.db);
-
-var openShiftApp = new OpenShiftApp();
-openShiftApp.initialize(app);
-
-secrets.db = app.get('mongodb-url');
 
 app.response.renderNotFound = function() {
   this.render('404', { status: 404 });
@@ -67,12 +58,12 @@ var hour = 3600000;
 var day = (hour * 24);
 var month = (day * 30);
 
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'jade');
 app.use(connectAssets({
-  paths: ['public/css', 'public/js'],
+  paths: ['public/css', 'public/js', 'public/lib'],
   helperContext: app.locals,
-  build: appConfig.IS_PRODUCTION || openShiftApp.isOpenShiftEnv()
+  build: appConfig.buildAssets
 }));
 app.use(express.compress());
 app.use(express.logger('dev'));
@@ -88,7 +79,14 @@ app.use(express.session({
     auto_reconnect: true
   })
 }));
-app.use(express.csrf());
+if (appConfig.enableCsrf) {
+  app.use(express.csrf());
+} else {
+  app.use(function(req, res, next) {
+    req.csrfToken = function() {return '';};
+    next();
+  });
+}
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next) {
@@ -119,7 +117,17 @@ app.use(function(req, res, next) {
 });
 app.use(app.router);
 app.use(function(req, res) {
-  res.renderNotFound();
+  res.format({
+    html: res.renderNotFound.bind(res),
+
+    json: function () {
+      res.send(404, { error: 'Ресурс не найден' });
+    },
+
+    text: function () {
+      res.send(404, 'Ресурс не найден');
+    }
+  });
 });
 app.use(appConfig.IS_PRODUCTION ? errorHandler.error : express.errorHandler());
 
@@ -140,77 +148,83 @@ function headersForLanguage(req, res, next) {
  * Application routes.
  */
 
-app.get('/', homeController.index);
+simpleRenders.forEach(function(render) {
+  if (render.pre) {
+    app.get(render.url, render.pre, renderMiddleware);
+  } else {
+    app.get(render.url, renderMiddleware);
+  }
+  function renderMiddleware(req, res) {
+    res.render(render.view, render.params);
+  }
+});
+
+app.param('userId', userController.userById);
 app.get('/sitemap.xml', sitemap.getSitemap);
 app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
 app.post('/forgot', userController.postForgot);
 app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
-app.get('/signup', userController.getSignup);
+app.get('/signup', utils.isGuestMiddleware);
 app.post('/signup', userController.postSignup);
-app.get('/account', passportConf.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
 app.get('/account/unsubscribe/:email/:token', userController.getUnsubscribe);
-app.get('/api', apiController.getApi);
-app.get('/api/lastfm', apiController.getLastfm);
-app.get('/api/nyt', apiController.getNewYorkTimes);
-app.get('/api/aviary', apiController.getAviary);
-app.get('/api/paypal', apiController.getPayPal);
-app.get('/api/paypal/success', apiController.getPayPalSuccess);
-app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-app.get('/api/steam', apiController.getSteam);
-app.get('/api/scraping', apiController.getScraping);
-app.get('/api/twilio', apiController.getTwilio);
-app.post('/api/twilio', apiController.postTwilio);
-app.get('/api/clockwork', apiController.getClockwork);
-app.post('/api/clockwork', apiController.postClockwork);
-app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
-app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);
-app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
-app.get('/api/github', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getGithub);
-app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTwitter);
-app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
-app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
-app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
 
-var feedback = require('./controllers/feedback');
 app.get('/tpl/*', renderTpl);
-app.get('/feedback', feedback.get_feedback);
-app.get('/event/create', createEventPage);
-app.post('/event/save', passportConf.isAuthenticated, saveEvent);
 app.get('/event/:id', viewEvent);
 app.get('/event/:id/edit', passportConf.isAuthenticated, editEvent);          // TODO move rest calls under /api/meetua
-app.get('/event/:id/cancel', passportConf.isAuthenticated, cancelEvent);
 app.post('/event/:id/rm-image/:imageId', rmEventImage);
+app.get('/user/:userId', userController.getUserProfile);
 app.post('/upload/image', passportConf.isAuthenticated, upload);
-app.get('/profile/my-events', passportConf.isAuthenticated, myEvents);
 
 // MeetUA API
-var meetuaEventsApi = require('./controllers/api/events');
+var eventParticipation = require('./app/controllers/event/participation');
+
+// User
 app.get('/api/meetua/user/login', passportConf.isAuthenticated, userController.api.getLogin); // authenticates user through auth-modal
 app.post('/api/meetua/user/login', userController.api.postLoginRest);
 app.get('/api/meetua/user/getCurrent', userController.api.getCurrentUser);
-app.get('/api/meetua/events/find', meetuaEventsApi.get_find); // TODO rename events -> event to keep routing consistency
-app.get('/api/meetua/events/findById', meetuaEventsApi.get_findById);
-app.get('/api/meetua/events/my', passportConf.isAuthenticated, meetuaEventsApi.get_my);
-app.get('/api/meetua/events/myOverview', passportConf.isAuthenticated, meetuaEventsApi.get_myOverview);
-app.post('/api/meetua/events/participation', passportConf.isAuthenticated, meetuaEventsApi.post_participation);
-if (appConfig.IS_DEVELOPMENT) {
-  var devApi = require('./controllers/api/dev');
-  app.get('/dev-api', function(req, res, next) {
-    res.render('dev-api', { title: 'MeetUA API' });
+app.post('/api/meetua/user/notifications', passportConf.isAuthenticated, userController.api.postSetupUserNotifications);
+app.post('/api/meetua/user/updateProfile', passportConf.isAuthenticated, userController.api.postUpdateProfile);
+
+// Event
+app.param('eventId', eventsCtrl.eventById);
+app.post('/api/meetua/events', passportConf.isAuthenticated, eventsCtrl.save);
+app.post('/api/meetua/events/:eventId/cancel', passportConf.isAuthenticated, eventsCtrl.cancel);
+app.post('/api/meetua/events/participation', passportConf.isAuthenticated, eventParticipation.post_participation);
+app.post('/api/meetua/events/:eventId', passportConf.isAuthenticated, eventsCtrl.save);
+app.get('/api/meetua/events/:eventId', eventsCtrl.getEvent);
+app.get('/api/meetua/events', eventsCtrl.find);
+
+if (!appConfig.IS_PRODUCTION) {
+
+  var eventGenerator = require('./app/controllers/dev/event-generator');
+  app.get('/dev/event-generator', passportConf.isAuthenticated, eventGenerator.view);
+  app.post('/dev/event-generator', passportConf.isAuthenticated, eventGenerator.generate);
+
+  var userGenerator = require('./app/controllers/dev/user-generator');
+  app.get('/dev/user-generator', passportConf.isAuthenticated, userGenerator.view);
+  app.post('/dev/user-generator', passportConf.isAuthenticated, userGenerator.generate);
+
+  var devUsers = require('./app/controllers/dev/users');
+  app.get('/dev/users/list', passportConf.isAuthenticated, devUsers.list);
+  app.post('/dev/users/changeFriendship/:userId', passportConf.isAuthenticated, devUsers.changeFriendship);
+
+  app.get('/dev/api', function(req, res, next) {
+    res.render('dev/api', { title: 'MeetUA API' });
   });
-  app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticated, devApi.postNotifyParticipantOnJoin);
-  app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticated, devApi.postNotifyParticipantOnEdit);
-  app.post('/api/meetua/notify/user-forgot-password', passportConf.isAuthenticated, devApi.postNotifyUserForgotPassword);
-  app.post('/api/meetua/notify/user-password-reset', passportConf.isAuthenticated, devApi.postNotifyUserPasswordReset);
-  app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticated, devApi.postNotifyAuthorOnCreate);
-  app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticated, devApi.postNotifyComingSoonEvent);
-  app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticated, devApi.postNotifyOnCancel);
+
+  var devNotifs = require('./app/controllers/dev/notifications');
+  app.post('/api/meetua/notify/participant-on-join', passportConf.isAuthenticated, devNotifs.postNotifyParticipantOnJoin);
+  app.post('/api/meetua/notify/participant-on-edit', passportConf.isAuthenticated, devNotifs.postNotifyParticipantOnEdit);
+  app.post('/api/meetua/notify/user-forgot-password', passportConf.isAuthenticated, devNotifs.postNotifyUserForgotPassword);
+  app.post('/api/meetua/notify/user-password-reset', passportConf.isAuthenticated, devNotifs.postNotifyUserPasswordReset);
+  app.post('/api/meetua/notify/author-on-create', passportConf.isAuthenticated, devNotifs.postNotifyAuthorOnCreate);
+  app.post('/api/meetua/notify/coming-soon', passportConf.isAuthenticated, devNotifs.postNotifyComingSoonEvent);
+  app.post('/api/meetua/notify/on-cancel', passportConf.isAuthenticated, devNotifs.postNotifyOnCancel);
 }
 
 /**
@@ -220,43 +234,22 @@ if (appConfig.IS_DEVELOPMENT) {
 app.get('/auth/success', function(req, res) {
   res.render('after-auth');
 });
+var fbAuthSuccessHandler = function(req, res) {
+  apiController.updateFbFriends(req.user);
+  commonAuthSuccessHandler(req, res);
+};
+var commonAuthSuccessHandler = function(req, res) {
+  var referer = req.headers.referer;
+  if (referer && referer.indexOf('/account') !== -1) {
+    res.redirect(referer); // link account request
+  } else {
+    res.redirect('/auth/success');
+  }
+};
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/auth/success', failureRedirect: '/login' }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), fbAuthSuccessHandler);
 app.get('/auth/vkontakte', passport.authenticate('vkontakte', { scope: ['email'] }));
-app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte', { successRedirect: '/auth/success', failureRedirect: '/login' }));
-app.get('/auth/github', passport.authenticate('github'));
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/linkedin', passport.authenticate('linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
-
-/**
- * OAuth routes for API examples that require authorization.
- */
-
-app.get('/auth/foursquare', passport.authorize('foursquare'));
-app.get('/auth/foursquare/callback', passport.authorize('foursquare', { failureRedirect: '/api' }), function(req, res) {
-  res.redirect('/api/foursquare');
-});
-app.get('/auth/tumblr', passport.authorize('tumblr'));
-app.get('/auth/tumblr/callback', passport.authorize('tumblr', { failureRedirect: '/api' }), function(req, res) {
-  res.redirect('/api/tumblr');
-});
-app.get('/auth/venmo', passport.authorize('venmo', { scope: 'make_payments access_profile access_balance access_email access_phone' }));
-app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '/api' }), function(req, res) {
-  res.redirect('/api/venmo');
-});
+app.get('/auth/vkontakte/callback', passport.authenticate('vkontakte', { failureRedirect: '/' }), commonAuthSuccessHandler);
 
 /**
  * error trigger(development mode only)
@@ -270,24 +263,23 @@ if (appConfig.IS_DEVELOPMENT) {
  * Start Express server.
  */
 
-app.listen(app.get('port'), function() {
-  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
+app.listen(appConfig.port, function() {
+  console.log("✔ Express server listening on port %d in %s mode", appConfig.port, app.get('env'));
 });
 
 /**
  * Mongoose configuration.
  */
 
-mongoose.connect(app.get('mongodb-url'));
+console.log('mongo connect to ' + secrets.db);
+mongoose.connect(secrets.db);
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
 
-if (!openShiftApp.isOpenShiftEnv()) {
-  // DB preloading
-  eventStore.dbPreload();
-  userController.dbPreload();
-}
+// DB preloading
+eventStore.dbPreload();
+userController.dbPreload();
 
 notifyService.startCronJobs();
 

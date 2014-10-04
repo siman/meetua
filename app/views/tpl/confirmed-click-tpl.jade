@@ -1,0 +1,10 @@
+.modal(tabindex='-1', role='dialog')
+  .modal-dialog
+    .modal-content
+      .modal-header(ng-show='title')
+        button.close(type='button', ng-click='$hide()') ×
+        h4.modal-title(ng-bind='title')
+      .modal-body {{confirmation}}
+      .modal-footer
+        button.btn.btn-primary(ng-click='confirm()', type='button') {{yesText || 'Да'}}
+        button.btn.btn-default(ng-click='$hide()', type='button') {{noText || 'Нет'}}

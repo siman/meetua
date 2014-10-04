@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /event/
+Allow: /sitemap.xml
+Allow: /feedback
+Disallow: /dev/
+Disallow: /api/

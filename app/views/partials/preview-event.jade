@@ -1,0 +1,22 @@
+.row.preview_event_row(ng-init='cityLength = event.name.length > 20 ? 20 : 40')
+  div.event_logo_box
+    div(ng-if="!event.logoUrl")
+      div.no_image
+    div(ng-if="event.logoUrl")
+      dimensioned-img(ng-src='event.logoUrl', width='120')
+
+  div
+    h4.event_title: a(ng-href='{{event.url}}', title='{{event.name}}') {{event.name|truncate:30}}
+    div.event_date(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
+    div.text-muted(title='{{event.place.city}}') {{event.place.city|truncate:cityLength}}
+    div(style="margin-bottom: 10px;")
+
+  div.event_statistics(ng-if='entry.friends.length')
+    .text-muted Друзья идут:
+    img(ng-repeat='friend in entry.friends', profile-picture-src='friend', size='40', width='40', height='40', ng-attr-title='{{friend.profile.name}}')
+  div.event_statistics2
+    div(ng-show="event.participantCount")
+      span.event_label Участников:
+      span {{event.participantCount}}
+    div(ng-show="!event.participantCount")
+      span.event_label Нет участников

@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  .page-header: h1 #{title}
+  .col-sm-8.col-sm-offset-2
+    form(method='POST', action='/reset/'+token)
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        label(for='password') Новый пароль
+        input.form-control(type='password', name='password', value='', placeholder='Новый пароль', autofocus=true)
+      .form-group
+        label(for='confirm') Новый пароль ещё раз
+        input.form-control(type='password', name='confirm', value='', placeholder='Новый пароль ещё раз')
+      .form-group
+        button.btn.btn-primary.btn-reset(type='submit')
+          i.fa.fa-keyboard-o
+          | Изменить пароль

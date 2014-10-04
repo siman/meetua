@@ -7,3 +7,8 @@ https://bitbucket.org/meetua/meetua/issues?status=new&status=open&status=on+hold
 ## PROD (Digital Ocean)
 
 http://meetua.com
+
+
+## STAGING (Digital Ocean)
+
+http://meetua.com:3001
