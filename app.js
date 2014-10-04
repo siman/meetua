@@ -67,6 +67,7 @@ app.use(connectAssets({
 }));
 app.use(express.compress());
 app.use(express.logger('dev'));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: month }));
 app.use(express.cookieParser());
 app.use(express.json());
 app.use(express.urlencoded());
@@ -98,7 +99,6 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(flash());
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: month }));
 
 // Set of next headers should be after middleware for static serving
 // because we want cache for static assets but not for dynamic pages
