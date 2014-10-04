@@ -1,5 +1,6 @@
 'use strict';
 
+var logger = require('../app/controllers/util/logger')(__filename);
 var _ = require('underscore');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -15,24 +16,18 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(deserializeUser);
 
 function deserializeUser(id, done) {
-  User.findById(id).populate('profile.friends').exec(done);
-}
-/**
- * Sign in using Email and Password.
- */
-
-passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
-  User.findOne({ email: email }, function(err, user) {
-    if (!user) return done(null, false, { message: 'Email ' + email + ' not found'});
-    user.comparePassword(password, function(err, isMatch) {
-      if (isMatch) {
-        return done(null, user);
-      } else {
-        return done(null, false, { message: 'Invalid email or password.' });
-      }
-    });
+  User.findById(id).populate('profile.friends').exec(function(err, user) {
+    var logMsg = 'Auth callback. '; // for URL [' + req.url + ']. ';
+    if (!user) {
+      // Not logged-in.
+      logger.debug(logMsg + 'User not found by ID [' + id + ']');
+    } else {
+      // Logged in.
+      logger.debug(logMsg + 'Deserialized user [' + user.email + ']');
+    }
+    done(err, user)
   });
-}));
+}
 
 /**
  * OAuth Strategy Overview
@@ -49,17 +44,26 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
  *       - Else create a new account.
  */
 
-function suggestEmailForNotifications(user, email1, email2) {
-  if (!user.emailNotifications.email) {
-    user.emailNotifications.email = email1 || email2;
-  }
-}
+/**
+ * Sign in using Email and Password.
+ */
+var localAuthImpl = new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
+  User.findOne({ email: email }, function(err, user) {
+    if (!user) return done(null, false, { message: 'Email ' + email + ' not found'});
+    user.comparePassword(password, function(err, isMatch) {
+      if (isMatch) {
+        return done(null, user);
+      } else {
+        return done(null, false, { message: 'Invalid email or password.' });
+      }
+    });
+  });
+});
 
 /**
  * Sign in with Facebook.
  */
-
-passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, refreshToken, profile, done) {
+var fbAuthImpl = new FacebookStrategy(secrets.facebook, function(req, accessToken, refreshToken, profile, done) {
   if (req.user) {
     var query = profile.email ? { $or: [{ facebook: profile.id }, { email: profile.email }] } : { facebook: profile.id };
     User.findOne(query, function(err, existingUser) {
@@ -106,15 +110,13 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
       });
     });
   }
-}));
+});
 
 /**
- * Sign in with vk
+ * Sign in with VKontakte
  */
-
-passport.use(new VKontakteStrategy(secrets.vk,
+var vkAuthImpl = new VKontakteStrategy(secrets.vk,
   function(req, accessToken, refreshToken, profile, done) {
-
     if (req.user) {
       User.findOne({ vkontakte: profile.id }, function(err, existingUser) {
         if (existingUser) {
@@ -150,14 +152,22 @@ passport.use(new VKontakteStrategy(secrets.vk,
         });
       });
     }
-
   }
-));
+);
+
+function suggestEmailForNotifications(user, email1, email2) {
+  if (!user.emailNotifications.email) {
+    user.emailNotifications.email = email1 || email2;
+  }
+}
+
+passport.use(localAuthImpl);
+passport.use(fbAuthImpl);
+passport.use(vkAuthImpl);
 
 /**
  * Login Required middleware.
  */
-
 exports.isAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.send(401);
@@ -166,7 +176,6 @@ exports.isAuthenticated = function(req, res, next) {
 /**
  * Authorization Required middleware.
  */
-
 exports.isAuthorized = function(req, res, next) {
   var provider = req.path.split('/').slice(-1)[0];
   if (_.findWhere(req.user.tokens, { kind: provider })) next();
