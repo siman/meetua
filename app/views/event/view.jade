@@ -132,9 +132,7 @@ block content
                             span &nbsp;
                             span(ng-if='!isMe && participant.guests > 0', class="badge") +{{participant.guests}}
                           .col-xs-12(ng-if='isMe')
-                            // hello gavnocode, first participate to 'unparticipate', and second to 'participate' and to add some friends
-                            a.text-muted.pointer(data-toggle='modal', data-target='.guest-number-modal',
-                              ng-click='isPart() && participate(0)')
+                            a.text-muted.pointer(data-toggle='modal', data-target='.guest-number-modal')
                               |Возьму с собой друзей &nbsp;
                               span(class="badge", ng-if='participant.guests > 0') +{{participant.guests}}
 

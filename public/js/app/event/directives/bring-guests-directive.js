@@ -9,7 +9,7 @@ angular.module('myApp')
         var res = "";
         for (var i = 0; i <= tAttrs.maxGuests; i++) {
           var txt = (i == 0 ? "Только я" : "+" + i);
-          res = res + "<button type='button' data-dismiss='modal' ng-click='participate("+i+")" +
+          res = res + "<button type='button' data-dismiss='modal' ng-click='bringGuests("+i+")" +
             "' class='btn btn-default'>" + txt + "</button>"
         }
         return '<span>' + res + '</span>';

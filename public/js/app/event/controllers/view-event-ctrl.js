@@ -71,11 +71,11 @@ angular.module('myApp').controller('ViewEventCtrl',
       }, $scope.app.ErrorService.handleResponse);
     };
 
-    $scope.participate = function(guestNumber) {
+    $scope.participate = function() {
       var $partBtn = $('#partBtn');
       $partBtn.attr('disabled', 'disabled');
 
-      var params = {eventId: $scope.event._id, act: $scope.isPart() ? 'remove' : 'add', guests: guestNumber};
+      var params = {eventId: $scope.event._id, act: $scope.isPart() ? 'remove' : 'add'};
       $http.post(util.apiUrl('/events/participation'), params).
         success(function(data, status, headers, config) {
           $partBtn.removeAttr('disabled');  // FIXME: to Siman: controller shouldn't modify DOM. It's directive's responsibility
@@ -85,6 +85,19 @@ angular.module('myApp').controller('ViewEventCtrl',
         }).
         error(function() {
           $partBtn.removeAttr('disabled');
+        });
+    };
+
+    $scope.bringGuests = function(guestNumber) {
+      var params = {eventId: $scope.event._id, guests: guestNumber};
+      $http.post(util.apiUrl('/events/addGuests'), params).
+        success(function(data, status, headers, config) {
+          EventsResource.get({eventId: $scope.event._id}, function(res) {
+            setCurrentEvent(res.event);
+          });
+        }).
+        error(function() {
+          console.log("bring guests error")
         });
     };
   }]);
