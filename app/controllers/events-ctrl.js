@@ -6,6 +6,7 @@
 var eventsService = require('../services/events');
 var _ = require('lodash');
 var Event = require('../models/Event');
+var utils = require('./util/utils');
 
 /**
  * Keep our controllers 'thin'.
@@ -25,10 +26,10 @@ module.exports = {
       isCreate: _.isUndefined(req.body._id),
       currentUser: req.user,
       flashFn: req.flash.bind(req) };
-    eventsService.save(args, returnJson(res));
+    eventsService.save(args, utils.sendJson(res));
   },
   cancel: function(req, res) {
-    eventsService.cancel(req.user, req.eventById, returnJson(res));
+    eventsService.cancel(req.user, req.eventById, utils.sendJson(res));
   },
   getEvent: function(req, res) {
     res.json({event: req.eventById});
@@ -41,12 +42,6 @@ module.exports = {
       canceled: req.query.canceled,
       passed: req.query.passed,
       limit: req.query.limit};
-    eventsService.find(args, returnJson(res));
+    eventsService.find(args, utils.sendJson(res));
   }
 };
-
-function returnJson(res) {
-  return function doReturn(status, data) {
-    res.json(status, data);
-  }
-}

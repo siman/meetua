@@ -13,6 +13,7 @@ var rand = require('../util/rand');
 var Image = require('../../../app/models/Image');
 var Event = require('../../../app/models/Event');
 var saveEvent = require('../../services/events').save;
+var imagesService = require('../../services/images');
 
 var sizes = ['small', 'medium', 'large'];
 
@@ -25,41 +26,63 @@ module.exports.generate = function(req, res, next) {
   var params = req.body;
   logger.debug('Gen params', params);
 
-  var fns = [];
-  if (params.cleanDatabase) {
-    fns.push(cleanDatabase);
-  }
-  fns.push(callGenerate);
-  async.waterfall(fns, end);
-
   function cleanDatabase(cb) {
-    Event.find({isGenerated: true}, function(err, allEvents) {
-      if (err) return cb(err);
-
-      allEvents.forEach(function(event) {
-        event.remove({}, function(err) {
-          if (err) return cb(err);
-          logger.debug('Event', event.name, 'is removed');
-        });
+    logger.debug('clean database');
+    function findGenerated(next) {
+      logger.debug('find generated events');
+      Event.find({isGenerated: true}, next);
+    }
+    function rmSingleEventImages(event, next) {
+      async.each(event.images, function(image, next) {
+        if (image) {
+          logger.debug('rm event image', image._id);
+          imagesService.remove({eventId: event._id, imageId: image._id, userId: req.user._id}, next);
+        } else next();
+      }, next);
+    }
+    function removeSingleEvent(event, next) {
+      logger.debug('remove event', event._id);
+      event.remove(function(err) {
+        if (!err) logger.debug('Event', event.name, 'is removed');
+        else logger.error('Failed to remove event', err);
+        return next(err);
       });
-      cb();
-    });
+    }
+    function rm(events, next) {
+      async.series([function(next) {
+        logger.debug('rm events images');
+        async.each(events, rmSingleEventImages, next);
+      }, function(next) {
+        logger.debug('rm events');
+        async.each(events, removeSingleEvent, next);
+      }], next);
+    }
+    async.waterfall([findGenerated, rm], cb);
   }
 
   function callGenerate(cb) {
+    logger.debug('generating events');
     generateEvents({params: params, currentUser: req.user}, function(err, events) {
       if (err) {
         logger.error('Failed to generate events', err);
         return cb(err);
       }
+      logger.debug('Generated events', events.length, events);
       cb(null, events);
     });
   }
 
-  function end(err, events) {
+  function end(err, results) {
     if (err) return res.json(500, err);
-    res.json(200, events);
+    res.json(200, results.callGenerate);
   }
+
+  var fns = {};
+  if (params.cleanDatabase) {
+    fns.cleanDatabase = cleanDatabase;
+  }
+  fns.callGenerate = callGenerate;
+  async.series(fns, end);
 };
 
 /**
@@ -118,7 +141,7 @@ function generateEvent(args, cb) {
   async.waterfall([
     function uploadImage(cb) {
       if (image) {
-        utils.copyFile(image.path, appConfig.EVENT_IMG_DIR, cb);
+        utils.copyFile(image.path, appConfig.UPLOAD_DIR, cb);
       } else {
         cb();
       }
@@ -131,6 +154,12 @@ function generateEvent(args, cb) {
     // TODO: Random dates: past, current, future.
     var startMoment = rand.randomFutureMoment();
     var endMoment = rand.randomEndMoment(startMoment);
+
+    var images = [];
+    if (hasLogo) {
+      var logoImage = Image.newLogoFromPath(imagePath);
+      images.push(logoImage.toObject()); // needs plain image, since it adds custom fields for processing image
+    }
 
     var eventData = {
       activity: donor.activity,
@@ -145,7 +174,7 @@ function generateEvent(args, cb) {
       },
 //        canceledOn: undefined, // TODO
       participants: [], // TODO
-      images: [] // No images at this point. We will add logo explicitly later
+      images: images
     };
 
     var saveArgs = { params: eventData, isCreate: true, currentUser: args.currentUser,
@@ -153,13 +182,7 @@ function generateEvent(args, cb) {
         logger.debug('Flash ', flashKey + '=' + flashValue);
       },
       beforeSaveEventFn: function(newEvent) {
-        logger.debug('beforeSaveEventFn: hasLogo', hasLogo);
-        if (hasLogo) {
-          var logoImage = Image.newLogoFromPath(imagePath);
-          logger.debug('beforeSaveEventFn: logoImage', logoImage);
-          newEvent.isGenerated = true;
-          newEvent.images.push(logoImage);
-        }
+        newEvent.isGenerated = true;
       }
     };
     saveEvent(saveArgs, function(resCode, resData) {

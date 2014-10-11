@@ -51,13 +51,18 @@ eventSchema.virtual('googleMapsUrl').get(function() {
 });
 
 eventSchema.virtual('logoUrl').get(function() {
-  var logo = _.find(this.images, function(img) { return img.isLogo; });
-  if (logo) {
-    return logo.url;
-  } else {
-    return null;
-  }
+  var logo = findLogo(this.images);
+  return logo ? logo.url : null;
 });
+
+eventSchema.virtual('logoThumbnailUrl').get(function() {
+  var logo = findLogo(this.images);
+  return logo ? logo.thumbnailUrl : null;
+});
+
+function findLogo(images) {
+  return _.find(images, function(img) { return img.isLogo; });
+}
 
 eventSchema.virtual('participantCount').get(function() {
   var guestCount = _.reduce(this.participants, function(acc, part) { return acc + part.guests; }, 0);

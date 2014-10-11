@@ -36,10 +36,10 @@ block content
       div#view_event_page
         .col-md-2
           div#view_event_logo_box.pull-right(style="text-align: right")
-            if (!event.logoUrl)
+            if (!event.logoThumbnailUrl)
               div.no_image
             else
-              dimensioned-img(ng-src='event.logoUrl', width='240')
+              dimensioned-img(ng-src='event.logoThumbnailUrl', width='240')
 
         .col-md-7
           div: h1 #{event.name}

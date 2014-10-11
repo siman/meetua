@@ -3,6 +3,7 @@
 var path = require('path');
 var fs = require('fs-extra');
 var _ = require('underscore');
+var lwip = require('lwip');
 var config = require('../../../config/app-config');
 var UPLOAD_DIR = config.UPLOAD_DIR;
 var EVENT_IMG_DIR = config.EVENT_IMG_DIR;
@@ -72,7 +73,7 @@ module.exports = function(args, cb) {
       if (images.length > 0 && logoCount != 1) {
         var errorMsg = 'Invalid logo count ' + logoCount;
         logger.debug(errorMsg);
-        return cb(400, {error: errorMsg});
+        return cb(400, new Error(errorMsg));
       }
       next();
     });
@@ -82,7 +83,7 @@ module.exports = function(args, cb) {
       logger.debug('doSave');
       var saveEventParams = {event: event, imagesWithId: imagesWithId, currentUser: currentUser,
         isCreate: isCreate, params: params, flashFn: flashFn, beforeSaveEventFn: beforeSaveEventFn};
-      async.map(newImages, copyImage, buildAndSaveEvent(saveEventParams, cb));
+      async.map(newImages, processImage, buildAndSaveEvent(saveEventParams, cb));
     };
   }
 };
@@ -155,7 +156,7 @@ function buildAndSaveEvent(args, cb) {
       return function(err) {
         if (err) {
           logger.error("error while saving event", err);
-          return cb(400, {error: err});
+          return cb(400, err);
         }
 
         var onNotifyComplete = function(err, resp) {
@@ -178,27 +179,81 @@ function buildAndSaveEvent(args, cb) {
     }
   };
 }
+function processImage(image, next) {
+  logger.debug('process image', image);
+  function copy(next) {
+    copyImage(image, next);
+  }
+  function renameOriginal(image, next) {
+    utils.renamePrefix(image.path, 'original-', function(err, newPath) {
+      logger.debug('Renamed image', image.path, 'to', newPath);
+      image.path = newPath;
+      image.name = path.basename(newPath);
+      next(err, image);
+    });
+  }
+  function createThumbnail(image, next) {
+    logger.debug('create thumbnail for image', image.path, image);
+    function openImage(next) {
+      logger.debug('open lwip image', image.path);
+      var p = image.path.toString();
+      lwip.open(p, next);
+    }
+    function cover(img, next) {
+      var targetWidth = config.eventThumbnail.width;
+      var targetHeight = config.eventThumbnail.height;
+      var coveredDimensions = utils.dimensionsToCover(img.width(), img.height(), targetWidth, targetHeight);
+      logger.debug('original dimensions', img.width(), 'x', img.height());
+      logger.debug('resize to', coveredDimensions.width, 'x', coveredDimensions.height);
+      img.resize(coveredDimensions.width, coveredDimensions.height, function(err, scaledImg) {
+        if (err) return next(err);
+        logger.debug('crop to', targetWidth, 'x', targetHeight);
+        scaledImg.crop(targetWidth, targetHeight, next);
+      });
+    }
+
+  function save(img, next) {
+      logger.debug('save thumbnail for', image.path);
+      var thumbnailPath = utils.prefixFileName(image.path, 'thumbnail-');
+      img.writeFile(thumbnailPath, function(err) {
+        logger.debug('saved thumbnail to', thumbnailPath, 'for', image.path);
+        next(err, thumbnailPath);
+      });
+    }
+    async.waterfall([openImage, cover, save], next);
+  }
+  function transform(image, next) {
+    async.waterfall([
+      function(next) { createThumbnail(image, next) },
+      function(thumbnailPath, next) {
+        renameOriginal(image, function(err, renamedOriginal) {
+          renamedOriginal.thumbnailName = path.basename(thumbnailPath);
+          next(err, renamedOriginal);
+        });
+      }
+    ], next);
+  }
+  async.waterfall([copy, transform], next);
+}
+
 
 function copyImage(image, next) {
-  logger.debug('copy image ', image);
+  logger.debug('copy image', image);
 
-  // Siman: Image uploading works for me if comment next line. Does it work on Linux as well?
-//  var imagePath = path.join('/', image.name); // removes any '..'
   var imagePath = path.join(UPLOAD_DIR, image.name);
 
   fs.exists(imagePath, function (exists) {
     logger.debug('Image ', imagePath, 'exists ', exists);
     logger.debug('uploadDir ', UPLOAD_DIR);
-    if (exists && imagePath.indexOf(UPLOAD_DIR) == 0) {
-      maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function (err) {
-        if (err) return next(err);
-        utils.moveFile(imagePath, EVENT_IMG_DIR, function (err, newPath) {
-          next(err, _.extend(image, {name: path.basename(newPath)}));
-        });
+    var starts = imagePath.indexOf(UPLOAD_DIR) == 0;
+    if (!exists) return next(new Error('Image ' + image.name + ' doesn\'t exist in ' + UPLOAD_DIR));
+    if (!starts) return next(new Error('Image name is invalid'));
+    maybeCreateImgDir(EVENT_IMG_DIR, config.PERSISTENT_DATA_DIR, function (err) {
+      if (err) return next(err);
+      utils.moveFile(imagePath, EVENT_IMG_DIR, function (err, newPath) {
+        next(err, _.extend(image, {name: path.basename(newPath), path: newPath}));
       });
-    } else {
-      next(new Error('Image name is invalid'));
-    }
+    });
   });
 }
 

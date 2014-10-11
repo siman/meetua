@@ -117,3 +117,78 @@ module.exports.copyFile = function(srcPath, destDir, next) {
       });
     });
 };
+
+/**
+ * Prepend prefix to file name
+ * @param filePath file path to modify
+ * @param prefix prefix to add to the file name
+ * @return newPath
+ */
+module.exports.prefixFileName = function(filePath, prefix) {
+  var newName = prefix + path.basename(filePath);
+  var newPath = path.join(path.dirname(filePath), newName);
+  return newPath;
+};
+
+/**
+ * Rename file prepending the prefix to it's name, taken from path.basename
+ * @param filePath - path to rename
+ * @param prefix - prefix to prepend to the file name
+ * @param next - callback(error, newPath)
+ */
+module.exports.renamePrefix = function(filePath, prefix, next) {
+  var newPath = module.exports.prefixFileName(filePath, prefix);
+  fs.rename(filePath, newPath, function(err) {
+    next(err, newPath);
+  });
+};
+
+/**
+ * @deprecated
+ */
+module.exports.sendJson = function sendJson(res) {
+  return function doReturn(status, data) {
+    res.json(status, data);
+  }
+};
+
+module.exports.sendJson2 = function sendJson(res) {
+  return function doReturn(err, data) {
+    var statusCode = !err ? 200 : err.statusCode ? err.statusCode : 500; // unexpected error, came from third party code
+    res.json(statusCode, data);
+  }
+};
+
+/**
+ * Create error with http status code and msg
+ * @param msg - error message
+ * @param status - http status code
+ */
+module.exports.errorWithStatus = function(msg, status) {
+  var err = new Error(msg);
+  err.statusCode = status;
+  return err;
+};
+
+module.exports.scaleToCover = function dimensionsToCover(sourceWidth, sourceHeight, targetWidth, targetHeight) {
+  var xscale = targetWidth / sourceWidth;
+  var yscale = targetHeight / sourceHeight;
+  return {xscale: xscale, yscale: yscale};
+};
+/**
+ * Calculate image dimensions to perform cover transformation
+ * @param targetWidth
+ * @param targetHeight
+ * @param sourceWidth
+ * @param sourceHeight
+ * return {width, height}
+ */
+module.exports.dimensionsToCover = function dimensionsToCover(sourceWidth, sourceHeight, targetWidth, targetHeight) {
+  var scales = module.exports.scaleToCover(sourceWidth, sourceHeight, targetWidth, targetHeight);
+
+  if (scales.xscale > scales.yscale) {
+    return {width: (sourceWidth * scales.xscale), height: (sourceHeight * scales.xscale)};
+  } else {
+    return {width: (sourceWidth * scales.yscale), height: (sourceHeight * scales.yscale)};
+  }
+};

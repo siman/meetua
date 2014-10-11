@@ -8,11 +8,16 @@ var imageSchema = new mongoose.Schema({
   originalName: { type: String, required: true },
   type: { type: String, required: true },
   name: { type: String, required: true },
+  thumbnailName: { type: String, required: true},
   isLogo: { type: Boolean, default: false }
 });
 
 imageSchema.virtual('url').get(function() {
   return '/upload/' + this.name;
+});
+
+imageSchema.virtual('thumbnailUrl').get(function() {
+  return '/upload/' + this.thumbnailName;
 });
 
 imageSchema.statics.newLogoFromPath = function(imagePublicPath) {

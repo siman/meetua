@@ -2,8 +2,10 @@
 
 var appConfig = require('../../config/app-config'); // patches mongoose for every test
 var mongoose = require('mongoose');
-var _ = require('underscore');
+var _ = require('lodash');
+var os = require('os');
 var tmp = require('tmp');
+tmp.setGracefulCleanup();
 var fs = require('fs-extra');
 var path = require('path');
 var util = require('../controllers/util/utils');
@@ -59,35 +61,47 @@ exports.createTestImage = function(imageOpts, fileOpts, cb) {
     }
   }
 
-  tmp.file(fileOpts || {}, function(err, filePath, fd) {
-    var content = new Buffer('image content');
-    var image = _.extend({
-      name: path.basename(filePath),
-      path: filePath, // for tests purposes
-      type: 'image/jpg',
-      originalName: 'my-image.jpg',
-      isLogo: false
-    }, imageOpts || {});
-    fs.writeSync(fd, content, 0, content.length, 0);
-    cb(image);
+  var ext = fileOpts && 'postfix' in fileOpts ? fileOpts.postfix : '.png';
+  tmp.tmpName({template: path.join(appConfig.UPLOAD_DIR, 'tmp-XXXXXX' + ext)}, function(err, filePath) {
+    if (err) return cb(err);
+    var src = path.join(process.cwd(), 'app/test/resources/sample.png');
+    fs.copy(src, filePath, function(err) {
+      if (err) return cb(err);
+      var image = _.extend({
+        name: path.basename(filePath),
+        path: filePath, // for tests purposes
+        type: 'image/png', // currently doesn't make so much sense so can be any type
+        originalName: 'my-image' + ext,
+        isLogo: false
+      }, imageOpts || {});
+      cb(null, image);
+    });
   });
 };
 
 /**
  * Shortcut for createTestImage()
  */
-exports.createImage = function(next) {
-  exports.createTestImage({isLogo: false}, function(image) {
-    next(null, image);
+exports.createImage = function(fileOpts, next) {
+  if (!next) {
+    next = fileOpts;
+    fileOpts = null;
+  }
+  exports.createTestImage({isLogo: false}, fileOpts, function(err, image) {
+    next(err, image);
   });
 };
 
 /**
  * Shortcut for createTestImage()
  */
-exports.createLogoImage = function(next) {
-  exports.createTestImage({isLogo: true}, function(image) {
-    next(null, image);
+exports.createLogoImage = function(fileOpts, next) {
+  if (!next) {
+    next = fileOpts;
+    fileOpts = null;
+  }
+  exports.createTestImage({isLogo: true}, fileOpts, function(err, image) {
+    next(err, image);
   });
 };
 

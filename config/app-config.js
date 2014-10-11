@@ -7,6 +7,7 @@ var moment = require('moment');
 moment.lang('ru');
 
 require('./patch-mongoose');
+require('./patch-error');
 
 var DOMAIN = 'localhost';
 var PORT = 3000;
@@ -31,6 +32,11 @@ var config = {
   UPLOAD_DIR: path.join(os.tmpdir(), 'meetua', 'upload'),
   LOG_DIR_NAME: 'logs',
   LOG_FILE_NAME: 'service.log',
+
+  eventThumbnail: {
+    width: 400,
+    height: 400
+  },
 
   notification: {
     MANDRILL_KEY: 'iiiPHm_fhC7JrK4vgExm0A',
