@@ -44,6 +44,19 @@ mixin eventFields(isCreate)
       input#endTime.form-control(type='text', name='endTime', ng-model='event.end.dateTime', bs-timepicker,
         data-time-format='HH:mm', ng-disabled=endDateDisabled)
     .col-sm-1
+  .form-group
+    label(class='col-sm-2 control-label', for='price')
+      | Стоимость участия
+    .col-sm-4
+      .form-inline
+        .form-group
+          .col-sm-2
+            select#currency.form-control(ng-init='event.price.currency = "UAH"', ng-model='event.price.currency')
+              option UAH
+              option USD
+        .form-group(ng-class="{'has-error' : eventForm.price.$invalid && submitted}")
+          input#price.form-control.col-sm-4(type='number', name='price', ng-model='event.price.amount', min='0')
+    .col-sm-1
   .form-group(ng-class="{'has-error' : eventForm.description.$invalid && submitted}")
     label(class='col-sm-2 control-label', for='description') Описание *
     .col-sm-10

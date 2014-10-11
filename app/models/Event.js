@@ -41,6 +41,10 @@ var eventSchema = new mongoose.Schema({
   end: {
     dateTime: Date
   },
+  price: {
+    amount: Number,
+    currency: String
+  },
   canceledOn: { type: Date },
   images: [Image.schema] // default order, logo first TODO
 });
