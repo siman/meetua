@@ -145,7 +145,51 @@ html, body {
 // Home page
 // -------------------------
 
-.border_radius(@radius: 5px) {
+#home_event_filter {
+  background-color: #EAEAEA;
+//  color: #00b3ee;
+  margin-top: 30px;
+  padding: 5px 15px;
+  overflow-y: auto;
+  border-radius: @border-radius-large;
+
+  .group_title {
+    color: #707070;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top: 1px solid #CCC;
+    padding: 10px 0;
+    margin-top: 15px;
+
+    &.first {
+      border-top: 0;
+      margin-top: 0;
+    }
+  }
+
+  .filter_item {
+    padding: 3px 10px;
+    cursor: pointer;
+    border: 1px solid #EAEAEA;
+
+    &.selected {
+      color: @link-color;
+      background-color: #DEDEDE;
+      border-radius: 4px;
+    }
+
+    &:hover {
+      color: @link-hover-color;
+    }
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.border_radius(@radius: @border-radius-large) {
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
   border-radius: @radius;
@@ -277,7 +321,7 @@ html, body {
   margin-right: -15px;
   margin-bottom: 15px;
   border: 1px solid #fff;
-  border-radius: 5px;
+  border-radius: @border-radius-large;
   background-color: #FFF;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 
@@ -443,7 +487,7 @@ label[disabled] {
 .top30 { margin-top:30px; }
 
 .highlight {
-  font-size: @font-size-h3;
+  font-size: @font-size-h4;
   font-weight: @headings-font-weight;
   line-height: @line-height-large;
 }

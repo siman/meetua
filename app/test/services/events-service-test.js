@@ -16,8 +16,8 @@ describe('events-service', function() {
       beforeEach(function() {
         tk.reset(); // drop date freezing
       });
-      it('act', function() {
-        mapAndExpect({act: 'aa'}, {filter: {activity: 'aa'}});
+      it('activities', function() {
+        mapAndExpect({activities: ['aa']}, {filter: {activity: 'aa'}});
       });
       it('passed', function() {
         var now = moment('2014-09-20');
@@ -52,7 +52,7 @@ describe('events-service', function() {
     });
     describe('should not fail', function(done) {
       var tests = [
-        {name: 'act', args: {act: 'aa'}, status: 200},
+        {name: 'activities', args: {activities: ['aa']}, status: 200},
         {name: 'passed true', args: {passed: true}, status: 200},
         {name: 'passed false', args: {passed: false}, status: 200},
         {name: 'canceled true', args: {canceled: true}, status: 200},

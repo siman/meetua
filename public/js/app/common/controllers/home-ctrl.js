@@ -4,7 +4,7 @@ angular.module('myApp').controller('HomeCtrl',
   ['$scope', '$http', 'util', 'activities', 'ErrorService', '$alert', '$q', 'EventsService', 'EVENT_LIMIT', 'EventsResource',
   function ($scope, $http, util, activities, ErrorService, $alert, $q, EventsService, EVENT_LIMIT, EventsResource) {
     $scope.data = {};
-    $scope.activities = activities;
+    $scope.activities = ([{name: 'all', textOver: 'Все', selected: true}]).concat(activities);
     $scope.foundEvents = undefined; // []. undefined is for proper UI state on page load.
 
     $scope.$watch('currentUser', function(currentUser) {
@@ -14,7 +14,7 @@ angular.module('myApp').controller('HomeCtrl',
       // load preferred activities, keep logic on the client, because it's not critical now and keeps our REST more generic
       var preferredActivities = currentUser.profile.preferredActivities;
       var fetchPrefEvents = _.map(preferredActivities, function(activity) {
-        return EventsResource.query({act: activity, limit: EVENT_LIMIT}).$promise;
+        return EventsResource.query({activities: [activity], limit: EVENT_LIMIT}).$promise;
       });
       $q.all(fetchPrefEvents).then(function(ress) {
         var events = _.flatten(_.map(ress, function(res) {return res}));
@@ -30,16 +30,18 @@ angular.module('myApp').controller('HomeCtrl',
     });
 
 
-    $scope.activityByName = function(actName) {
-      return _.findWhere(activities, {name: actName});
-    };
+    $scope.activityByName = findActivityByName;
+
+    function findActivityByName(actName) {
+      return _.findWhere($scope.activities, {name: actName});
+    }
 
     $scope.isSubscribedOnSelectedActivity = function() {
-      return $scope.currentUser && _.contains($scope.currentUser.profile.preferredActivities, $scope.data.selectedAct);
+      return $scope.currentUser && _.contains($scope.currentUser.profile.preferredActivities, $scope.data.selectedActivity);
     };
 
     $scope.toggleSubscriptionOnSelectedActivity = function() {
-      var selected = $scope.data.selectedAct;
+      var selected = $scope.data.selectedActivity;
       var preferred = $scope.currentUser.profile.preferredActivities;
       var wasSubscribed = _.contains(preferred, selected);
       if (wasSubscribed) {
@@ -54,19 +56,47 @@ angular.module('myApp').controller('HomeCtrl',
       });
     };
 
-    $scope.$watch('data.selectedAct', function(newAct) {
-      console.log("actName", newAct);
-      findEvents(newAct);
+    $scope.$watch('data.selectedActivity', function(newAct) {
+      if (newAct) {
+        console.log("actName", newAct);
+        findEvents([newAct]);
+      }
     });
+
+    $scope.toggleActivityFilter = function(activity) {
+      var act = findActivityByName(activity.name);
+      var selectedActs = _.where($scope.activities, {selected: true});
+      if (act.name === 'all') {
+        // Unselected other filter if user selected to show events of 'All' types.
+        _.each(selectedActs, function(act) { act.selected = false; });
+        act.selected = true;
+        selectedActs = [];
+      } else {
+        act.selected = !act.selected;
+        var allIsSelected = _.findWhere(selectedActs, {name: 'all'});
+        if (allIsSelected) {
+          allIsSelected.selected = false;
+        }
+        selectedActs = _.where($scope.activities, {selected: true});
+      }
+      // Select All events if nothing selected.
+      if (selectedActs.length === 0) {
+        var allAct = _.findWhere($scope.activities, {name: 'all'});
+        allAct.selected = true;
+      }
+      var selectedActNames = _.map(selectedActs, function(act) { return act.name; });
+      findEvents(selectedActNames);
+    };
 
     function init() {
       findEvents();
     }
 
-    function findEvents(actName) {
+    function findEvents(actNames) {
       var params = { limit: EVENT_LIMIT };
-      if (actName) {
-        params.act = actName;
+      if (actNames) {
+        console.log('Filter events by activities: ', actNames);
+        params.activities = actNames;
       }
       EventsResource.query(params, function(data) {
         $scope.foundEvents = data;

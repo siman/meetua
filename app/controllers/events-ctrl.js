@@ -35,7 +35,7 @@ module.exports = {
   },
   find: function(req, res) {
     var args = {
-      act: req.query.act,
+      activities: req.query.activities,
       participantId: req.query.participantId,
       authorId: req.query.authorId,
       canceled: req.query.canceled,

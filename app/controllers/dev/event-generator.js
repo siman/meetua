@@ -171,7 +171,7 @@ function generateEvent(args, cb) {
 
 /**
  * @param {String} typeOfFiles Possible values: descriptions, images.
- * @param {Array} filterActsArr List of activities to generate. Example: ['cycling', 'it', 'langs']
+ * @param {Array} filterActsArr List of activities to generate. Example: ['sport', 'conference']
  * @param {Function} readFileFn function({activity: '', path: ''}, cb)
  * @param {Function} cb
  */

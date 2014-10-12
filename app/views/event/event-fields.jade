@@ -48,11 +48,13 @@ mixin eventFields(isCreate)
     label(class='col-sm-2 control-label', for='description') Описание *
     .col-sm-10
       summernote#description.form-control(name='description', ng-model='event.description', height='150', config='WYSIWYG_OPTIONS', required)
-  .form-group
-    label.col-sm-2.control-label(style='margin-top:70px') Тип события
-    .col-sm-10: div.act_bar
-      act-icon(ng-model='event.activity', activity='activity', ng-repeat='activity in activities')
-      div.clearfix
+  .form-group(ng-class="{'has-error' : eventForm.activity.$invalid && submitted}")
+    label.col-sm-2.control-label Тип события *
+    .col-sm-3
+      select.form-control(name='activity', ng-model='event.activity', required,
+        ng-options='activity.textOver for activity in activities',
+      )
+        option(value='') -- Выберите тип события --
   .form-group
     label(class='col-sm-2 control-label', for='description') Лого/изображение
     .col-sm-10

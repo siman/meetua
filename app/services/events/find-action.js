@@ -9,7 +9,7 @@ var _ = require('lodash');
 
 /**
  * @param {Object} args
- * @param {String} args.act
+ * @param {String} args.activities
  * @param {ObjectId} args.participantId
  * @param {Boolean} args.authorId
  * @param {Boolean} args.passed
@@ -17,7 +17,7 @@ var _ = require('lodash');
  * @param {Number} args.limit
  */
 exports.findQuery = function(args) {
-  var activity = args.act;
+  var activities = args.activities;
   var participantId = args.participantId;
   var filter = {};
   var startDateTime = undefined;
@@ -32,8 +32,12 @@ exports.findQuery = function(args) {
   if (!_.isUndefined(args.canceled)) {
     filter.canceledOn = {$exists: args.canceled === true || args.canceled === 'true'}
   }
-  if (activity) {
-    filter.activity = activity;
+  if (activities) {
+    if (_.isArray(activities)) {
+      filter.activity = {$in: activities};
+    } else {
+      filter.activity = activities; // Look by single activity
+    }
   }
   if (participantId) {
     filter['participants.user'] = ObjectId(participantId);
@@ -52,6 +56,9 @@ exports.findQuery = function(args) {
 exports.find = function(args, cb) {
   try {
     var findQuery = exports.findQuery(args, function() {});
+
+    logger.debug('Find events by filter:', findQuery.filter);
+
     var q = Event.find(findQuery.filter);
     if (findQuery.limit) {
       q.limit(findQuery.limit);

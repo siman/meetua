@@ -6,7 +6,7 @@ angular.module('myApp')
   .directive('dimensionedImg', ['util', '$parse',function(util, $parse) {
     function link($scope, element, attrs) {
       $scope.$watch('src', function(src) {
-        console.log(src);
+//        console.log(src);
         var image = new Image();
         if (!src) {
           return;

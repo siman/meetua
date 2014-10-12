@@ -10,8 +10,8 @@ angular.module('myApp').controller('EventGeneratorCtrl',
     // UI specific structures.
     $scope.ui = {
       activities: {
-        cycling: true,
-        it: true
+        sport: true,
+        conference: true
       }
     };
 

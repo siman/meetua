@@ -133,8 +133,9 @@ block content
                             span(ng-if='!isMe && participant.guests > 0', class="badge") +{{participant.guests}}
                           .col-xs-12(ng-if='isMe')
                             a.text-muted.pointer(data-toggle='modal', data-target='.guest-number-modal')
-                              |Возьму с собой друзей &nbsp;
-                              span(class="badge", ng-if='participant.guests > 0') +{{participant.guests}}
+                              div(ng-if='!participant.guests') Возьмете с собой друзей?
+                              div(ng-if='participant.guests') Возьму с собой друзей&nbsp;
+                                span(class="badge") +{{participant.guests}}
 
                 div(ng-if='event.friendParticipants.length > 0')
                   .event_label Мои друзья

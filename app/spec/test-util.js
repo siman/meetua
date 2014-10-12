@@ -135,7 +135,7 @@ exports.buildTestEvent = function(opts) {
       dateTime: new Date()
     },
     description: 'event description',
-    activity: 'cycling',
+    activity: 'sport',
     images: []
   };
   return _.extend(reqData, opts);

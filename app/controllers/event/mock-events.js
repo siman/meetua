@@ -5,7 +5,7 @@ module.exports = [
     "_id" : "5355443a9e965c7c19f33c43",
     "name" : "test1",
     "description" : "test desc",
-    "activity" : "cycling",
+    "activity" : "sport",
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
@@ -23,7 +23,7 @@ module.exports = [
     "_id" : "5355518ec5db1e5c17ba7887",
     "name" : "pokatushka v buche",
     "description" : "pokatuuuuuuuuuuuuuuuushka",
-    "activity" : "cycling",
+    "activity" : "sport",
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
@@ -43,7 +43,7 @@ module.exports = [
     "_id" : "535551d2c5db1e5c17ba788a",
     "name" : "pokatushka na truhane",
     "description" : "Truhan",
-    "activity" : "cycling",
+    "activity" : "sport",
     "author" : "5355443a9e965c7c19f33c43",
     "images" : [ ],
     "end" : {
@@ -63,7 +63,7 @@ module.exports = [
     "_id" : "535551ecc5db1e5c17ba788b",
     "name" : "Code in comfy",
     "description" : "comfy code hackathon",
-    "activity" : "it",
+    "activity" : "conference",
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
@@ -83,7 +83,7 @@ module.exports = [
     "_id" : "535551ecc5db1e6c17ba788b",
     "name" : "Code in comfy",
     "description" : "comfy code hackathon",
-    "activity" : "it",
+    "activity" : "conference",
     "author" : "5355443a9e965c7c19f33c44",
     "images" : [ ],
     "end" : {
