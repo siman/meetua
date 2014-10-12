@@ -56,9 +56,6 @@ exports.findQuery = function(args) {
 exports.find = function(args, cb) {
   try {
     var findQuery = exports.findQuery(args, function() {});
-
-    logger.debug('Find events by filter:', findQuery.filter);
-
     var q = Event.find(findQuery.filter);
     if (findQuery.limit) {
       q.limit(findQuery.limit);
