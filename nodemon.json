@@ -1,0 +1,18 @@
+{
+  "verbose": true,
+  "ignore": [
+    ".git",
+    ".idea",
+    ".openshift",
+    ".sass-cache",
+    "bower_components",
+    "node_modules",
+    "prod"
+  ],
+  "watch": [
+    "app",
+    "config",
+    "app.js"
+  ],
+  "ext": "js json"
+}
