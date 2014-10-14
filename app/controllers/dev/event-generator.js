@@ -154,6 +154,7 @@ function generateEvent(args, cb) {
     // TODO: Random dates: past, current, future.
     var startMoment = rand.randomFutureMoment();
     var endMoment = rand.randomEndMoment(startMoment);
+    var eventPrice = rand.randomPrice();
 
     var images = [];
     if (hasLogo) {
@@ -174,6 +175,10 @@ function generateEvent(args, cb) {
       },
 //        canceledOn: undefined, // TODO
       participants: [], // TODO
+      price: {
+        amount: eventPrice,
+        currency: "UAH"
+      },
       images: images
     };
 

@@ -65,3 +65,8 @@ exports.randomPlace = function() {
     city: 'Київ'
   };
 };
+
+exports.randomPrice = function() {
+  var hasPrice = random.bool();
+  return hasPrice ? randomInt(1, 1000) : 0;
+};
