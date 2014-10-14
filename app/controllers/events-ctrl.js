@@ -12,6 +12,11 @@ var Event = require('../models/Event');
  * @see {@link http://sailsjs.org/#/documentation/concepts/Controllers?q=thin-controllers}
  */
 module.exports = {
+  countByActivity: function(req, res, next) {
+    eventsService.countByActivity(function(err, eventCounts) {
+      res.json(200, eventCounts);
+    });
+  },
   eventById: function(req, res, next, eventId) {
     eventsService.eventById(eventId, function(err, event) {
       if (err) return next(err);
@@ -40,7 +45,8 @@ module.exports = {
       authorId: req.query.authorId,
       canceled: req.query.canceled,
       passed: req.query.passed,
-      limit: req.query.limit};
+      limit: req.query.limit
+    };
     eventsService.find(args, returnJson(res));
   }
 };

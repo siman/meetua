@@ -15,6 +15,7 @@ block content
             ng-class='{selected: activity.selected}'
           )
             span {{activity.textOver}}
+            span.badge.pull-right(ng-if='activity.eventCount > 0') {{activity.eventCount}}
 
         .group_title TODO: Дата
         ul

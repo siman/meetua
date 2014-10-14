@@ -130,7 +130,7 @@ block content
                           .col-xs-12(ng-class='{"highlight": isMe}')
                             a(ng-href="{{participant.user.url}}") {{participant.user.profile.name}}
                             span &nbsp;
-                            span(ng-if='!isMe && participant.guests > 0', class="badge") +{{participant.guests}}
+                            span.badge(ng-if='!isMe && participant.guests > 0') +{{participant.guests}}
                           .col-xs-12(ng-if='isMe')
                             a.text-muted.pointer(data-toggle='modal', data-target='.guest-number-modal')
                               div(ng-if='!participant.guests') Возьмете с собой друзей?

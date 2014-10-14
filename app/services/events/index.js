@@ -3,15 +3,18 @@
  */
 'use strict';
 
+var countAction = require('./count-action');
 var saveAction = require('./save-action');
 var cancelAction = require('./cancel-action');
 var findAction = require('./find-action');
 var Event = require('../../models/Event');
 
 /**
- * Encapsulates internal implementation, so it's easy to refactor it. Also may keep common logic for event actions.
+ * Encapsulates internal implementation, so it's easy to refactor it.
+ * Also may keep common logic for event actions.
  */
 module.exports = {
+  countByActivity: countAction.countByActivity,
   save: saveAction,
   cancel: cancelAction,
   find: findAction.find,

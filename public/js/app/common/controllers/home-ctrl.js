@@ -90,6 +90,22 @@ angular.module('myApp').controller('HomeCtrl',
 
     function init() {
       findEvents();
+      countEventsByActivity();
+    }
+
+    function countEventsByActivity() {
+      $http.get(util.apiUrl('/events/countByActivity'), {}).
+        success(function(data) {
+          _.each(data, function(c) {
+            var act = findActivityByName(c.activity);
+            if (act) {
+              act.eventCount = c.count;
+            }
+          });
+        }).
+        error(function(data) {
+          console.log("countByActivity error", data)
+        });
     }
 
     function findEvents(actNames) {

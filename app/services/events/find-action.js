@@ -2,10 +2,13 @@
  * Created by oleksandr on 9/20/14.
  */
 'use strict';
+
 var Event = require('../../models/Event');
 var ObjectId = require('mongoose').Types.ObjectId;
 var logger = require('../../controllers/util/logger')(__filename);
 var _ = require('lodash');
+
+module.exports.buildFindCondition = buildFindCondition;
 
 /**
  * @param {Object} args
@@ -16,21 +19,23 @@ var _ = require('lodash');
  * @param {Boolean} args.canceled
  * @param {Number} args.limit
  */
-exports.findQuery = function(args) {
+function buildFindCondition(args) {
+  args = args || {};
   var activities = args.activities;
   var participantId = args.participantId;
-  var filter = {};
   var startDateTime = undefined;
   var now = Date.now();
-  if (!_.isUndefined(args.passed)) {
+  var filter = {};
+
+  if (!_.isUndefined(args.passed)) { // FIXME: This looks in mongo by timestamp. But mongo works with ISODate
     // TODO: Check also end date that it is <= now. issue #171
-    startDateTime = args.passed === true || args.passed === 'true' ? {$lte: now} : {$gt: now}
+    startDateTime = args.passed === true || args.passed === 'true' ? {$lte: now} : {$gt: now};
   }
   if (startDateTime) {
     filter['start.dateTime'] = startDateTime;
   }
   if (!_.isUndefined(args.canceled)) {
-    filter.canceledOn = {$exists: args.canceled === true || args.canceled === 'true'}
+    filter.canceledOn = {$exists: args.canceled === true || args.canceled === 'true'};
   }
   if (activities) {
     if (_.isArray(activities)) {
@@ -45,11 +50,16 @@ exports.findQuery = function(args) {
   if (args.authorId) {
     filter.author = ObjectId(args.authorId);
   }
+  return filter;
+}
+
+exports.findQuery = function(args) {
+  var filter = buildFindCondition(args);
   var res = {filter: filter, sort: {'start.dateTime': 1}};
   if (args.limit) {
     res.limit = args.limit;
   }
-  return  res;
+  return res;
 };
 
 // TODO: Add pagination. issue #170
