@@ -10,8 +10,8 @@
     div.event_date(ng-attr-title='{{event.start.dateTime | prettyDateTime}}') {{event.start.dateTime | comingDateTime}}
     div.text-muted(title='{{event.place.city}}') {{event.place.city|truncate:cityLength}}
     div.event-price
-      span.label.label-default(title='Стоимость участия', ng-show='event.price.amount && event.price.amount != 0') {{event.price.amount | currency:event.price.currency}}
-      span.label.label-success(title='Стоимость участия', ng-hide='event.price.amount && event.price.amount != 0') Бесплатно
+      span.label.label-default(title='Стоимость участия', ng-show='!event.isFree') {{event.price.amount | currency:event.price.currency}}
+      span.label.label-success(title='Стоимость участия', ng-show='event.isFree') Бесплатно
     div(style="margin-bottom: 10px;")
 
   div.event_statistics(ng-if='entry.friends.length')

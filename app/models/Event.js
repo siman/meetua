@@ -17,6 +17,7 @@ var activityNames = _.map(activities, function(activity) {
 
 var eventSchema = new mongoose.Schema({
   isGenerated: { type: Boolean, default: false },
+  isBlocked: {type: Boolean, default: false},
 
   // TODO: by Siman: Add fields: 'createdOn', 'updatedOn'
 
@@ -80,6 +81,11 @@ eventSchema.virtual('isPassed').get(function() {
 eventSchema.virtual('url').get(function() {
   return appConfig.hostname + '/event/' + this._id;
 });
+
+eventSchema.virtual('isFree').get(function() {
+  return !(this.price.amount && this.price.amount > 0);
+});
+
 
 eventSchema.set('toJSON', {virtuals: true });
 

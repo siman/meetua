@@ -62,8 +62,8 @@ block content
 
             div
               span.event_label Стоимость участия:
-              span(ng-show='event.price.amount && event.price.amount != 0') {{event.price.amount | currency:event.price.currency}}
-              span(ng-hide='event.price.amount && event.price.amount != 0') Бесплатно
+              span(ng-show='!event.isFree') {{event.price.amount | currency:event.price.currency}}
+              span(ng-show='event.isFree') Бесплатно
 
             if event.author
               +eventField("Организатор", event.author.profile.name, event.author.url)
