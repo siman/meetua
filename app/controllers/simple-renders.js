@@ -5,11 +5,12 @@
  */
 
 var passportConf = require('../../config/passport');
+var utils = require('./util/utils');
 
 module.exports = [
   { url: '/', view: 'home', params: {} },
   { url: '/feedback', view: 'feedback', params: {title: 'Отзывы и предложения'} },
-  { url: '/signup', view: 'account/signup', params: {title: 'Создать аккаунт'} },
+  { url: '/signup', view: 'account/signup', pre: utils.isGuestMiddleware, params: {title: 'Создать аккаунт'} },
   { url: '/account', view: 'account/profile', pre: passportConf.isAuthenticated, params: {title: 'Личные данные'} },
   { url: '/forgot', view: 'account/forgot', params: {title: 'Восстановление пароля'} },
   { url: '/event/create', view: 'event/create', params: {title: 'Создать событие'} },

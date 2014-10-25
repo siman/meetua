@@ -133,6 +133,7 @@ exports.logout = function(req, res) {
 
 exports.postSignup = function(req, res, next) {
   req.assert('email', 'Неверный email').isEmail();
+  req.assert('firstname', 'Имя должно иметь длину минимум 2 символа').len(2);
   req.assert('password', 'Пароль должен иметь длину минимум 4 символа').len(4);
   req.assert('confirmPassword', 'Пароли не совпадают').equals(req.body.password);
 
@@ -145,7 +146,10 @@ exports.postSignup = function(req, res, next) {
 
   var user = new User({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    profile: {
+      name: req.body.firstname + ' ' + req.body.lastname
+    }
   });
 
   user.save(function(err) {
