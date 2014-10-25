@@ -1,0 +1,10 @@
+extends ../email-layout
+include ../mixins
+
+block content
+  h1.h1
+    +safeUserName('', user, ', ')
+    |Cобытие, на которое вы подписались: "#{event.name}" было заблокировано модератором
+  br
+  strong Просмотреть детали события: &nbsp;
+  a(href=event.url) #{event.name}

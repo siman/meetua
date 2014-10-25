@@ -10,6 +10,10 @@ mixin eventField(label, data, href)
 
 block content
   div(ng-controller='ViewEventCtrl')
+    #on_my_event_panel.alert-danger(ng-if='event.isBlocked', ng-cloak)
+      div.event_edit_panel
+      | Событие заблокировано модератором
+
     #on_my_event_panel.alert-warning(ng-if='event.isPassed', ng-cloak)
       div.event_edit_panel
       | Событие уже прошло
@@ -89,7 +93,7 @@ block content
                 div Событие отменено
               div(ng-if="!event.isPassed")
                 button#partBtn.btn.btn-lg(ng-class="{'btn-default': isPart(), 'btn-success': !isPart()}",
-                    ng-disabled="event.canceledOn",
+                    ng-disabled="event.canceledOn || event.isBlocked",
                     ng-click="participate(0)")
                   span(ng-if="!isPart()")
                     i.fa.fa-check

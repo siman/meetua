@@ -65,6 +65,7 @@ angular.module('myApp').controller('HomeCtrl',
 
     function findEvents(actName) {
       var params = { limit: EVENT_LIMIT };
+      params.ignoreBlocked = true;
       if (actName) {
         params.act = actName;
       }

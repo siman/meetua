@@ -39,6 +39,7 @@ module.exports = {
       act: req.query.act,
       participantId: req.query.participantId,
       authorId: req.query.authorId,
+      ignoreBlocked: req.query.ignoreBlocked,
       canceled: req.query.canceled,
       passed: req.query.passed,
       limit: req.query.limit};

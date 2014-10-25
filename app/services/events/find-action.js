@@ -41,6 +41,9 @@ exports.findQuery = function(args) {
   if (args.authorId) {
     filter.author = ObjectId(args.authorId);
   }
+  if (args.ignoreBlocked) {
+    filter.isBlocked = false;
+  }
   var res = {filter: filter, sort: {'start.dateTime': 1}};
   if (args.limit) {
     res.limit = args.limit;

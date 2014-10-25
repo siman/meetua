@@ -117,6 +117,7 @@ module.exports.notifyParticipantOnEdit = function (event, cb) {
   store.findById(event._id, ['participants.user'], function (err, eventFound) {
     if (err) return cb(err);
     if (!eventFound) return cb(new Error('Событие не найдено'));
+    if (eventFound.isBlocked) return cb();
     async.map(eventFound.participants, function (participant, done) {
       notifyUser(participant.user, 'Изменилось описание события', eventFound, 'event-edit', done);
     }, cb);
@@ -144,7 +145,9 @@ function notifyComingSoonEvent(event) {
       return;
     }
 
-    notifyUser(eventFound.author, subject, eventFound, 'event-coming-soon');
+    var templateName = eventFound.isBlocked ? 'event-blocked' : 'event-coming-soon';
+
+    notifyUser(eventFound.author, subject, eventFound, templateName);
     _.map(eventFound.participants, function(participant) {
       if (!participant.user._id.equals(eventFound.author._id))
         notifyUser(user, subject, eventFound, 'event-coming-soon');
