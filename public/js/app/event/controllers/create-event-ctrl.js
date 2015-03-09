@@ -14,6 +14,18 @@ angular.module('myApp')
     $scope.WYSIWYG_OPTIONS = WYSIWYG_OPTIONS;
     $scope.activities = activities;
     $scope.event = {};
+
+    $scope.isValidEndTime = isValidTime($scope.endTime);
+    $scope.isValidStartTime = isValidTime($scope.startTime);
+
+    /**
+     * @param {Number} timeObj.hours
+     * @param {Number} timeObj.mins
+     */
+    function isValidTime(timeObj) {
+
+    }
+
     $scope.submit = function() {
       if (uploader.queue.length > 0) {
         uploader.uploadAll();
@@ -21,6 +33,10 @@ angular.module('myApp')
         postSave(buildReqData());
       }
     };
+
+    // TODO: Use start/endTime for building start/end.dateTime
+
+    // TODO do not append start/endTime to post event req.
 
     function buildReqData(uploadedImages) {
       var reqData = _.extend({

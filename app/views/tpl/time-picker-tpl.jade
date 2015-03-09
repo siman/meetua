@@ -1,0 +1,19 @@
+.time_picker(ng-form, name='timePickerForm')
+
+    select.form-control.time_picker_select(
+      name='hours', ng-model='hoursModel', ng-required='hoursRequired',
+      ng-options='hour.amount as hour.text for hour in tp.options',
+      ng-disabled='disabled'
+    ): option(value='')
+
+    //span(style='padding: 0 5px;') :
+    //
+    //select.form-control.time_picker_select(
+    //  name='{{minsName}}', ng-model='minsModel', ng-required='minsRequired',
+    //  ng-options='min.amount as min.text for min in tp.minOptions',
+    //  ng-disabled='disabled'
+    //): option(value='')
+
+    //div form: {{ form | json }}
+    //div hours.valid: {{ timePickerForm.hours.$valid | json }}
+    //div hours.error: {{ timePickerForm.hours.$error | json }}

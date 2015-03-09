@@ -1,64 +1,86 @@
 mixin eventFields(isCreate)
   input(type='hidden', name='_csrf', value=_csrf, ng-model='csrf')
+
   .form-group(ng-class="{'has-error' : eventForm.name.$invalid && submitted}")
     label.col-sm-2.control-label(for='name') Название *
     .col-sm-10
       input.form-control(type='text', name='name', id='name', autofocus=true, ng-model='event.name', required)
+
   .form-group(ng-class="{'has-error' : eventForm.placeName.$invalid && submitted}")
     label.col-sm-2.control-label(for='placeName') Где *
     .col-sm-10
       input#placeName.form-control(type='text', name='placeName', ng-autocomplete='ng-autocomplete',
-      ng-model='event.place.name', options='placeOptions', details='place.details', required)
+        ng-model='event.place.name', options='placeOptions', details='place.details', required,
+        placeholder='Введите адрес'
+      )
+
   .form-group(ng-if='place.details')
     label.col-sm-2.control-label
     .col-sm-10
       place-map(details='place.details', lat='event.place.latitude', lng='event.place.longitude', place='event.place')
-  .form-group
+
+  .form-group(ng-class="{'has-error' : submitted && (eventForm.startDate.$invalid || eventForm.startTime.$invalid)}")
     label.col-sm-2.control-label(for='startDate')
       i.fa.fa-calendar
       | Начало в *
-    .col-sm-4(ng-class="{'has-error' : eventForm.startDate.$invalid && submitted}")
+    .col-sm-2(ng-class="{'has-error' : eventForm.startDate.$invalid && submitted}")
       input#startDate.form-control(ng-model='event.start.dateTime', type='text', name='startDate', bs-datepicker,
-      required, min-date='today')
-    .col-sm-2: label.checkbox.pull-right(for='startTime')
-      i.fa.fa-clock-o
-      | Время
-    .col-sm-3
-      input#startTime.form-control(type='text', name='startTime', ng-model='event.start.dateTime',
-        data-time-format='HH:mm', bs-timepicker)
+        required, min-date='today')
     .col-sm-1
-  .form-group
-    - var endDateDisabled = (isCreate ? 'eventForm.startDate.$invalid || eventForm.startDate.$pristine' : 'eventForm.startDate.$invalid')
-    label(class='col-sm-2 control-label', for='endDate', ng-disabled="disableMe")
-      i.fa.fa-calendar
-      | Окончание в
-    .col-sm-4
-      input#endDate.form-control(ng-model='event.end.dateTime', type='text', name='endDate', bs-datepicker
-      ng-disabled=endDateDisabled, min-date="{{event.start.dateTime}}")
-    .col-sm-2
-      label.checkbox.pull-right(for='endTime',
-      ng-disabled=endDateDisabled)
+      label.checkbox.pull-right(for='startTime')
         i.fa.fa-clock-o
         | Время
     .col-sm-3
-      input#endTime.form-control(type='text', name='endTime', ng-model='event.end.dateTime', bs-timepicker,
-        data-time-format='HH:mm', ng-disabled=endDateDisabled)
+      time-picker(name='startTime', ng-model='startTime',
+        hours-model='event.startTime.hours', hours-name='startHours', hours-required='true',
+        mins-model='event.startTime.mins', mins-name='startMins', mins-required='true'
+      )
+
+      // Debug
+      div eventForm: {{ eventForm | json }}
+      div startTime.valid: {{ eventForm.startTime.$valid | json }}
+      div startTime.error: {{ eventForm.startTime.$error | json }}
+
+  // TODO : Extract to ctrl function
+  - var endDateDisabled = (isCreate ? 'eventForm.startDate.$invalid || eventForm.startDate.$pristine' : 'eventForm.startDate.$invalid')
+  // var invalidDateOrTime =
+  .form-group(ng-class="{'has-error' : !endDateDisabled && submitted && eventForm.endDate.$invalid}")
+    // TODO Fix validation of time
+    label(class='col-sm-2 control-label', for='endDate', ng-disabled="disableMe")
+      i.fa.fa-calendar
+      | Окончание в
+    .col-sm-2
+      input#endDate.form-control(ng-model='event.end.dateTime', type='text', name='endDate', bs-datepicker
+      ng-disabled=endDateDisabled, min-date="{{event.start.dateTime}}")
     .col-sm-1
+      label.checkbox.pull-right(for='endTime', ng-disabled=endDateDisabled)
+        i.fa.fa-clock-o
+        | Время
+    .col-sm-3
+      time-picker(
+        hours-model='event.endTime.hours', hours-name='endHours', hours-required='!endDateDisabled',
+        mins-model='event.endTime.mins', mins-name='endMins', mins-required='!endDateDisabled'
+      )
+
   .form-group(ng-class="{'has-error' : eventForm.description.$invalid && submitted}")
     label(class='col-sm-2 control-label', for='description') Описание *
     .col-sm-10
-      summernote#description.form-control(name='description', ng-model='event.description', height='150', config='WYSIWYG_OPTIONS', required)
+      summernote#description.form-control(name='description', ng-model='event.description',
+        height='150', config='WYSIWYG_OPTIONS', required)
+
   .form-group(ng-class="{'has-error' : eventForm.activity.$invalid && submitted}")
-    label.col-sm-2.control-label Тип события *
+    label.col-sm-2.control-label(for='activity') Тип события *
     .col-sm-3
       select.form-control(name='activity', ng-model='event.activity', required,
         ng-options='activity.textOver for activity in activities',
       )
         option(value='') -- Выберите тип события --
+
   .form-group
     label(class='col-sm-2 control-label', for='description') Лого/изображение
     .col-sm-10
-      input(ng-show='uploader.queue.length == 0', nv-file-select='nv-file-select', type='file', uploader='uploader', filters='onlyImages')
+      input(name='description', ng-show='uploader.queue.length == 0', nv-file-select='nv-file-select',
+        type='file', uploader='uploader', filters='onlyImages')
       .img-thumbnail(ng-repeat="item in uploader.queue", ng-click="imageService.setAsLogo(item)", ng-show="uploader.isHTML5")
         .event_img(ng-class="{ 'pointer': !item.isLogo }")
           i.pointer.glyphicon.glyphicon-remove-circle.remove_img(ng-if='!item.isUploaded', ng-click='imageService.removeItem(item)')
